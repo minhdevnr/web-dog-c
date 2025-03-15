@@ -1,0 +1,98 @@
+.notification-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  min-width: 300px;
+  max-width: 400px;
+}
+
+.notification {
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: slide-in 0.4s ease-out;
+  display: flex;
+  align-items: center;
+  color: white;
+  font-family: "Merriweather", serif;
+}
+
+.notification-success {
+  background: linear-gradient(135deg, #36d1dc, #5b86e5);
+  border-left: 5px solid #2ecc71;
+}
+
+.notification-error {
+  background: linear-gradient(135deg, #ff9966, #ff5e62);
+  border-left: 5px solid #e74c3c;
+}
+
+.notification-warning {
+  background: linear-gradient(135deg, #f2994a, #f2c94c);
+  border-left: 5px solid #f39c12;
+}
+
+.notification-info {
+  background: linear-gradient(135deg, #86d9e1, #d9afd9);
+  border-left: 5px solid #97d9e1;
+}
+
+.notification-icon {
+  margin-right: 15px;
+  font-size: 20px;
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-title {
+  font-weight: 700;
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+.notification-message {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.notification-close {
+  cursor: pointer;
+  opacity: 0.7;
+  font-size: 18px;
+  margin-left: 15px;
+  transition: opacity 0.2s;
+}
+
+.notification-close:hover {
+  opacity: 1;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.notification.hide {
+  animation: fade-out 0.4s forwards;
+} 

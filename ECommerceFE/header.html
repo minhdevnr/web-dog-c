@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+    integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+  <title>Document</title>
+</head>
+<body>
+  <header class="header">
+    <a href="index.html" class="logo">
+      <img src="img/1.jpg" alt="logo" width="100px" height="150px" />
+    </a>
+    <nav class="navbar">
+      <a href="index.html#home" data-i18n="home">Trang chủ</a>
+      <a href="index.html#about" data-i18n="about">Giới thiệu</a>
+      <a href="index.html#menu" data-i18n="menu">Thực đơn</a>
+      <a href="index.html#products" data-i18n="products">Sản phẩm</a>
+      <a href="index.html#review" data-i18n="review">Đánh giá</a>
+      <a href="index.html#contact" data-i18n="contact">Liên hệ</a>
+      <a href="index.html#blogs" data-i18n="blog">Blog</a>
+    </nav>
+    <div class="icons">
+      <div class="fa fa-search" id="search-btn" data-tooltip="Tìm kiếm"></div>
+      <div class="fa fa-shopping-cart" id="cart-btn" data-tooltip="Giỏ hàng">
+        <span class="cart-count">0</span>
+      </div>
+      <div class="fa fa-user" id="login-btn" data-tooltip="Đăng nhập"></div>
+      <div class="fa fa-user-plus" id="register-btn" data-tooltip="Đăng ký"></div>
+      <div class="fa fa-bars" id="bars-btn" data-tooltip="Menu"></div>
+    </div>
+    <div class="search-form">
+      <input type="search" id="search-box" placeholder="Tìm kiếm ở đây..." />
+      <label for="search-box" class="fa fa-search"></label>
+    </div>
+    <div class="cart-item-container">
+      <div class="cart-item">
+        <span class="fa fa-times"></span>
+        <img src="img/logo.jpg" alt="" width="100px" height="100px" />
+        <div class="content">
+          <h3>cart item 02</h3>
+          <div class="price">$1000</div>
+        </div>
+      </div>
+      <div class="cart-item">
+        <span class="fa fa-times"></span>
+        <img src="img/logo.jpg" alt="" width="100px" height="100px" />
+        <div class="content">
+          <h3>cart item 01</h3>
+          <div class="price">$1000</div>
+        </div>
+      </div>
+      <div class="cart-item">
+        <span class="fa fa-times"></span>
+        <img src="img/logo.jpg" alt="" width="100px" height="100px" />
+        <div class="content">
+          <h3>cart item 03</h3>
+          <div class="price">$1000</div>
+        </div>
+      </div>
+      <a href="index-cart.html" class="btn">Thanh toán ngay</a>
+    </div>
+    <div class="language-switcher">
+      <span class="current-language">VI</span>
+      <div class="language-options">
+        <a href="#" onclick="switchLanguage('vi'); return false;">VI</a>
+        <a href="#" onclick="switchLanguage('en'); return false;">EN</a>
+      </div>
+    </div>
+  </header>
+  <script src="script.js"></script>
+  <script src="js/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+.checkout_info_product .checkout-price p {
+  font-weight: bolder;
+  text-transform: uppercase;
+}
+.checkout-all p {
+  font-weight: bolder;
+  text-transform: uppercase;
+}
+
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa; /* Light background for contrast */
+    margin: 0;
+    padding: 20px;
+}
+
+h2 {
+    text-align: center;
+}
+
+/* Header Styles */
+.navbar {
+    margin-bottom: 20px; /* Space below the navbar */
+}
+
+/* Cart Item Styles */
+.cart-item {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #fff; /* White background for items */
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.cart-item img {
+    margin-right: 15px; /* Space between image and text */
+}
+
+.cart-item span {
+    flex-grow: 1; /* Allow name to take available space */
+}
+
+/* Quantity Input Styles */
+.cart-item input[type="number"] {
+    width: 60px; /* Fixed width for quantity input */
+    text-align: center; /* Center the number */
+}
+
+/* Order Summary Styles */
+.order-summary {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #f9f9f9; /* Light gray background */
+    margin-top: 20px;
+}
+
+.order-summary p {
+    margin: 5px 0; /* Space between summary items */
+}
+
+/* Button Styles */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .cart-item {
+        flex-direction: column; /* Stack items on smaller screens */
+        align-items: flex-start; /* Align items to the start */
+    }
+
+    .cart-item img {
+        margin-bottom: 10px; /* Space below image */
+    }
+}

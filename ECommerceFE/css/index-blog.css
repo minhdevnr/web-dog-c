@@ -1,0 +1,343 @@
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
+
+:root {
+  --main-color: #d3ad7f;
+  --black: #13131a;
+  --bg: #010103;
+  --border: 0.1rem solid rgba(255, 255, 255, 0.3);
+}
+* {
+  font-family: "Quicksand", serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+  border: none;
+  text-decoration: none;
+  text-transform: capitalize;
+  transition: 0.2s linear;
+}
+html {
+  overflow-x: hidden;
+  scroll-padding-top: 9rem;
+  scroll-behavior: smooth;
+}
+html::-webkit-scrollbar {
+  width: 0.8rem;
+}
+html::-webkit-scrollbar-track {
+  background: transparent;
+}
+html::-webkit-scrollbar-thumb {
+  background: #fff;
+  border-radius: 5rem;
+}
+body {
+  background: var(--bg);
+}
+section {
+  padding: 2rem;
+}
+.heading {
+  text-align: center;
+  color: #fff;
+  text-transform: uppercase;
+  padding-bottom: 2.5rem;
+  font-size: 4rem;
+}
+.heading span {
+  color: var(--main-color);
+  text-transform: uppercase;
+}
+.btn {
+  margin-top: 0.3rem;
+  display: inline-block;
+  padding: 0.3rem 2rem;
+  font-size: 1.5rem;
+  color: #fff;
+  background: var(--main-color);
+  cursor: pointer;
+}
+.btn:hover {
+  letter-spacing: 0.2rem;
+}
+.header {
+  background: var(--bg);
+  display: flex;
+  text-align: center;
+  justify-content: space-between;
+  padding: 0.5rem 7%;
+  border-bottom: var(--border);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+.header .logo img {
+  height: 6rem;
+}
+.header .navbar {
+  padding-top: 35px;
+}
+.header .navbar a {
+  margin: 0 1rem;
+  font-size: 1rem;
+  color: #fff;
+}
+.header .navbar a:hover {
+  color: var(--main-color);
+  border-bottom: 0.1rem solid var(--main-color);
+  padding-bottom: 0.5rem;
+}
+.header .icons div {
+  color: #fff;
+  cursor: pointer;
+  font-size: 1.5rem;
+  margin-left: 2rem;
+  padding-top: 35px;
+}
+.header .icons div:hover {
+  color: var(--main-color);
+}
+
+#bars-btn {
+  display: none;
+}
+.header .search-form {
+  position: absolute;
+  top: 115%;
+  right: 7%;
+  background: #fff;
+  height: 50rem;
+  width: 50rem;
+  display: flex;
+  align-items: center;
+  transform: scaleY(0);
+  transform-origin: top;
+}
+.header .search-form.active {
+  transform: scaleY(1);
+}
+.header .search-form input {
+  height: 100%;
+  width: 100%;
+  font-size: 1.6rem;
+  color: var(--black);
+  padding: 1rem;
+  text-transform: none;
+}
+.header .search-form label {
+  cursor: pointer;
+  font-size: 2.2rem;
+  margin-right: 1.5rem;
+  color: var(--black);
+}
+.header .search-form label:hover {
+  color: var(--main-color);
+}
+.header .cart-item-container {
+  position: absolute;
+  top: 100%;
+  right: -100%;
+  height: calc(100vh-9.5rem);
+  width: 35rem;
+  background: #fff;
+  padding: 0 1.5rem;
+}
+.header .cart-item-container .cart-item {
+  position: relative;
+  margin: 2rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.header .cart-item-container .cart-item .fa-times {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 2rem;
+  cursor: pointer;
+  color: var(--black);
+}
+.header .cart-item-container .cart-item .fa-times:hover {
+  color: var(--main-color);
+}
+.header .cart-item-container .cart-item .content h3 {
+  font-size: 1.5rem;
+  color: var(--black);
+  padding-bottom: 0.5rem;
+}
+.header .cart-item-container .cart-item .content .price {
+  font-size: 1rem;
+  color: var(--black);
+  padding-bottom: 0.5rem;
+}
+.header .cart-item-container .btn {
+  width: 100%;
+  text-align: center;
+}
+/*about_us*/
+.blog_cf {
+  padding: 10rem;
+}
+.blog_cf .blog_cf_content .blog_cf_author {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.blog_cf .blog_cf_content .blog_cf_author span {
+  color: white;
+  font-style: italic;
+}
+.blog_cf .blog_cf_content h3 {
+  text-align: center;
+  color: #fff;
+  text-transform: uppercase;
+  padding-bottom: 2.5rem;
+  font-size: 4rem;
+}
+.blog_cf .blog_cf_content h5 {
+  color: white;
+  font-weight: bold;
+  font-size: 1.5rem;
+  padding-bottom: 1rem;
+}
+.blog_cf .blog_cf_content .blog_cf_img {
+  display: flex;
+  /* align-items: center; */
+  justify-content: center;
+  padding-bottom: 1rem;
+}
+.blog_cf .blog_cf_content p {
+  color: white;
+  padding-bottom: 1rem;
+}
+.blog_cf .blog_cf_content h3 span {
+  color: var(--main-color);
+  text-transform: uppercase;
+}
+.footer {
+  background: var(--bg);
+  text-align: center;
+  border-top: 1px solid var(--main-color);
+}
+.footer .share {
+  padding: 1rem 0;
+}
+.footer .share a {
+  height: 5rem;
+  width: 5rem;
+  line-height: 5rem;
+  font-size: 2rem;
+  color: #fff;
+  border: var(--border);
+  margin: 0.3rem;
+  border-radius: 50%;
+}
+.footer .share a:hover {
+  background: var(--main-color);
+}
+.footer .links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 2rem 0;
+  gap: 1rem;
+}
+.footer .links a {
+  padding: 0.7rem 2rem;
+  color: #fff;
+  font-size: 1.5rem;
+}
+.footer .links a:hover {
+  color: var(--main-color);
+}
+/*media queries*/
+@media (max-width: 991px) {
+  html {
+    font-size: 55%;
+  }
+  .header {
+    padding: 1.5rem 2rem;
+  }
+  #bars-btn {
+    display: inline-block;
+  }
+  .header .navbar.active {
+    right: 0;
+  }
+  .header .navbar {
+    position: absolute;
+    top: 100%;
+    right: -100%;
+    background: #fff;
+    width: 30rem;
+    height: calc(100vh - 9.5rem);
+  }
+
+  .header .navbar a {
+    color: var(--black);
+    display: block;
+    margin: 1.5rem;
+    padding: 0.5rem;
+    font-size: 2rem;
+  }
+  .header .cart-item-container.active {
+    right: 0;
+    height: calc(100vh - 9.5rem);
+  }
+  .header .search-form {
+    width: 90%;
+    height: 5rem;
+  }
+  .header .icons div {
+    font-size: 2rem;
+  }
+  .header .logo img {
+    height: 10rem;
+  }
+  .home {
+    background-position: left;
+    justify-content: center;
+    text-align: center;
+  }
+  .home .content h3 {
+    font-size: 4.5rem;
+    text-align: center;
+  }
+  .home .content p {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+  .about .row .image {
+    width: 100%;
+  }
+  .about .row {
+    display: grid;
+  }
+  .about .row .content h3 {
+    font-size: 2.5rem;
+  }
+  .about .row .content p {
+    font-size: 2rem;
+  }
+  .blog_cf .about_us_content h3 {
+    padding-top: 4rem;
+  }
+  .blog_cf .about_us_content .blog_cf_img {
+    height: 340px;
+    display: flex;
+    /* align-items: center; */
+    justify-content: center;
+    padding-bottom: 1rem;
+  }
+  .blog_cf .blog_cf_content h5,
+  .blog_cf .blog_cf_content p {
+    font-size: 2rem;
+  }
+}
+@media (max-width: 450px) {
+  html {
+    font-size: 55%;
+  }
+}
