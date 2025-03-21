@@ -27,12 +27,12 @@ async function loadOrders() {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <th scope="row">${index + 1}</th>
-                <td>${order.user ? order.user.FullName : 'N/A'}</td>
-                <td>${order.shippingAddress || ''}</td>
-                <td>${order.totalAmount.toLocaleString()} đ</td>
-                <td>${getStatusLabel(order.status)}</td>
-                <td>${new Date(order.orderDate).toLocaleDateString()}</td>
-                <td>${order.phoneNumber || ''}</td>
+                <td>${order.User ? order.User.FullName : 'N/A'}</td>
+                <td>${order.ShippingAddress || ''}</td>
+                <td>${order.TotalAmount.toLocaleString()} đ</td>
+                <td>${getStatusLabel(order.Status)}</td>
+                <td>${new Date(order.OrderDate).toLocaleDateString()}</td>
+                <td>${order.PhoneNumber || ''}</td>
                 <td>
                     <button class="btn btn-danger btn-sm" onclick="deleteOrder(${order.id})">Xóa</button>
                     <button class="btn btn-warning btn-sm" onclick="editOrder(${order.id})">Sửa</button>
@@ -159,9 +159,6 @@ async function saveOrder() {
         totalAmount: document.getElementById('totalAmount').value,
         status: document.getElementById('status').value,
         orderDate: document.getElementById('orderDate').value,
-        // Add the required fields that the backend expects
-        user: null,
-        orderItems: []
     };
     
     if (orderId) {

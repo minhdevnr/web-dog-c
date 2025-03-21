@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace ECommerceAPI.Controllers
 {
@@ -40,6 +42,7 @@ namespace ECommerceAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> CreateUser(User user)
         {
+            user.Password = HashPassword(user.Password); // Hash the password using MD5
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
@@ -52,6 +55,12 @@ namespace ECommerceAPI.Controllers
             if (id != user.Id)
             {
                 return BadRequest();
+            }
+
+            // If the password is provided, hash it
+            if (!string.IsNullOrEmpty(user.Password))
+            {
+                user.Password = HashPassword(user.Password); // Hash the password using MD5
             }
 
             _context.Entry(user).State = EntityState.Modified;
@@ -94,6 +103,15 @@ namespace ECommerceAPI.Controllers
         private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.Id == id);
+        }
+
+        private string HashPassword(string password)
+        {
+            using (var md5 = MD5.Create())
+            {
+                var hashedBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(password));
+                return BitConverter.ToString(hashedBytes).Replace("-", "").ToLowerInvariant(); // Convert to lowercase hex string
+            }
         }
     }
 } 

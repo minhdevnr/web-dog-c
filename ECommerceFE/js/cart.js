@@ -41,7 +41,6 @@ class CartManager {
                 throw new Error('Failed to add item to cart');
             }
 
-            // Reload cart from server to get updated state
             await this.loadCartFromServer();
             NotificationSystem.success('Sản phẩm đã được thêm vào giỏ hàng');
         } catch (error) {

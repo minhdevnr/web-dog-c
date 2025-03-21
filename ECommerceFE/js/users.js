@@ -74,46 +74,33 @@ function openUserModal(user = {}) {
         document.getElementById('email').value = user.Email || '';
         document.getElementById('phoneNumber').value = user.PhoneNumber || '';
         document.getElementById('username').value = user.Username || '';
-        document.getElementById('userId').value = user.Id;
+        document.getElementById('id').value = user.Id;
     } else {
-        document.getElementById('userId').value = '';
+        document.getElementById('id').value = '';
     }
     
     // Show the modal
     $('#userModal').modal('show');
 }
 
-// Function to save user (both add and edit)
+// Function to save user
 document.getElementById('saveUserButton').addEventListener('click', async function() {
-    const userId = document.getElementById('userId').value;
-    
+    const userId = document.getElementById('id').value;
     const user = {
         FullName: document.getElementById('fullName').value,
         Role: document.getElementById('role').value,
         Address: document.getElementById('address').value,
         DateOfBirth: document.getElementById('dateOfBirth').value,
         Email: document.getElementById('email').value,
-        PhoneNumber: document.getElementById('phoneNumber').value
+        PhoneNumber: document.getElementById('phoneNumber').value,
+        Username: document.getElementById('username').value,
+        Password: document.getElementById('password').value,
+        Id : document.getElementById('id').value
     };
-    
-    // Include username and password only for new users
-    if (!userId) {
-        user.Username = document.getElementById('username').value;
-        user.Password = document.getElementById('password').value;
-    } else {
-        // For existing users, only include password if it was changed
-        const password = document.getElementById('password').value;
-        if (password) {
-            user.Password = password;
-        }
-        user.Id = userId;
-    }
-    
+
     const method = userId ? 'PUT' : 'POST';
-    const url = userId 
-        ? `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.USERS}/${userId}` 
-        : `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.USERS}`;
-    
+    const url = userId ? `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.USERS}/${userId}` : `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.USERS}`;
+
     try {
         const response = await fetch(url, {
             method: method,
@@ -122,7 +109,7 @@ document.getElementById('saveUserButton').addEventListener('click', async functi
             },
             body: JSON.stringify(user)
         });
-        
+
         if (response.ok) {
             const successMessage = userId ? 'Người dùng đã được cập nhật thành công' : 'Người dùng đã được thêm thành công';
             NotificationSystem.success(successMessage);
@@ -143,7 +130,16 @@ function editUser(userId) {
     fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.USERS}/${userId}`)
         .then(response => response.json())
         .then(user => {
-            openUserModal(user);
+            document.getElementById('fullName').value = user.FullName || '';
+            document.getElementById('role').value = user.Role || '';
+            document.getElementById('address').value = user.Address || '';
+            document.getElementById('dateOfBirth').value = user.DateOfBirth ? new Date(user.DateOfBirth).toISOString().split('T')[0] : '';
+            document.getElementById('email').value = user.Email || '';
+            document.getElementById('phoneNumber').value = user.PhoneNumber || '';
+            document.getElementById('username').value = user.Username || '';
+            document.getElementById('id').value = user.Id || ''; // Nếu bạn có trường ẩn cho ID
+
+            $('#userModal').modal('show'); // Hiển thị modal
         })
         .catch(error => {
             console.error('Error fetching user data:', error);

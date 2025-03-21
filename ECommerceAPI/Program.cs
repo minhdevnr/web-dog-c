@@ -69,7 +69,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
-
+app.UseStaticFiles();
 app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 app.UseAuthentication();

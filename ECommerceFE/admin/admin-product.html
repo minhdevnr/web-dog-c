@@ -17,6 +17,9 @@
         integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <link rel="stylesheet" href="/ECommerceFE/css/admin-style.css">
     <link rel="stylesheet" href="/ECommerceFE/css/notification.css">
+    <!-- Thêm vào phần head của tất cả các file HTML -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 </head>
 
 <body>
@@ -129,14 +132,17 @@
                             <input type="date" class="form-control" id="productExpiryDate" required>
                         </div>
                         <div class="form-group">
-                            <label for="productImageUrl">Hình ảnh (URL)</label>
-                            <input type="text" class="form-control" id="productImageUrl" required>
+                            <label for="productImage">Hình ảnh</label>
+                            <input type="file" class="form-control" id="productImage" accept="image/*" required>
+                        </div>
+                        <input type="hidden" id="productId">
+                        <div class="image-preview-container">
+                            <img id="imagePreview" src="" alt="Current Product Image" class="product-image-preview" />
                         </div>
                         <div class="form-group">
                             <label for="productDescription">Mô tả</label>
-                            <textarea class="form-control" id="productDescription" required></textarea>
+                            <textarea class="form-control" id="productDescription" rows="3" required></textarea>
                         </div>
-                        <input type="hidden" id="productId">
                     </form>
                 </div>
                 <div class="modal-footer">

@@ -1,7 +1,11 @@
 using Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ECommerceAPI.Controllers
@@ -11,6 +15,7 @@ namespace ECommerceAPI.Controllers
     public class ProductController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly string _imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
 
         public ProductController(ApplicationDbContext context)
         {
@@ -21,7 +26,14 @@ namespace ECommerceAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            return await _context.Products.ToListAsync();
+            var products = await _context.Products.ToListAsync();
+
+            foreach (var product in products)
+            {
+                product.ImageUrl = GetFullImageUrl(product.ImageUrl);
+            }
+
+            return products;
         }
 
         // GET: api/product/{id}
@@ -33,28 +45,91 @@ namespace ECommerceAPI.Controllers
             {
                 return NotFound();
             }
+
+            product.ImageUrl = GetFullImageUrl(product.ImageUrl);
             return product;
         }
 
         // POST: api/product
         [HttpPost]
-        public async Task<ActionResult<Product>> CreateProduct(Product product)
+        public async Task<ActionResult<Product>> CreateProduct([FromForm] Product product, IFormFile image)
         {
+            if (image != null)
+            {
+                if (!Directory.Exists(_imagePath))
+                {
+                    Directory.CreateDirectory(_imagePath);
+                }
+
+                var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(image.FileName)}"; // Unique filename
+                var filePath = Path.Combine(_imagePath, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await image.CopyToAsync(stream);
+                }
+
+                product.ImageUrl = $"/images/{fileName}"; // Store relative path
+            }
+
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
+
+            product.ImageUrl = GetFullImageUrl(product.ImageUrl); // Convert to full URL before returning
+
             return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
         }
 
         // PUT: api/product/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, Product product)
+        public async Task<IActionResult> UpdateProduct(int id, [FromForm] Product product, IFormFile? image)
         {
             if (id != product.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(product).State = EntityState.Modified;
+            var existingProduct = await _context.Products.FindAsync(id);
+            if (existingProduct == null)
+            {
+                return NotFound();
+            }
+
+            // Handle image update
+            if (image != null)
+            {
+                if (!Directory.Exists(_imagePath))
+                {
+                    Directory.CreateDirectory(_imagePath);
+                }
+
+                // Delete old image if exists
+                if (!string.IsNullOrEmpty(existingProduct.ImageUrl))
+                {
+                    var oldImagePath = Path.Combine(_imagePath, Path.GetFileName(existingProduct.ImageUrl));
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
+
+                // Save new image
+                var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(image.FileName)}";
+                var filePath = Path.Combine(_imagePath, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await image.CopyToAsync(stream);
+                }
+
+                product.ImageUrl = $"/images/{fileName}";
+            }
+            else
+            {
+                product.ImageUrl = existingProduct.ImageUrl; // Keep existing image
+            }
+
+            _context.Entry(existingProduct).CurrentValues.SetValues(product);
 
             try
             {
@@ -85,6 +160,16 @@ namespace ECommerceAPI.Controllers
                 return NotFound();
             }
 
+            // Delete image file if exists
+            if (!string.IsNullOrEmpty(product.ImageUrl))
+            {
+                var filePath = Path.Combine(_imagePath, Path.GetFileName(product.ImageUrl));
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+            }
+
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
 
@@ -95,5 +180,14 @@ namespace ECommerceAPI.Controllers
         {
             return _context.Products.Any(e => e.Id == id);
         }
+
+        // Helper function to generate full image URL
+        private string GetFullImageUrl(string imageUrl)
+        {
+            if (string.IsNullOrEmpty(imageUrl))
+                return null;
+
+            return $"{Request.Scheme}://{Request.Host}{imageUrl}";
+        }
     }
-} 
+}

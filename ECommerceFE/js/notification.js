@@ -4,10 +4,10 @@
 const NotificationSystem = {
   container: null,
   icons: {
-    success: '<i class="fa fa-check-circle"></i>',
-    error: '<i class="fa fa-times-circle"></i>',
-    warning: '<i class="fa fa-exclamation-circle"></i>',
-    info: '<i class="fa fa-info-circle"></i>'
+    success: '<i class="fas fa-check-circle"></i>',
+    error: '<i class="fas fa-times-circle"></i>',
+    warning: '<i class="fas fa-exclamation-circle"></i>',
+    info: '<i class="fas fa-info-circle"></i>'
   },
 
   // Khởi tạo container chứa thông báo
@@ -15,7 +15,12 @@ const NotificationSystem = {
     if (!this.container) {
       this.container = document.createElement('div');
       this.container.className = 'notification-container';
-      this.container.style.zIndex = '9999';
+      this.container.style.cssText = `
+        position: fixed !important;
+        top: 20px !important;
+        right: 20px !important;
+        z-index: 999999 !important;
+      `;
       document.body.appendChild(this.container);
     }
   },
@@ -36,6 +41,7 @@ const NotificationSystem = {
     // Tạo phần tử thông báo
     const notification = document.createElement('div');
     notification.className = `notification notification-${settings.type}`;
+    notification.style.cssText = 'display: flex !important; opacity: 1 !important;';
     
     // Nội dung thông báo
     notification.innerHTML = `

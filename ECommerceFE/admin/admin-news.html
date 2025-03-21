@@ -16,7 +16,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
         integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <link rel="stylesheet" href="/ECommerceFE/css/admin-style.css">
+    
+    <link rel="stylesheet" href="/ECommerceFE/css/notification.css">
+    <!-- Thêm vào phần head của tất cả các file HTML -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
+
 
 <body>
     <input type="checkbox" id="sidebar-toggle">
@@ -86,17 +91,17 @@
             </div>
             <div id="newsContainer"></div>
             <button type="button" class="btn btn-dark" id="addNewsButton">Thêm bài viết</button>
-            <table class="table">
-                <thead class="thead-light">
+            <table class="table" id="newsTable">
+                <thead>
                     <tr>
-                        <th scope="col">Tên bài viết</th>
-                        <th scope="col">Nội dung</th>
-                        <th scope="col">Ngày viết</th>
-                        <th scope="col">Thao tác</th>
+                        <th>Tên bài viết</th>
+                        <th>Nội dung</th>
+                        <th>Ngày viết</th>
+                        <th>Thao tác</th>
                     </tr>
                 </thead>
                 <tbody id="newsTableBody">
-                    <!-- Dữ liệu bài viết sẽ được thêm vào đây -->
+                    <!-- Dữ liệu bài viết sẽ được thêm ở đây bằng JavaScript -->
                 </tbody>
             </table>
             <div class="modal fade" id="newsModal" tabindex="-1" role="dialog" aria-labelledby="newsModalLabel" aria-hidden="true">
@@ -109,18 +114,21 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <div class="form-group">
-                                <label for="newsTitle">Tên bài viết</label>
-                                <input type="text" class="form-control" id="newsTitle" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="newsContent">Nội dung</label>
-                                <textarea class="form-control" id="newsContent" rows="3" required></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="newsDate">Ngày viết</label>
-                                <input type="date" class="form-control" id="newsDate" required>
-                            </div>
+                            <form id="newsForm">
+                                <div class="form-group">
+                                    <label for="newsTitle">Tên bài viết</label>
+                                    <input type="text" class="form-control" id="newsTitle" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newsContent">Nội dung</label>
+                                    <textarea class="form-control" id="newsContent" rows="3" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newsDate">Ngày viết</label>
+                                    <input type="date" class="form-control" id="newsDate" required>
+                                </div>
+                                <input type="hidden" id="newsId"> <!-- Trường ẩn để lưu ID bài viết -->
+                            </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
@@ -142,6 +150,7 @@
         integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
         crossorigin="anonymous"></script>
     <script src="/ECommerceFE/js/news.js"></script>
+    <script src="/ECommerceFE/js/notification.js"></script>
 </body>
 
 </html>

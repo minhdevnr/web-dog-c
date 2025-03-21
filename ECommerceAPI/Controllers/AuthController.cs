@@ -96,18 +96,16 @@ namespace ECommerceAPI.Controllers
 
         private bool VerifyPassword(string password, string hashedPassword)
         {
-            // In a real application, you should use proper password hashing
-            // This is a simple example - replace with proper password hashing in production
-            return hashedPassword == HashPassword(password);
+            // Hash the provided password and compare it with the stored hashed password
+            return HashPassword(password) == hashedPassword;
         }
 
         private string HashPassword(string password)
         {
-            // This is a simple example - use proper password hashing in production
-            using (var sha256 = SHA256.Create())
+            using (var md5 = MD5.Create())
             {
-                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                return Convert.ToBase64String(hashedBytes);
+                var hashedBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(password));
+                return BitConverter.ToString(hashedBytes).Replace("-", "").ToLowerInvariant(); // Convert to lowercase hex string
             }
         }
     }

@@ -28,8 +28,8 @@ function displayNews(news) {
             <td>${item.Content}</td>
             <td>${new Date(item.Date).toLocaleDateString()}</td>
             <td>
-                <button  class="btn btn-danger" onclick="editNews(${item.Id})">Edit</button>
-                <button  class="btn btn-warning" onclick="deleteNews(${item.Id})">Delete</button>
+                <button class="btn btn-danger" onclick="deleteNews(${item.Id})">Xóa</button>
+                <button class="btn btn-warning" onclick="editNews(${item.Id})">Sửa</button>
             </td>
         `;
         newsContainer.appendChild(row);
@@ -71,30 +71,37 @@ async function saveNews() {
         });
 
         if (response.ok) {
-            alert('Bài viết đã được lưu thành công');
-            loadNews(); // Reload the news list
+            NotificationSystem.success('Bài viết đã được lưu thành công');
+            await loadNews(); // Reload the news list
             $('#newsModal').modal('hide'); // Hide the modal
         } else {
             const error = await response.text();
-            alert('Lỗi khi lưu bài viết: ' + error);
+            NotificationSystem.error('Lỗi khi lưu bài viết: ' + error);
         }
     } catch (error) {
         console.error('Error saving news:', error);
-        alert('Đã xảy ra lỗi khi lưu bài viết');
+        NotificationSystem.error('Đã xảy ra lỗi khi lưu bài viết');
     }
 }
 
 async function deleteNews(newsId) {
-    const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.NEWS}/${newsId}`, {
-        method: 'DELETE'
-    });
+    if (confirm('Bạn có chắc chắn muốn xóa bài viết này?')) {
+        try {
+            const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.NEWS}/${newsId}`, {
+                method: 'DELETE'
+            });
 
-    if (response.ok) {
-        alert('Bài viết đã được xóa thành công');
-        loadNews(); // Reload the news list
-    } else {
-        const error = await response.text();
-        alert('Lỗi khi xóa bài viết: ' + error);
+            if (response.ok) {
+                NotificationSystem.success('Bài viết đã được xóa thành công');
+                await loadNews(); // Reload the news list
+            } else {
+                const error = await response.text();
+                NotificationSystem.error('Lỗi khi xóa bài viết: ' + error);
+            }
+        } catch (error) {
+            console.error('Error deleting news:', error);
+            NotificationSystem.error('Đã xảy ra lỗi khi xóa bài viết');
+        }
     }
 }
 
@@ -124,4 +131,25 @@ document.getElementById('searchInput').addEventListener('input', function() {
             item.style.display = 'none';
         }
     });
-}); 
+});
+
+async function editNews(newsId) {
+    try {
+        const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.NEWS}/${newsId}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch news details');
+        }
+        const news = await response.json();
+        
+        // Mở modal và điền thông tin vào các trường
+        document.getElementById('newsTitle').value = news.Title || '';
+        document.getElementById('newsContent').value = news.Content || '';
+        document.getElementById('newsDate').value = news.Date ? new Date(news.Date).toISOString().split('T')[0] : '';
+        document.getElementById('newsId').value = news.Id || ''; // Nếu bạn có trường ẩn cho ID
+
+        $('#newsModal').modal('show'); // Hiển thị modal
+    } catch (error) {
+        console.error('Error fetching news data:', error);
+        NotificationSystem.error('Lỗi khi tải thông tin bài viết');
+    }
+} 

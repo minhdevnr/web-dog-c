@@ -22,6 +22,20 @@ namespace ECommerceAPI.Controllers
             return await _context.News.ToListAsync();
         }
 
+        // GET: api/news/{id}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<News>> GetNewsById(int id)
+        {
+            var news = await _context.News.FindAsync(id);
+
+            if (news == null)
+            {
+                return NotFound();
+            }
+
+            return news;
+        }
+
         [HttpPost]
         public async Task<ActionResult<News>> CreateNews(News news)
         {

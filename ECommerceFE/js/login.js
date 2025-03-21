@@ -6,7 +6,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     username: document.querySelector('input[name="username"]').value,
     password: document.querySelector('input[name="password"]').value
   };
-
+  debugger
   try {
     const response = await fetch(API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.LOGIN, {
       method: 'POST',
@@ -20,8 +20,8 @@ document.querySelector('form').addEventListener('submit', async (e) => {
       const data = await response.json();
       localStorage.setItem('token', data.token);
       
-      // Redirect based on role
-      if (data.role === 'admin') {
+      // Redirect based on role 
+      if (data.Role === 'Admin') {
         window.location.href = '/ECommerceFE/admin/admin.html';
       } else {
         window.location.href = '/ECommerceFE/index.html';
@@ -33,4 +33,4 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     console.error('Login error:', error);
     alert('An error occurred during login');
   }
-}); 
+});

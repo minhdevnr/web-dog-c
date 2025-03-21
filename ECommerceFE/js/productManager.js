@@ -77,11 +77,24 @@ function openProductModal(product = {}) {
         document.getElementById('productPrice').value = product.Price || '';
         document.getElementById('productOrigin').value = product.Origin || '';
         document.getElementById('productExpiryDate').value = product.ExpiryDate ? new Date(product.ExpiryDate).toISOString().split('T')[0] : '';
-        document.getElementById('productImageUrl').value = product.ImageUrl || '';
         document.getElementById('productDescription').value = product.Description || '';
         document.getElementById('productId').value = product.Id;
+
+        // Display the current image
+        const imagePreview = document.getElementById('imagePreview');
+        if (imagePreview) {
+            imagePreview.src = product.ImageUrl || ''; // Set the image source
+            imagePreview.style.display = product.ImageUrl ? 'block' : 'none'; // Show the image preview if there's an image
+        }
     } else {
         document.getElementById('productId').value = '';
+        
+        // Hide the image preview if adding a new product
+        const imagePreview = document.getElementById('imagePreview');
+        if (imagePreview) {
+            imagePreview.src = ''; // Clear the image source
+            imagePreview.style.display = 'none'; // Hide the image preview
+        }
     }
     
     // Show the modal
@@ -97,29 +110,38 @@ document.getElementById('saveProductButton').addEventListener('click', async fun
         Price: document.getElementById('productPrice').value,
         Origin: document.getElementById('productOrigin').value,
         ExpiryDate: document.getElementById('productExpiryDate').value,
-        ImageUrl: document.getElementById('productImageUrl').value,
         Description: document.getElementById('productDescription').value
     };
-    
+
     if (productId) {
         product.Id = productId;
     }
-    
+
     const method = productId ? 'PUT' : 'POST';
     const url = productId 
         ? `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PRODUCTS}/${productId}` 
         : `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PRODUCTS}`;
-    
+
+    // Create a FormData object to handle file upload
+    const formData = new FormData();
+    for (const key in product) {
+        formData.append(key, product[key]);
+    }
+
+    // Get the file input and append the file to the FormData
+    const imageFile = document.getElementById('productImage').files[0];
+    if (imageFile) {
+        formData.append('Image', imageFile);
+    }
+
     try {
         const response = await fetch(url, {
             method: method,
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(product)
+            body: formData // Use FormData instead of JSON
         });
         
         if (response.ok) {
+            debugger
             const successMessage = productId ? 'Sản phẩm đã được cập nhật thành công' : 'Sản phẩm đã được thêm thành công';
             NotificationSystem.success(successMessage);
             loadProducts(); // Reload the product list
@@ -131,6 +153,27 @@ document.getElementById('saveProductButton').addEventListener('click', async fun
     } catch (error) {
         console.error('Error saving product:', error);
         NotificationSystem.error('Đã xảy ra lỗi khi lưu sản phẩm');
+    }
+});
+
+// Thêm code để hiển thị xem trước hình ảnh khi người dùng chọn file
+document.addEventListener('DOMContentLoaded', function() {
+    const productImage = document.getElementById('productImage');
+    const imagePreview = document.getElementById('imagePreview');
+    
+    if (productImage && imagePreview) {
+        productImage.addEventListener('change', function(event) {
+            if (event.target.files && event.target.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                }
+                
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        });
     }
 });
 
