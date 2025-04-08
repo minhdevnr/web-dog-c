@@ -1,9 +1,4 @@
-const API_CONFIG = {
-    BASE_URL: 'https://localhost:7175',
-    ENDPOINTS: {
-        NEWS: '/api/news'
-    }
-};
+
 
 async function fetchNews() {
     try {

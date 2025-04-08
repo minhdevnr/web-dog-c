@@ -1,83 +1,331 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
-    integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  />
-  
-  <link rel="stylesheet" href="/ECommerceFE/css/notification.css">
-  <!-- Thêm vào phần head của tất cả các file HTML -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <title>Document</title>
-</head>
-<body>
-  <header class="header">
-    <a href="index.html" class="logo">
-      <img src="img/1.jpg" alt="logo" width="100px" height="150px" />
-    </a>
-    <nav class="navbar">
-      <a href="index.html#home" data-i18n="home">Trang chủ</a>
-      <a href="index.html#about" data-i18n="about">Giới thiệu</a>
-      <a href="index.html#menu" data-i18n="menu">Thực đơn</a>
-      <a href="index.html#products" data-i18n="products">Sản phẩm</a>
-      <a href="index.html#review" data-i18n="review">Đánh giá</a>
-      <a href="index.html#contact" data-i18n="contact">Liên hệ</a>
-      <a href="index.html#blogs" data-i18n="blog">Blog</a>
-    </nav>
-    <div class="icons">
-      <div class="fa fa-search" id="search-btn" data-tooltip="Tìm kiếm"></div>
-      <div class="fa fa-shopping-cart" id="cart-btn" data-tooltip="Giỏ hàng">
-        <span class="cart-count">0</span>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/ECommerceFE/" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+      integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <link rel="stylesheet" href="css/notification.css" />
+    <link rel="stylesheet" href="css/user-profile.css" />
+    <!-- Thêm vào phần head của tất cả các file HTML -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <title>LH Coffee - Cà Phê Tươi Sạch</title>
+    <style>
+      /* Styles cho user-profile-dropdown */
+      .user-profile-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 30px;
+        background: #fff;
+        width: 250px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        padding: 10px;
+        display: none;
+        z-index: 1000;
+      }
+
+      .user-profile-dropdown.active {
+        display: block;
+      }
+
+      .user-info {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .user-menu a {
+        display: block;
+        padding: 8px 15px;
+        color: #333;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+      }
+
+      .user-menu a:hover {
+        background-color: #f5f5f5;
+        color: var(--main-color);
+      }
+
+      .user-menu i {
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
+      }
+
+      /* Styles cho language switcher */
+      .language-switcher {
+        position: relative;
+        margin-left: 15px;
+        cursor: pointer;
+      }
+
+      .current-language {
+        background: var(--main-color);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      .language-options {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+        padding: 5px 0;
+        margin-top: 5px;
+        display: none;
+        min-width: 80px;
+      }
+
+      .language-options a {
+        display: block;
+        padding: 5px 15px;
+        color: #333;
+        text-decoration: none;
+      }
+
+      .language-options a:hover {
+        background-color: #f5f5f5;
+      }
+
+      .language-switcher:hover .language-options {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <a href="index.html" class="logo">
+        <img src="img/1.jpg" alt="logo" width="100px" height="150px" />
+      </a>
+      <nav class="navbar">
+        <a href="index.html#home" data-i18n="home">Trang chủ</a>
+        <a href="index.html#about" data-i18n="about">Giới thiệu</a>
+        <a href="index.html#menu" data-i18n="menu">Thực đơn</a>
+        <a href="index.html#products" data-i18n="products">Sản phẩm</a>
+        <a href="index.html#review" data-i18n="review">Đánh giá</a>
+        <a href="index.html#contact" data-i18n="contact">Liên hệ</a>
+        <a href="index.html#blogs" data-i18n="blog">Blog</a>
+      </nav>
+      <div class="icons">
+        <div class="fa fa-search" id="search-btn" data-tooltip="Tìm kiếm"></div>
+        <div class="fa fa-shopping-cart" id="cart-btn" data-tooltip="Giỏ hàng">
+          <span class="cart-count">0</span>
+        </div>
+        <div class="fa fa-user" id="login-btn" data-tooltip="Đăng nhập"></div>
+        <div
+          class="fa fa-user"
+          id="user-profile-btn"
+          data-tooltip="Tài khoản"
+        ></div>
+        <div
+          class="fa fa-user-plus"
+          id="register-btn"
+          data-tooltip="Đăng ký"
+        ></div>
+        <div class="fa fa-bars" id="bars-btn" data-tooltip="Menu"></div>
       </div>
-      <div class="fa fa-user" id="login-btn" data-tooltip="Đăng nhập"></div>
-      <div class="fa fa-user-plus" id="register-btn" data-tooltip="Đăng ký"></div>
-      <div class="fa fa-bars" id="bars-btn" data-tooltip="Menu"></div>
-    </div>
-    <div class="search-form">
-      <input type="search" id="search-box" placeholder="Tìm kiếm ở đây..." />
-      <label for="search-box" class="fa fa-search"></label>
-    </div>
-    <div class="cart-item-container">
-      <div class="cart-item">
-        <span class="fa fa-times"></span>
-        <img src="img/logo.jpg" alt="" width="100px" height="100px" />
-        <div class="content">
-          <h3>cart item 02</h3>
-          <div class="price">$1000</div>
+      <div class="search-form">
+        <input type="search" id="search-box" placeholder="Tìm kiếm ở đây..." />
+        <label for="search-box" class="fa fa-search"></label>
+      </div>
+      <div class="cart-item-container">
+        <div class="cart-item">
+          <span class="fa fa-times"></span>
+          <img src="img/coffee1.jpg" alt="" width="100px" height="100px" />
+          <div class="content">
+            <h3>cart item 02</h3>
+            <div class="price">15.000₫</div>
+          </div>
+        </div>
+        <div class="cart-item">
+          <span class="fa fa-times"></span>
+          <img src="img/coffee2.jpg" alt="" width="100px" height="100px" />
+          <div class="content">
+            <h3>cart item 01</h3>
+            <div class="price">15.000₫</div>
+          </div>
+        </div>
+        <div class="cart-item">
+          <span class="fa fa-times"></span>
+          <img src="img/coffee3.jpg" alt="" width="100px" height="100px" />
+          <div class="content">
+            <h3>cart item 03</h3>
+            <div class="price">15.000₫</div>
+          </div>
+        </div>
+        <a href="index-cart.html" class="btn">Thanh toán ngay</a>
+      </div>
+      <div class="language-switcher">
+        <span class="current-language">VI</span>
+        <div class="language-options">
+          <a href="#" onclick="switchLanguage('vi'); return false;">VI</a>
+          <a href="#" onclick="switchLanguage('en'); return false;">EN</a>
         </div>
       </div>
-      <div class="cart-item">
-        <span class="fa fa-times"></span>
-        <img src="img/logo.jpg" alt="" width="100px" height="100px" />
-        <div class="content">
-          <h3>cart item 01</h3>
-          <div class="price">$1000</div>
+      <div class="user-profile-dropdown">
+        <div class="user-info">
+          <span id="user-name">Chưa đăng nhập</span>
+        </div>
+        <div class="user-menu">
+          <a href="profile.html" id="profile-link" style="display: none"
+            ><i class="fa fa-id-card"></i> Thông tin tài khoản</a
+          >
+          <a href="user-orders.html" id="orders-link" style="display: none"
+            ><i class="fa fa-shopping-bag"></i> Đơn hàng của tôi</a
+          >
+          <a href="user-wishlist.html" id="wishlist-link" style="display: none"
+            ><i class="fa fa-heart"></i> Sản phẩm yêu thích</a
+          >
+          <a href="admin/admin.html" id="admin-link" style="display: none"
+            ><i class="fa fa-cogs"></i> Quản trị hệ thống</a
+          >
+          <a href="#" id="logout-btn" style="display: none"
+            ><i class="fa fa-sign-out-alt"></i> Đăng xuất</a
+          >
+          <a href="login.html" id="login-link" style="display: block"
+            ><i class="fa fa-sign-in-alt"></i> Đăng nhập</a
+          >
         </div>
       </div>
-      <div class="cart-item">
-        <span class="fa fa-times"></span>
-        <img src="img/logo.jpg" alt="" width="100px" height="100px" />
-        <div class="content">
-          <h3>cart item 03</h3>
-          <div class="price">$1000</div>
-        </div>
-      </div>
-      <a href="index-cart.html" class="btn">Thanh toán ngay</a>
-    </div>
-    <div class="language-switcher">
-      <span class="current-language">VI</span>
-      <div class="language-options">
-        <a href="#" onclick="switchLanguage('vi'); return false;">VI</a>
-        <a href="#" onclick="switchLanguage('en'); return false;">EN</a>
-      </div>
-    </div>
-  </header>
-  <script src="js/nav.js"></script>
-</body>
+    </header>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Xử lý hiển thị dropdown profile
+        const userProfileBtn = document.getElementById("user-profile-btn");
+        const userProfileDropdown = document.querySelector(
+          ".user-profile-dropdown"
+        );
+
+        userProfileBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          userProfileDropdown.classList.toggle("active");
+        });
+
+        document.addEventListener("click", function (e) {
+          if (
+            !userProfileDropdown.contains(e.target) &&
+            e.target !== userProfileBtn
+          ) {
+            userProfileDropdown.classList.remove("active");
+          }
+        });
+
+        // Kiểm tra trạng thái đăng nhập
+        const token = localStorage.getItem("token");
+        const userName = document.getElementById("user-name");
+        const profileLink = document.getElementById("profile-link");
+        const ordersLink = document.getElementById("orders-link");
+        const wishlistLink = document.getElementById("wishlist-link");
+        const adminLink = document.getElementById("admin-link");
+        const logoutBtn = document.getElementById("logout-btn");
+        const loginLink = document.getElementById("login-link");
+        const loginBtn = document.getElementById("login-btn");
+        const registerBtn = document.getElementById("register-btn");
+
+        if (token) {
+          // Người dùng đã đăng nhập
+          const user = JSON.parse(localStorage.getItem("user"));
+          if (user) {
+            userName.textContent = user.username || "Người dùng";
+
+            // Hiển thị các menu liên quan đến người dùng đã đăng nhập
+            profileLink.style.display = "block";
+            ordersLink.style.display = "block";
+            wishlistLink.style.display = "block";
+            logoutBtn.style.display = "block";
+            loginLink.style.display = "none";
+
+            // Hiển thị menu admin nếu là admin
+            if (user.role === "admin") {
+              adminLink.style.display = "block";
+            }
+
+            // Ẩn nút đăng nhập, đăng ký
+            loginBtn.style.display = "none";
+            registerBtn.style.display = "none";
+
+            // Hiển thị nút profile
+            userProfileBtn.style.display = "block";
+          }
+        } else {
+          // Người dùng chưa đăng nhập
+          userName.textContent = "Chưa đăng nhập";
+
+          // Ẩn các menu liên quan đến người dùng đã đăng nhập
+          profileLink.style.display = "none";
+          ordersLink.style.display = "none";
+          wishlistLink.style.display = "none";
+          adminLink.style.display = "none";
+          logoutBtn.style.display = "none";
+          loginLink.style.display = "block";
+
+          // Hiển thị nút đăng nhập, đăng ký
+          loginBtn.style.display = "block";
+          registerBtn.style.display = "block";
+
+          // Ẩn nút profile
+          userProfileBtn.style.display = "none";
+        }
+
+        // Xử lý đăng xuất
+        logoutBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          window.location.href = "index.html";
+        });
+
+        // Xử lý chuyển hướng đăng nhập
+        loginBtn.addEventListener("click", function () {
+          window.location.href = "login.html";
+        });
+
+        // Xử lý chuyển hướng đăng ký
+        registerBtn.addEventListener("click", function () {
+          window.location.href = "register.html";
+        });
+      });
+
+      // Xử lý chuyển đổi ngôn ngữ
+      function switchLanguage(lang) {
+        localStorage.setItem("language", lang);
+        const currentLang = document.querySelector(".current-language");
+        currentLang.textContent = lang.toUpperCase();
+
+        if (typeof updateTexts === "function") {
+          updateTexts();
+        }
+      }
+
+      // Khởi tạo ngôn ngữ từ localStorage (nếu có)
+      document.addEventListener("DOMContentLoaded", function () {
+        const savedLang = localStorage.getItem("language") || "vi";
+        const currentLang = document.querySelector(".current-language");
+        currentLang.textContent = savedLang.toUpperCase();
+
+        if (typeof updateTexts === "function") {
+          updateTexts();
+        }
+      });
+    </script>
+  </body>
 </html>

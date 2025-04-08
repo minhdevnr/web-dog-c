@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập - LH Coffee</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/notification.css" />
+    <style>
+      body {
+        background-image: url("img/background.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+      }
+
+      .auth-container {
+        max-width: 400px;
+        margin: 120px auto;
+        padding: 30px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .auth-header {
+        text-align: center;
+        margin-bottom: 25px;
+      }
+
+      .auth-header h2 {
+        font-size: 2rem;
+        color: var(--main-color);
+        margin-bottom: 10px;
+      }
+
+      .auth-form .form-group {
+        margin-bottom: 20px;
+      }
+
+      .auth-form label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--black);
+      }
+
+      .auth-form input {
+        width: 100%;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+
+      .auth-form input:focus {
+        border-color: var(--main-color);
+        outline: none;
+      }
+
+      .auth-btn {
+        background-color: var(--main-color);
+        color: white;
+        border: none;
+        padding: 12px;
+        width: 100%;
+        font-size: 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .auth-btn:hover {
+        background-color: var(--black);
+      }
+
+      .auth-links {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .auth-links a {
+        color: var(--main-color);
+        text-decoration: none;
+        margin: 0 10px;
+        font-size: 0.9rem;
+      }
+
+      .auth-links a:hover {
+        text-decoration: underline;
+      }
+
+      .logo-container {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .logo-container img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="auth-container">
+      <div class="auth-header">
+        <div class="logo-container">
+          <img src="img/1.jpg" alt="LH Coffee Logo" />
+        </div>
+        <h2>Đăng nhập</h2>
+      </div>
+      <form class="auth-form" id="login-form">
+        <div class="form-group">
+          <label for="email">Email hoặc Số điện thoại</label>
+          <input type="text" id="email" name="email" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Mật khẩu</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+        <button type="submit" class="auth-btn">Đăng nhập</button>
+      </form>
+      <div class="auth-links">
+        <a href="forgot-password.html">Quên mật khẩu?</a>
+        <a href="register.html">Đăng ký tài khoản mới</a>
+      </div>
+    </div>
+
+    <script src="js/notification.js"></script>
+    <script src="js/user-auth.js"></script>
+    <script>
+      document
+        .getElementById("login-form")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const emailOrPhone = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+
+          try {
+            const data = await login(emailOrPhone, password);
+            showSuccess("Đăng nhập thành công, đang chuyển hướng...");
+            setTimeout(() => {
+              window.location.href = "index.html";
+            }, 1500);
+          } catch (error) {
+            showError(error.message || "Đăng nhập thất bại");
+          }
+        });
+    </script>
+  </body>
+</html>

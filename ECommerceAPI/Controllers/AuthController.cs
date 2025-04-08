@@ -1,11 +1,8 @@
+using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using System.Security.Cryptography;
-using Data;
+using ECommerceAPI.Models;
+using ECommerceAPI.Services;
 
 namespace ECommerceAPI.Controllers
 {
@@ -13,100 +10,129 @@ namespace ECommerceAPI.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
-        private readonly ApplicationDbContext _context;
+        private readonly IUserService _userService;
 
-        public AuthController(IConfiguration configuration, ApplicationDbContext context)
+        public AuthController(IUserService userService)
         {
-            _configuration = configuration;
-            _context = context;
+            _userService = userService;
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginRequest request)
+        public async Task<ActionResult<AuthResponse>> Login([FromBody] LoginRequest request)
         {
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Username == request.Username);
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            var (user, token) = await _userService.AuthenticateAsync(request.EmailOrPhone, request.Password, ipAddress);
 
-            if (user == null || !VerifyPassword(request.Password, user.Password))
+            if (user == null)
+                return Unauthorized(new { message = "Invalid credentials" });
+
+            return new AuthResponse
             {
-                return Unauthorized("Invalid username or password");
-            }
-
-            var token = GenerateJwtToken(user);
-            return Ok(new { token, user.Role });
+                Id = user.Id,
+                Username = user.Username,
+                Email = user.Email,
+                Token = token
+            };
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterRequest request)
+        public async Task<ActionResult<AuthResponse>> Register([FromBody] RegisterRequest request)
         {
-            // Check if username already exists
-            if (await _context.Users.AnyAsync(u => u.Username == request.Username))
-            {
-                return BadRequest("Username already exists");
-            }
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
 
             // Check if email already exists
-            if (await _context.Users.AnyAsync(u => u.Email == request.Email))
-            {
-                return BadRequest("Email already exists");
-            }
+            if (await _userService.GetUserByEmailAsync(request.Email) != null)
+                return BadRequest(new { message = "Email already registered" });
+
+            // Check if username already exists
+            if (await _userService.GetUserByUsernameAsync(request.Username) != null)
+                return BadRequest(new { message = "Username already taken" });
 
             var user = new User
             {
                 Username = request.Username,
-                Password = HashPassword(request.Password),
-                FullName = request.FullName,
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
                 Address = request.Address,
                 DateOfBirth = request.DateOfBirth,
-                Role = "Customer",
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true,
+                Role = UserRole.Customer.ToString()
             };
 
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            var registeredUser = await _userService.RegisterAsync(user, request.Password, ipAddress);
+            var token = _userService.GenerateJwtToken(registeredUser);
 
-            return Ok("Registration successful");
-        }
-
-        private string GenerateJwtToken(User user)
-        {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"].PadRight(32, '0')));
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
+            return new AuthResponse
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.Role)
+                Id = registeredUser.Id,
+                Username = registeredUser.Username,
+                Email = registeredUser.Email,
+                Token = token
             };
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.Now.AddHours(3),
-                signingCredentials: credentials
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private bool VerifyPassword(string password, string hashedPassword)
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<AuthResponse>> RefreshToken()
         {
-            // Hash the provided password and compare it with the stored hashed password
-            return HashPassword(password) == hashedPassword;
-        }
+            var token = Request.Cookies["refreshToken"];
+            if (string.IsNullOrEmpty(token))
+                return BadRequest(new { message = "Token is required" });
 
-        private string HashPassword(string password)
-        {
-            using (var md5 = MD5.Create())
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            var newRefreshToken = await _userService.RefreshTokenAsync(token, ipAddress);
+
+            if (newRefreshToken == null)
+                return Unauthorized(new { message = "Invalid token" });
+
+            SetRefreshTokenCookie(newRefreshToken.Token);
+
+            var user = newRefreshToken.User;
+            var jwtToken = _userService.GenerateJwtToken(user);
+
+            return new AuthResponse
             {
-                var hashedBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(password));
-                return BitConverter.ToString(hashedBytes).Replace("-", "").ToLowerInvariant(); // Convert to lowercase hex string
-            }
+                Id = user.Id,
+                Username = user.Username,
+                Email = user.Email,
+                Token = jwtToken
+            };
         }
+
+        [HttpPost("revoke-token")]
+        public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenRequest request)
+        {
+            var token = request.Token ?? Request.Cookies["refreshToken"];
+            if (string.IsNullOrEmpty(token))
+                return BadRequest(new { message = "Token is required" });
+
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            var result = await _userService.RevokeTokenAsync(token, ipAddress);
+
+            if (!result)
+                return NotFound(new { message = "Token not found" });
+
+            return Ok(new { message = "Token revoked" });
+        }
+
+        private void SetRefreshTokenCookie(string token)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.UtcNow.AddDays(7),
+                SameSite = SameSiteMode.Strict,
+                Secure = true
+            };
+            Response.Cookies.Append("refreshToken", token, cookieOptions);
+        }
+    }
+
+    public class AuthResponse
+    {
+        public int Id { get; set; }
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public string Token { get; set; }
     }
 } 

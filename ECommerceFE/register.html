@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng ký - LH Coffee</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/notification.css" />
+    <style>
+      body {
+        background-image: url("img/background.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+      }
+
+      .auth-container {
+        max-width: 500px;
+        margin: 80px auto;
+        padding: 30px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .auth-header {
+        text-align: center;
+        margin-bottom: 25px;
+      }
+
+      .auth-header h2 {
+        font-size: 2rem;
+        color: var(--main-color);
+        margin-bottom: 10px;
+      }
+
+      .auth-form .form-group {
+        margin-bottom: 20px;
+      }
+
+      .auth-form label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--black);
+      }
+
+      .auth-form input {
+        width: 100%;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+
+      .auth-form input:focus {
+        border-color: var(--main-color);
+        outline: none;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 15px;
+      }
+
+      .form-row .form-group {
+        flex: 1;
+      }
+
+      .auth-btn {
+        background-color: var(--main-color);
+        color: white;
+        border: none;
+        padding: 12px;
+        width: 100%;
+        font-size: 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .auth-btn:hover {
+        background-color: var(--black);
+      }
+
+      .auth-links {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .auth-links a {
+        color: var(--main-color);
+        text-decoration: none;
+        font-size: 0.9rem;
+      }
+
+      .auth-links a:hover {
+        text-decoration: underline;
+      }
+
+      .logo-container {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .logo-container img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="auth-container">
+      <div class="auth-header">
+        <div class="logo-container">
+          <img src="img/1.jpg" alt="LH Coffee Logo" />
+        </div>
+        <h2>Đăng ký tài khoản</h2>
+      </div>
+      <form class="auth-form" id="register-form">
+        <div class="form-group">
+          <label for="username">Họ và tên</label>
+          <input type="text" id="username" name="username" required />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+          <div class="form-group">
+            <label for="phone">Số điện thoại</label>
+            <input type="tel" id="phone" name="phoneNumber" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="password">Mật khẩu</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">Xác nhận mật khẩu</label>
+          <input
+            type="password"
+            id="confirm-password"
+            name="confirm-password"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="address">Địa chỉ</label>
+          <input type="text" id="address" name="address" required />
+        </div>
+        <div class="form-group">
+          <label for="birthdate">Ngày sinh</label>
+          <input type="date" id="birthdate" name="dateOfBirth" required />
+        </div>
+        <button type="submit" class="auth-btn">Đăng ký</button>
+      </form>
+      <div class="auth-links">
+        <a href="login.html">Đã có tài khoản? Đăng nhập ngay</a>
+      </div>
+    </div>
+
+    <script src="js/notification.js"></script>
+    <script src="js/user-auth.js"></script>
+    <script>
+      document
+        .getElementById("register-form")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const password = document.getElementById("password").value;
+          const confirmPassword =
+            document.getElementById("confirm-password").value;
+
+          if (password !== confirmPassword) {
+            showError("Mật khẩu xác nhận không khớp");
+            return;
+          }
+
+          const userData = {
+            Username: document.getElementById("username").value,
+            Email: document.getElementById("email").value,
+            PhoneNumber: document.getElementById("phone").value,
+            Password: password,
+            Address: document.getElementById("address").value,
+            DateOfBirth: document.getElementById("birthdate").value,
+          };
+
+          try {
+            const data = await register(userData);
+            showSuccess("Đăng ký thành công. " + data.message);
+            setTimeout(() => {
+              window.location.href = "login.html";
+            }, 2000);
+          } catch (error) {
+            showError(error.message || "Đăng ký thất bại");
+          }
+        });
+    </script>
+  </body>
+</html>

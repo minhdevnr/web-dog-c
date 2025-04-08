@@ -1,5 +1,13 @@
-public class LoginRequest
+using System.ComponentModel.DataAnnotations;
+
+namespace ECommerceAPI.Models
 {
-    public string Username { get; set; }
-    public string Password { get; set; }
+    public class LoginRequest
+    {
+        [Required]
+        public string EmailOrPhone { get; set; }
+
+        [Required]
+        public string Password { get; set; }
+    }
 } 

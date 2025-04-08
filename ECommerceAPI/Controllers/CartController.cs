@@ -1,9 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ECommerceAPI.Entities;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
+using ECommerceAPI.Data;
+using ECommerceAPI.Models;
+using ECommerceAPI.Entities;
 using System.Linq;
-using Data;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ECommerceAPI.Controllers
 {
@@ -30,11 +35,17 @@ namespace ECommerceAPI.Controllers
                 .Where(ci => ci.UserId == userId)
                 .Select(ci => new {
                     ci.Id,
-                    ci.ProductId,
+                    Product = new {
+                        ci.Product.Id,
+                        ci.Product.Name,
+                        ci.Product.Price,
+                        ci.Product.ImageUrl
+                    },
                     ci.Quantity,
-                    ci.Product.Name,
-                    ci.Product.Price,
-                    ImageUrl = ci.Product.ImageUrl
+                    ci.UnitPrice,
+                    ci.TotalPrice,
+                    ci.CreatedAt,
+                    ci.UpdatedAt
                 })
                 .ToListAsync();
 
@@ -51,21 +62,31 @@ namespace ECommerceAPI.Controllers
             // TODO: Get actual user ID from authentication
             string userId = User.Identity.Name ?? "default-user";
 
+            var product = await _context.Products.FindAsync(request.ProductId);
+            if (product == null)
+            {
+                return BadRequest("Product not found");
+            }
+
             var existingItem = await _context.CartItems
-                .FirstOrDefaultAsync(ci => ci.ProductId == request.ProductId && ci.UserId == userId);
+                .FirstOrDefaultAsync(ci => ci.Product.Id == request.ProductId && ci.UserId == userId);
 
             if (existingItem != null)
             {
                 existingItem.Quantity += request.Quantity;
                 existingItem.UpdatedAt = DateTime.UtcNow;
+                existingItem.TotalPrice = existingItem.UnitPrice * existingItem.Quantity;
             }
             else
             {
                 var cartItem = new CartItem
                 {
-                    ProductId = request.ProductId,
+                    Product = product,
                     Quantity = request.Quantity,
-                    UserId = userId
+                    UserId = userId,
+                    UnitPrice = product.Price,
+                    TotalPrice = product.Price * request.Quantity,
+                    CreatedAt = DateTime.UtcNow
                 };
                 _context.CartItems.Add(cartItem);
             }
@@ -81,7 +102,7 @@ namespace ECommerceAPI.Controllers
             string userId = User.Identity.Name ?? "default-user";
 
             var cartItem = await _context.CartItems
-                .FirstOrDefaultAsync(ci => ci.ProductId == productId && ci.UserId == userId);
+                .FirstOrDefaultAsync(ci => ci.Product.Id == productId && ci.UserId == userId);
 
             if (cartItem == null)
                 return NotFound();
@@ -101,13 +122,15 @@ namespace ECommerceAPI.Controllers
             string userId = User.Identity.Name ?? "default-user";
 
             var cartItem = await _context.CartItems
-                .FirstOrDefaultAsync(ci => ci.ProductId == productId && ci.UserId == userId);
+                .Include(ci => ci.Product)
+                .FirstOrDefaultAsync(ci => ci.Product.Id == productId && ci.UserId == userId);
 
             if (cartItem == null)
                 return NotFound();
 
             cartItem.Quantity = request.Quantity;
             cartItem.UpdatedAt = DateTime.UtcNow;
+            cartItem.TotalPrice = cartItem.UnitPrice * request.Quantity;
 
             await _context.SaveChangesAsync();
             return Ok();
@@ -131,13 +154,18 @@ namespace ECommerceAPI.Controllers
 
     public class AddToCartRequest
     {
+        [Required]
         public int ProductId { get; set; }
 
+        [Required]
+        [Range(1, int.MaxValue)]
         public int Quantity { get; set; }
     }
 
     public class UpdateQuantityRequest
     {
+        [Required]
+        [Range(1, int.MaxValue)]
         public int Quantity { get; set; }
     }
 } 

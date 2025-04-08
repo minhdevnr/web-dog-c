@@ -14,19 +14,27 @@
 #sidebar-toggle {
   display: none;
 }
+
 #sidebar-toggle:checked ~ .sidebar {
-  width: auto;
+  width: 70px;
 }
+
 #sidebar-toggle:checked ~ .sidebar .sidebar-header h3 span:last-child,
 #sidebar-toggle:checked ~ .sidebar li a span:last-child {
   display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
+
 #sidebar-toggle:checked ~ .main-content {
-  margin-left: 45px;
+  margin-left: 70px;
+  transition: margin-left 0.3s ease;
 }
+
 #sidebar-toggle:checked ~ .main-content header {
   left: 50px;
 }
+
 .sidebar {
   height: 100%;
   width: 240px;
@@ -37,36 +45,68 @@
   background: var(--main-color);
   color: var(--color-dark);
   overflow-y: auto;
-  transition: width 500ms;
+  transition: all 0.3s ease;
 }
+
 .sidebar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 60px;
   padding: 0rem 1rem;
+  transition: all 0.3s ease;
 }
+
 .sidebar-header .brand span {
   font-family: "Inter", serif;
   font-optical-sizing: auto;
   font-weight: 570;
   font-style: italic;
 }
+
+.sidebar-header .fa-bars {
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.sidebar-header .fa-bars:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
 .sidebar-menu {
   padding: 1rem;
+  height: calc(100% - 60px);
 }
 
 .sidebar li {
   margin-bottom: 1rem;
-  padding-top: 2rem;
+  padding-top: 1rem;
+  transition: all 0.3s ease;
 }
+
 .sidebar a {
   color: var(--color-dark);
   font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
 }
+
+.sidebar a:hover {
+  padding-left: 10px;
+  color: var(--text-grey);
+}
+
 .sidebar a span:first-child {
   padding-left: 1rem;
+  padding-right: 1rem;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
 }
+
 .main-content {
   position: relative;
   margin-left: 240px;
@@ -381,4 +421,10 @@ tbody tr:nth-child(even) {
 .modal-footer {
     display: flex;
     justify-content: space-between;
+}
+
+/* Active state for menu items */
+.sidebar li.active a {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
 }

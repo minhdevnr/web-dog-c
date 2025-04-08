@@ -11,7 +11,8 @@
       referrerpolicy="no-referrer"
     />
     <link rel="stylesheet" href="css/style.css" />
-    <title data-i18n="cart">Shopping Cart - LH Coffee</title>
+    <link rel="stylesheet" href="css/notification.css" />
+    <title data-i18n="cart">Giỏ hàng - LH Coffee</title>
   </head>
 
   <body>
@@ -23,16 +24,36 @@
         <div class="cart-products">
           <h3 data-i18n="cart_details">Chi tiết sản phẩm</h3>
           <div id="cart-items">
+            <!-- Sản phẩm trong giỏ hàng sẽ được thêm vào đây bằng JavaScript -->
           </div>
-          <a href="index.html" class="btn" data-i18n="continue_shopping">Tiếp tục mua sắm</a>
+          <a href="index.html" class="btn" data-i18n="continue_shopping"
+            >Tiếp tục mua sắm</a
+          >
         </div>
         <div class="cart-summary">
           <h3 data-i18n="order_summary">Tóm tắt đơn hàng</h3>
           <div class="order-summary">
-            <p><span data-i18n="quantity">Số lượng</span>: <span id="item-count">0</span></p>
-            <p><span data-i18n="shipping_fee">Phí vận chuyển</span>: <span id="shipping-cost" data-i18n="standard_shipping">Giao hàng tiêu chuẩn - 70.000đ</span></p>
-            <p><span data-i18n="total_amount">Tổng tiền</span>: <span id="total-cost">0</span> đ</p>
-            <a href="index-checkout.html" class="btn" id="checkout-button" data-i18n="checkout">Thanh toán</a>
+            <p>
+              <span data-i18n="quantity">Số lượng</span>:
+              <span id="item-count">0</span>
+            </p>
+            <p>
+              <span data-i18n="shipping_fee">Phí vận chuyển</span>:
+              <span id="shipping-cost" data-i18n="standard_shipping"
+                >Giao hàng tiêu chuẩn - 70.000đ</span
+              >
+            </p>
+            <p>
+              <span data-i18n="total_amount">Tổng tiền</span>:
+              <span id="total-cost">0</span> đ
+            </p>
+            <a
+              href="index-checkout.html"
+              class="btn"
+              id="checkout-button"
+              data-i18n="checkout"
+              >Thanh toán</a
+            >
           </div>
         </div>
       </div>
@@ -40,29 +61,40 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="/ECommerceFE/js/translations.js"></script>
-    <script src="/ECommerceFE/js/notification.js"></script>
-    <script src="/ECommerceFE/js/config.js"></script>
-    <script src="/ECommerceFE/js/cart.js"></script>
-    <script src="/ECommerceFE/js/nav.js"></script>
+    <script src="js/translations.js"></script>
+    <script src="js/notification.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/user-auth.js"></script>
     <script>
-      // Load header
-      fetch('header.html')
-        .then(response => response.text())
-        .then(data => {
-          document.getElementById('header-placeholder').innerHTML = data;
-          translatePage(); // Translate after loading header
-        })
-        .catch(error => console.error('Error loading header:', error));
+      document.addEventListener("DOMContentLoaded", function () {
+        // Load header and footer
+        const headerPlaceholder = document.getElementById("header-placeholder");
+        const footerPlaceholder = document.getElementById("footer-placeholder");
 
-      // Load footer
-      fetch('footer.html')
-        .then(response => response.text())
-        .then(data => {
-          document.getElementById('footer-placeholder').innerHTML = data;
-          translatePage(); // Translate after loading footer
-        })
-        .catch(error => console.error('Error loading footer:', error));
+        fetch("header.html")
+          .then((response) => response.text())
+          .then((data) => {
+            headerPlaceholder.innerHTML = data;
+
+            // Initialize header events after loading
+            if (typeof initHeaderEvents === "function") {
+              initHeaderEvents();
+            }
+
+            // Update cart items count
+            if (typeof updateCartCount === "function") {
+              updateCartCount();
+            }
+          });
+
+        fetch("footer.html")
+          .then((response) => response.text())
+          .then((data) => {
+            footerPlaceholder.innerHTML = data;
+          });
+      });
     </script>
   </body>
 </html>

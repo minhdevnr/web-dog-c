@@ -178,4 +178,78 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Call the function to load products when the page loads
-document.addEventListener('DOMContentLoaded', loadProducts); 
+document.addEventListener('DOMContentLoaded', loadProducts);
+
+// Function to view product reviews
+function viewProductReviews(productId) {
+    fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PRODUCTS}/${productId}/reviews`)
+        .then(response => response.json())
+        .then(reviews => {
+            displayProductReviews(reviews, productId);
+        })
+        .catch(error => {
+            console.error('Error fetching product reviews:', error);
+            NotificationSystem.error('Lỗi khi tải đánh giá sản phẩm');
+        });
+}
+
+// Function to display product reviews
+function displayProductReviews(reviews, productId) {
+    // Get the modal
+    const reviewsModal = document.getElementById('reviewsModal');
+    if (!reviewsModal) {
+        createReviewsModal();
+    }
+    
+    const reviewsContainer = document.getElementById('reviewsContainer');
+    reviewsContainer.innerHTML = '';
+    
+    if (reviews.length === 0) {
+        reviewsContainer.innerHTML = '<p class="text-center">Chưa có đánh giá nào cho sản phẩm này</p>';
+        return;
+    }
+    
+    reviews.forEach(review => {
+        const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+        const reviewItem = `
+            <div class="review-item">
+                <div class="review-header">
+                    <div class="review-author">${review.userName || 'Khách hàng'}</div>
+                    <div class="review-date">${new Date(review.createdAt).toLocaleDateString('vi-VN')}</div>
+                </div>
+                <div class="review-rating">${stars}</div>
+                <div class="review-content">${review.comment}</div>
+            </div>
+        `;
+        reviewsContainer.innerHTML += reviewItem;
+    });
+    
+    // Show the modal
+    $('#reviewsModal').modal('show');
+}
+
+// Function to create reviews modal if it doesn't exist
+function createReviewsModal() {
+    const modalHtml = `
+        <div class="modal fade" id="reviewsModal" tabindex="-1" role="dialog" aria-labelledby="reviewsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reviewsModalLabel">Đánh giá sản phẩm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="reviewsContainer"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+} 

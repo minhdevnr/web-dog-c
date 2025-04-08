@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý tài khoản - LH Coffee</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/ECommerceFE/css/styles.css" />
+    <link rel="stylesheet" href="/ECommerceFE/css/notification.css" />
+    <link rel="stylesheet" href="/ECommerceFE/css/user-profile.css" />
+  </head>
+  <body>
+    <!-- Include header -->
+    <div id="header-container"></div>
+
+    <div class="container profile-container">
+      <div class="sidebar-profile">
+        <div class="profile-avatar">
+          <img
+            src="img/default-avatar.jpg"
+            alt="User Avatar"
+            id="user-avatar"
+          />
+          <h3 id="profile-username">Username</h3>
+        </div>
+        <ul class="profile-menu">
+          <li class="active">
+            <a href="#personal-info"
+              ><i class="fas fa-user"></i> Thông tin cá nhân</a
+            >
+          </li>
+          <li>
+            <a href="user-orders.html"
+              ><i class="fas fa-shopping-bag"></i> Đơn hàng của tôi</a
+            >
+          </li>
+          <li>
+            <a href="user-wishlist.html"
+              ><i class="fas fa-heart"></i> Sản phẩm yêu thích</a
+            >
+          </li>
+          <li>
+            <a href="#change-password"
+              ><i class="fas fa-lock"></i> Đổi mật khẩu</a
+            >
+          </li>
+          <li id="admin-menu-item" style="display: none">
+            <a href="admin/admin.html"
+              ><i class="fas fa-cogs"></i> Quản trị hệ thống</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="profile-content">
+        <div id="personal-info" class="profile-section active">
+          <h2>Thông tin cá nhân</h2>
+          <form id="profile-form">
+            <div class="form-group">
+              <label for="fullName">Họ và tên</label>
+              <input
+                type="text"
+                id="fullName"
+                name="fullName"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-control"
+                readonly
+              />
+            </div>
+            <div class="form-group">
+              <label for="phoneNumber">Số điện thoại</label>
+              <input
+                type="tel"
+                id="phoneNumber"
+                name="phoneNumber"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group">
+              <label for="address">Địa chỉ</label>
+              <textarea
+                id="address"
+                name="address"
+                class="form-control"
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="dateOfBirth">Ngày sinh</label>
+              <input
+                type="date"
+                id="dateOfBirth"
+                name="dateOfBirth"
+                class="form-control"
+              />
+            </div>
+            <button type="submit" class="btn">Cập nhật thông tin</button>
+          </form>
+        </div>
+
+        <div id="change-password" class="profile-section">
+          <h2>Đổi mật khẩu</h2>
+          <form id="password-form">
+            <div class="form-group">
+              <label for="currentPassword">Mật khẩu hiện tại</label>
+              <input
+                type="password"
+                id="currentPassword"
+                name="currentPassword"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group">
+              <label for="newPassword">Mật khẩu mới</label>
+              <input
+                type="password"
+                id="newPassword"
+                name="newPassword"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group">
+              <label for="confirmPassword">Xác nhận mật khẩu mới</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                class="form-control"
+              />
+            </div>
+            <button type="submit" class="btn">Đổi mật khẩu</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Include footer -->
+    <div id="footer-container"></div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="/ECommerceFE/js/config.js"></script>
+    <script src="/ECommerceFE/js/notification.js"></script>
+    <script src="/ECommerceFE/js/user-auth.js"></script>
+    <script src="/ECommerceFE/js/user-profile.js"></script>
+  </body>
+</html>

@@ -11,68 +11,98 @@
       referrerpolicy="no-referrer"
     />
     <link rel="stylesheet" href="css/style.css" />
-    
-    <link rel="stylesheet" href="/ECommerceFE/css/notification.css">
+
+    <link rel="stylesheet" href="css/notification.css" />
+    <link rel="stylesheet" href="css/user-profile.css" />
     <!-- Thêm vào phần head của tất cả các file HTML -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
     <title>LH Coffee - Cà Phê Tươi Sạch</title>
   </head>
 
   <body>
     <!-- Thay thế toàn bộ header hiện có bằng placeholder -->
-    <div id="header-placeholder"></div>
-    
+    <div id="header-container"></div>
+
     <!-- Giữ nội dung trang, nhưng thêm data-i18n vào các phần tử cần dịch -->
     <section class="home" id="home">
-      
       <div class="content">
         <h3 data-i18n="coffee_slogan">Cà phê tươi sạch nhất Sài Gòn</h3>
         <p data-i18n="coffee_description">
-          Tận hưởng hương vị đích thực từ những hạt cà phê được chọn lọc kỹ lưỡng từ cao nguyên Việt Nam. Mỗi tách cà phê là một hành trình khám phá đầy cảm xúc.
+          Tận hưởng hương vị đích thực từ những hạt cà phê được chọn lọc kỹ
+          lưỡng từ cao nguyên Việt Nam. Mỗi tách cà phê là một hành trình khám
+          phá đầy cảm xúc.
         </p>
         <a href="#" class="btn" data-i18n="get_yours">Mua ngay</a>
       </div>
     </section>
-    
+
     <section class="about" id="about">
-      <h1 class="heading" data-i18n="about_section">Giới thiệu <span data-i18n="about_us_span">về chúng tôi</span></h1>
+      <h1 class="heading" data-i18n="about_section">
+        Giới thiệu <span data-i18n="about_us_span">về chúng tôi</span>
+      </h1>
       <div class="row">
         <div class="image">
           <img src="./img/coffee-2225564_960_720.jpg" alt="cà phê" />
         </div>
         <div class="content">
-          <h3 data-i18n="about_journey">Hành trình từ hạt đến tách cà phê hoàn hảo</h3>
+          <h3 data-i18n="about_journey">
+            Hành trình từ hạt đến tách cà phê hoàn hảo
+          </h3>
           <p data-i18n="about_description_1">
-            Chúng tôi tự hào mang đến những sản phẩm cà phê chất lượng cao, được thu hoạch từ vùng nguyên liệu Buôn Ma Thuột và Lâm Đồng. Mỗi hạt cà phê đều trải qua quy trình rang xay nghiêm ngặt để đảm bảo giữ trọn hương vị đậm đà, thơm ngon.
+            Chúng tôi tự hào mang đến những sản phẩm cà phê chất lượng cao, được
+            thu hoạch từ vùng nguyên liệu Buôn Ma Thuột và Lâm Đồng. Mỗi hạt cà
+            phê đều trải qua quy trình rang xay nghiêm ngặt để đảm bảo giữ trọn
+            hương vị đậm đà, thơm ngon.
           </p>
           <p data-i18n="about_description_2">
-            Với hơn 10 năm kinh nghiệm, LH Coffee không chỉ mang đến những tách cà phê hoàn hảo mà còn kiến tạo không gian thư giãn, là nơi kết nối những tâm hồn yêu cà phê. Chúng tôi cam kết sử dụng nguồn nguyên liệu hữu cơ, thân thiện với môi trường và hỗ trợ cộng đồng nông dân Việt Nam.
+            Với hơn 10 năm kinh nghiệm, LH Coffee không chỉ mang đến những tách
+            cà phê hoàn hảo mà còn kiến tạo không gian thư giãn, là nơi kết nối
+            những tâm hồn yêu cà phê. Chúng tôi cam kết sử dụng nguồn nguyên
+            liệu hữu cơ, thân thiện với môi trường và hỗ trợ cộng đồng nông dân
+            Việt Nam.
           </p>
-          <a href="index-about.html" class="btn" data-i18n="learn_more">Tìm hiểu thêm</a>
+          <a href="index-about.html" class="btn" data-i18n="learn_more"
+            >Tìm hiểu thêm</a
+          >
         </div>
       </div>
     </section>
 
     <section class="menu" id="menu">
-      <h1 class="heading" data-i18n="our_menu">Thực đơn <span data-i18n="menu_span">của chúng tôi</span></h1>
+      <h1 class="heading" data-i18n="our_menu">
+        Thực đơn <span data-i18n="menu_span">của chúng tôi</span>
+      </h1>
       <div class="box-container">
         <div class="box-menu">
           <img src="./img/coffee1.jpg" alt="coffee" />
           <h3 data-i18n="traditional_coffee">Cà Phê Phin Truyền Thống</h3>
           <p data-i18n="traditional_coffee_desc">
-            Hương vị đậm đà, đắng nhẹ và hậu vị ngọt sâu của cà phê rang xay truyền thống Việt Nam. Được pha từ loại Robusta nguyên chất vùng Tây Nguyên, mang đến trải nghiệm thưởng thức đích thực cho những người yêu cà phê.
+            Hương vị đậm đà, đắng nhẹ và hậu vị ngọt sâu của cà phê rang xay
+            truyền thống Việt Nam. Được pha từ loại Robusta nguyên chất vùng Tây
+            Nguyên, mang đến trải nghiệm thưởng thức đích thực cho những người
+            yêu cà phê.
           </p>
           <div class="price">20.000 <span>15.000</span></div>
-          <a class="btn" href="index-cart.html" data-i18n="add_to_cart">Thêm vào giỏ hàng</a>
+          <a class="btn" href="index-cart.html" data-i18n="add_to_cart"
+            >Thêm vào giỏ hàng</a
+          >
         </div>
         <div class="box-menu">
           <img src="./img/coffee2.jpg" alt="coffee" />
           <h3 data-i18n="coffee_name">Cà Phê Arabica Cầu Đất</h3>
           <p data-i18n="coffee_description">
-            Tinh tế với hương thơm ngọt nhẹ của trái cây và hoa, kết hợp với vị chua dịu mang đặc trưng của vùng đất cao nguyên Đà Lạt. Là lựa chọn hoàn hảo cho những người thích thưởng thức cà phê theo phong cách hiện đại.
+            Tinh tế với hương thơm ngọt nhẹ của trái cây và hoa, kết hợp với vị
+            chua dịu mang đặc trưng của vùng đất cao nguyên Đà Lạt. Là lựa chọn
+            hoàn hảo cho những người thích thưởng thức cà phê theo phong cách
+            hiện đại.
           </p>
           <div class="price">20.000 <span>15.000</span></div>
-          <a class="btn" href="index-cart.html" data-i18n="add_to_cart">Thêm vào giỏ hàng</a>
+          <a class="btn" href="index-cart.html" data-i18n="add_to_cart"
+            >Thêm vào giỏ hàng</a
+          >
         </div>
         <div class="box-menu">
           <img src="./img/tea1.jpg" alt="coffee" />
@@ -85,7 +115,9 @@
             necessitatibus reprehenderit.
           </p>
           <div class="price">20.000 <span>15.000</span></div>
-          <a class="btn" href="index-cart.html" data-i18n="add_to_cart">Thêm vào giỏ hàng</a>
+          <a class="btn" href="index-cart.html" data-i18n="add_to_cart"
+            >Thêm vào giỏ hàng</a
+          >
         </div>
         <div class="box-menu">
           <img src="./img/coffee3.jpg" alt="coffee" />
@@ -98,12 +130,14 @@
             necessitatibus reprehenderit.
           </p>
           <div class="price">20.000 <span>15.000</span></div>
-          <a class="btn" href="index-cart.html" data-i18n="add_to_cart">Thêm vào giỏ hàng</a>
+          <a class="btn" href="index-cart.html" data-i18n="add_to_cart"
+            >Thêm vào giỏ hàng</a
+          >
         </div>
       </div>
     </section>
     <section class="products" id="products">
-      <h1 class="heading" data-i18n="products_title">our product </h1>
+      <h1 class="heading" data-i18n="products_title">our product</h1>
       <div class="box-container">
         <div class="box">
           <div class="icons">
@@ -196,7 +230,9 @@
       </div>
     </section>
     <section class="review" id="review">
-      <h1 class="heading" data-i18n="review_title">Ý kiến <span>Khách hàng</span></h1>
+      <h1 class="heading" data-i18n="review_title">
+        Ý kiến <span>Khách hàng</span>
+      </h1>
       <div class="box-container">
         <div class="box">
           <i class="fa fa-quote-right"></i>
@@ -351,118 +387,53 @@
         </div>
       </div>
     </section>
-    <section class="manage-profile" id="manage-profile">
-      <h1 class="heading" data-i18n="manage_profile">Quản lý <span data-i18n="your_profile">Hồ sơ của bạn</span></h1>
-      <div id="user-info" style="display: none;">
-        <img id="profile-pic" src="" alt="Profile Picture" width="100" height="100" />
-        <button id="logout-btn" class="btn" data-i18n="logout">Đăng xuất</button>
-      </div>
-      <form id="profile-form" style="display: block;">
-        <div class="inputBox">
-          <span class="fa fa-user"></span>
-          <input type="text" id="full-name" data-i18n-placeholder="full_name" placeholder="Họ và tên" required />
-        </div>
-        <div class="inputBox">
-          <span class="fa fa-envelope"></span>
-          <input type="email" id="email" data-i18n-placeholder="email" placeholder="Email" required />
-        </div>
-        <div class="inputBox">
-          <span class="fa fa-phone"></span>
-          <input type="number" id="phone" data-i18n-placeholder="phone" placeholder="Số điện thoại" required />
-        </div>
-        <div class="inputBox">
-          <span class="fa fa-home"></span>
-          <input type="text" id="address" data-i18n-placeholder="address" placeholder="Địa chỉ" required />
-        </div>
-        <div class="inputBox">
-          <span class="fa fa-city"></span>
-          <input type="text" id="city" data-i18n-placeholder="city" placeholder="Thành phố" required />
-        </div>
-        <div class="inputBox">
-          <span class="fa fa-code"></span>
-          <input type="text" id="postal-code" data-i18n-placeholder="postal_code" placeholder="Mã bưu điện" required />
-        </div>
-        <input type="submit" value="Cập nhật hồ sơ" class="btn" data-i18n-value="update_profile" />
-      </form>
-    </section>
-    
+
     <!-- Thay thế footer bằng placeholder -->
     <div id="footer-placeholder"></div>
-    
+
     <!-- Thêm các script translations.js và components.js -->
     <script src="js/translations.js"></script>
     <script src="js/components.js"></script>
-    
+
     <!-- Giữ nguyên các script khác -->
-    <script src="/ECommerceFE/js/notification.js"></script>
-    <script src="/ECommerceFE/js/config.js"></script>
-    <script src="/ECommerceFE/js/cart.js"></script>
-    <script src="/ECommerceFE/js/productList.js"></script>
-    <script src="/ECommerceFE/js/nav.js"></script>
+    <script src="js/notification.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/productList.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/user-auth.js"></script>
     <script>
-      document.getElementById('profile-form').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent the default form submission
+      document.addEventListener("DOMContentLoaded", function () {
+        // Tải header và footer
+        const headerContainer = document.getElementById("header-container");
+        const footerContainer = document.getElementById("footer-placeholder");
 
-        // Gather form data
-        const profileData = {
-          fullName: document.getElementById('full-name').value,
-          email: document.getElementById('email').value,
-          phone: document.getElementById('phone').value,
-          address: document.getElementById('address').value,
-          city: document.getElementById('city').value,
-          postalCode: document.getElementById('postal-code').value,
-        };
+        // Tải header
+        fetch("header.html")
+          .then((response) => response.text())
+          .then((data) => {
+            headerContainer.innerHTML = data;
 
-        // Make API call to update profile
-        fetch('https://api.example.com/updateProfile', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(profileData),
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            alert(__(data.success ? 'profile_updated' : 'profile_error'));
-          } else {
-            alert('Error updating profile: ' + data.message);
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert(__(profile_update_error));
-        });
+            // Khởi tạo các sự kiện header sau khi đã tải thành công
+            if (typeof initHeaderEvents === "function") {
+              initHeaderEvents();
+            }
+
+            // Cập nhật số lượng sản phẩm trong giỏ hàng
+            if (typeof updateCartCount === "function") {
+              updateCartCount();
+            }
+          })
+          .catch((error) => console.error("Lỗi khi tải header:", error));
+
+        // Tải footer
+        fetch("footer.html")
+          .then((response) => response.text())
+          .then((data) => {
+            footerContainer.innerHTML = data;
+          })
+          .catch((error) => console.error("Lỗi khi tải footer:", error));
       });
-
-      // Simulate user login status and profile data
-      const userLoggedIn = true; // Change this based on actual login status
-      const userProfile = {
-        fullName: "John Doe",
-        email: "john.doe@example.com",
-        phone: "1234567890",
-        address: "123 Main St",
-        city: "Hometown",
-        postalCode: "12345",
-        profilePic: "img/profile.jpg" // Path to the user's profile picture
-      };
-
-      if (userLoggedIn) {
-        document.getElementById('user-info').style.display = 'block';
-        document.getElementById('profile-pic').src = userProfile.profilePic;
-        document.getElementById('full-name').value = userProfile.fullName;
-        document.getElementById('email').value = userProfile.email;
-        document.getElementById('phone').value = userProfile.phone;
-        document.getElementById('address').value = userProfile.address;
-        document.getElementById('city').value = userProfile.city;
-        document.getElementById('postal-code').value = userProfile.postalCode;
-
-        document.getElementById('logout-btn').addEventListener('click', function() {
-          // Handle logout logic here
-          alert(__('logout_success'));
-          // Redirect or refresh the page as needed
-        });
-      }
     </script>
   </body>
 </html>
