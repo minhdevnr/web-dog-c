@@ -1,0 +1,132 @@
+/* Admin Sidebar Styles */
+
+/* 
+ * Main sidebar styling - Thêm gradient màu tốt hơn
+ */
+.sidebar {
+  background: linear-gradient(to bottom, #3a3f44, #1e2126);
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  transition: width 0.3s ease;
+}
+
+/* Sidebar header styling */
+.sidebar-header {
+  padding: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-header .brand {
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  font-size: 1.4em;
+}
+
+/* Sidebar menu list styling */
+.sidebar-menu ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-menu li {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.sidebar-menu li a {
+  padding: 15px;
+  display: block;
+  color: #ddd;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+/* Active state styling */
+.sidebar-menu li.active {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-left: 4px solid #be9c79; /* Sử dụng màu chính của LH Coffee */
+}
+
+.sidebar-menu li.active a {
+  color: #fff;
+  padding-left: 15px;
+  font-weight: bold;
+}
+
+/* Hover state styling */
+.sidebar-menu li:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-menu li:hover a {
+  color: #fff;
+}
+
+/* Icon styling */
+.sidebar-menu a span.fa {
+  margin-right: 10px;
+  width: 20px;
+  text-align: center;
+  color: #be9c79; /* Sử dụng màu chính của LH Coffee */
+}
+
+/* Fix for sidebar toggle button */
+.sidebar-header .fa-bars {
+  cursor: pointer;
+  padding: 10px;
+  transition: all 0.3s ease;
+  color: #ddd;
+}
+
+.sidebar-header .fa-bars:hover {
+  color: #fff;
+}
+
+/* Mobile optimizations */
+@media only screen and (max-width: 768px) {
+  #sidebar-toggle:not(:checked) ~ .sidebar {
+    width: 0;
+    overflow: hidden;
+  }
+  
+  #sidebar-toggle:checked ~ .sidebar {
+    width: 200px;
+  }
+}
+
+/* Debug panel styling */
+#debug-panel {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  width: 300px;
+  max-height: 200px;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 9999;
+  font-size: 12px;
+  font-family: monospace;
+}
+
+#debug-panel div {
+  border-bottom: 1px dotted #555;
+  padding-bottom: 3px;
+  margin-bottom: 3px;
+}
+
+/* Logout button styling */
+#menu-logout a {
+  color: #ff6b6b !important;
+}
+
+#menu-logout a:hover {
+  background-color: rgba(255, 107, 107, 0.1);
+} 

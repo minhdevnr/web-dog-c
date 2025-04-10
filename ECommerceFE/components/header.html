@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LH Coffee - Thưởng thức hương vị cà phê tuyệt hảo</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -11,9 +10,6 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/user-profile.css" />
-    <link rel="stylesheet" href="css/notification.css" />
     <style>
       :root {
         --main-color: #be9c79;
@@ -369,6 +365,37 @@
         z-index: 9999;
       }
 
+      /* Theme switcher */
+      .theme-switcher {
+        position: relative;
+        margin-left: 2rem;
+        cursor: pointer;
+      }
+
+      .theme-switcher i {
+        font-size: 2.5rem;
+        color: #fff;
+      }
+
+      .theme-switcher:hover i {
+        color: var(--main-color);
+      }
+
+      .theme-switcher[data-tooltip]:hover:after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: -3.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(255, 255, 255, 0.8);
+        color: var(--black);
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 1.2rem;
+        white-space: nowrap;
+        z-index: 10;
+      }
+
       /* Media queries */
       @media (max-width: 991px) {
         html {
@@ -435,7 +462,7 @@
   <body>
     <header class="header">
       <a href="index.html" class="logo">
-        <img src="img/logo.png" alt="LH Coffee" />
+        <img src="img/1.jpg" alt="logo" />
       </a>
       <nav class="navbar">
         <a href="index.html#home" data-i18n="home">Trang chủ</a>
@@ -447,20 +474,33 @@
         <a href="index.html#blogs" data-i18n="blog">Blog</a>
       </nav>
       <div class="icons">
-        <div class="fa fa-search" id="search-btn" data-tooltip="Tìm kiếm"></div>
-        <div class="fa fa-shopping-cart" id="cart-btn" data-tooltip="Giỏ hàng">
+        <div
+          id="search-btn"
+          class="fas fa-search"
+          data-tooltip="Tìm kiếm"
+        ></div>
+        <div id="cart-btn" class="fas fa-shopping-cart" data-tooltip="Giỏ hàng">
           <span class="cart-count">0</span>
         </div>
-        <div class="fa fa-user" id="login-btn" data-tooltip="Đăng nhập"></div>
+        <div id="login-btn" class="fas fa-user" data-tooltip="Đăng nhập"></div>
+        <div
+          id="register-btn"
+          class="fas fa-user-plus"
+          data-tooltip="Đăng ký"
+        ></div>
+        <div
+          id="logout-btn"
+          class="fas fa-sign-out-alt"
+          data-tooltip="Đăng xuất"
+          style="display: none"
+        ></div>
+        <div class="theme-switcher" data-tooltip="Chuyển đổi theme">
+          <i class="fas fa-moon"></i>
+        </div>
         <div
           class="fa fa-user"
           id="user-profile-btn"
           data-tooltip="Tài khoản"
-        ></div>
-        <div
-          class="fa fa-user-plus"
-          id="register-btn"
-          data-tooltip="Đăng ký"
         ></div>
         <div class="fa fa-bars" id="bars-btn" data-tooltip="Menu"></div>
       </div>
@@ -551,13 +591,10 @@
         const removeButtons = document.querySelectorAll(".cart-item .fa-times");
         const logoutBtn = document.querySelector("#logout-btn");
         const cartCount = document.querySelector(".cart-count");
-        const notificationContainer = document.getElementById(
-          "notification-container"
-        );
 
         // Kiểm tra và khởi tạo localStorage nếu chưa có
-        if (!localStorage.getItem("lhCoffeeCart")) {
-          localStorage.setItem("lhCoffeeCart", JSON.stringify([]));
+        if (!localStorage.getItem("cart")) {
+          localStorage.setItem("cart", JSON.stringify([]));
         }
 
         // Kiểm tra trạng thái đăng nhập từ localStorage
@@ -584,10 +621,11 @@
             navbar.classList.remove("active");
           });
         }
-
+        debugger;
         // Toggle cart
         if (cartBtn) {
           cartBtn.addEventListener("click", function (e) {
+            debugger;
             e.stopPropagation();
             cartItemContainer.classList.toggle("active");
             searchForm.classList.remove("active");
@@ -597,16 +635,6 @@
         }
 
         // Toggle user profile dropdown
-        if (loginBtn) {
-          loginBtn.addEventListener("click", function (e) {
-            e.stopPropagation();
-            userProfileDropdown.classList.toggle("active");
-            searchForm.classList.remove("active");
-            cartItemContainer.classList.remove("active");
-            navbar.classList.remove("active");
-          });
-        }
-
         if (userProfileBtn) {
           userProfileBtn.addEventListener("click", function (e) {
             e.stopPropagation();
@@ -631,9 +659,8 @@
         // Redirect to login/register pages
         if (loginBtn) {
           loginBtn.addEventListener("click", function (e) {
-            if (!userProfileDropdown.classList.contains("active")) {
-              window.location.href = "login.html";
-            }
+            e.stopPropagation();
+            window.location.href = "login.html";
           });
         }
 
@@ -671,8 +698,7 @@
             userProfileDropdown &&
             userProfileDropdown.classList.contains("active") &&
             !userProfileDropdown.contains(e.target) &&
-            e.target !== userProfileBtn &&
-            e.target !== loginBtn
+            e.target !== userProfileBtn
           ) {
             userProfileDropdown.classList.remove("active");
           }
@@ -689,34 +715,26 @@
           }
         });
 
-        // Attach event listeners to remove buttons
-        function attachRemoveButtonListeners() {
-          const removeButtons = document.querySelectorAll(
-            ".cart-item .fa-times"
-          );
-          if (removeButtons.length > 0) {
-            removeButtons.forEach(function (button) {
-              button.addEventListener("click", function (e) {
-                e.stopPropagation();
-                const cartItem = this.parentElement;
+        // Remove items from cart
+        if (removeButtons.length > 0) {
+          removeButtons.forEach(function (button) {
+            button.addEventListener("click", function (e) {
+              e.stopPropagation();
+              const cartItem = this.parentElement;
 
-                // Lấy thông tin sản phẩm để xóa khỏi localStorage
-                const productName = cartItem.querySelector("h3").textContent;
-                removeFromCart(productName);
+              // Lấy thông tin sản phẩm để xóa khỏi localStorage
+              const productName = cartItem.querySelector("h3").textContent;
+              removeFromCart(productName);
 
-                cartItem.remove();
-                updateCartCount();
-                showNotification(
-                  "Sản phẩm đã được xóa khỏi giỏ hàng!",
-                  "success"
-                );
-              });
+              cartItem.remove();
+              updateCartCount();
+              showNotification(
+                "Sản phẩm đã được xóa khỏi giỏ hàng!",
+                "success"
+              );
             });
-          }
+          });
         }
-
-        // Ban đầu gắn listeners cho các nút xóa
-        attachRemoveButtonListeners();
 
         // Logout functionality
         if (logoutBtn) {
@@ -732,9 +750,6 @@
 
             // Cập nhật UI ngay lập tức
             updateUIBasedOnAuthStatus(null);
-
-            // Đóng dropdown
-            userProfileDropdown.classList.remove("active");
 
             setTimeout(function () {
               window.location.href = "index.html";
@@ -785,8 +800,6 @@
             // Show admin link if user is admin
             if (adminLink && user.role === "admin") {
               adminLink.style.display = "block";
-            } else if (adminLink) {
-              adminLink.style.display = "none";
             }
 
             // Show/hide authentication buttons
@@ -816,16 +829,11 @@
          * Updates the cart count badge
          */
         function updateCartCount() {
-          if (cartCount) {
-            const cartItems = document.querySelectorAll(".cart-item");
-            cartCount.textContent = cartItems.length;
+          const cartCount = document.querySelector(".cart-count");
+          const cartItems = document.querySelectorAll(".cart-item");
 
-            // Hiển thị/ẩn số lượng
-            if (cartItems.length > 0) {
-              cartCount.style.display = "flex";
-            } else {
-              cartCount.style.display = "none";
-            }
+          if (cartCount) {
+            cartCount.textContent = cartItems.length;
           } else {
             console.warn("Không tìm thấy phần tử .cart-count");
           }
@@ -839,47 +847,14 @@
          */
         function loadCart() {
           try {
-            const cart = JSON.parse(localStorage.getItem("lhCoffeeCart")) || [];
-            const cartItemContainer = document.querySelector(
-              ".cart-item-container"
-            );
-
-            // Xóa các mục hiện tại
-            const existingItems = document.querySelectorAll(".cart-item");
-            existingItems.forEach((item) => item.remove());
-
+            const cart = JSON.parse(localStorage.getItem("cart"));
             if (cart && Array.isArray(cart) && cart.length > 0) {
-              // Thêm các mục từ localStorage
-              cart.forEach((item) => {
-                const cartItemElement = document.createElement("div");
-                cartItemElement.classList.add("cart-item");
-
-                cartItemElement.innerHTML = `
-                  <span class="fa fa-times"></span>
-                  <img src="${item.imgSrc || "img/coffee1.jpg"}" alt="${
-                  item.name
-                }">
-                  <div class="content">
-                    <h3>${item.name}</h3>
-                    <div class="price">${item.price}</div>
-                  </div>
-                `;
-
-                cartItemContainer.insertBefore(
-                  cartItemElement,
-                  cartItemContainer.querySelector(".btn")
-                );
-              });
-
-              // Gắn lại event listeners cho các nút xóa
-              attachRemoveButtonListeners();
+              // Cập nhật UI nếu cần
+              updateCartCount();
             }
-
-            // Cập nhật số lượng hiển thị
-            updateCartCount();
           } catch (error) {
             console.error("Lỗi khi tải giỏ hàng:", error);
-            localStorage.setItem("lhCoffeeCart", JSON.stringify([]));
+            localStorage.setItem("cart", JSON.stringify([]));
           }
         }
 
@@ -902,7 +877,7 @@
             });
           });
 
-          localStorage.setItem("lhCoffeeCart", JSON.stringify(cart));
+          localStorage.setItem("cart", JSON.stringify(cart));
         }
 
         /**
@@ -910,9 +885,9 @@
          */
         function removeFromCart(productName) {
           try {
-            let cart = JSON.parse(localStorage.getItem("lhCoffeeCart")) || [];
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
             cart = cart.filter((item) => item.name !== productName);
-            localStorage.setItem("lhCoffeeCart", JSON.stringify(cart));
+            localStorage.setItem("cart", JSON.stringify(cart));
           } catch (error) {
             console.error("Lỗi khi xóa sản phẩm khỏi giỏ hàng:", error);
           }
@@ -922,7 +897,8 @@
          * Displays a notification
          */
         function showNotification(message, type = "info") {
-          if (!notificationContainer) return;
+          const container = document.getElementById("notification-container");
+          if (!container) return;
 
           const notification = document.createElement("div");
           notification.className = `notification ${type}`;
@@ -942,7 +918,7 @@
             <button class="notification-close">&times;</button>
           `;
 
-          notificationContainer.appendChild(notification);
+          container.appendChild(notification);
 
           // Close button functionality
           const closeBtn = notification.querySelector(".notification-close");

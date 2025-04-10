@@ -1,85 +1,106 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Thiết lập tài khoản</title>
-    <link rel="stylesheet" href="css/profile-settings.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-</head>
-<body>
+    <link rel="stylesheet" href="css/profile-settings.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+  </head>
+  <body>
     <div id="header-container"></div>
 
     <div class="profile-container">
-        <div class="profile-header">
-            <img src="img/default-avatar.png" alt="Avatar" class="profile-avatar" id="user-avatar">
-            <div>
-                <h2 class="profile-name" id="display-name">Tên người dùng</h2>
-                <p class="profile-email" id="display-email">email@example.com</p>
-            </div>
+      <div class="profile-header">
+        <img
+          src="img/default-avatar.png"
+          alt="Avatar"
+          class="profile-avatar"
+          id="user-avatar"
+        />
+        <div>
+          <h2 class="profile-name" id="display-name">Tên người dùng</h2>
+          <p class="profile-email" id="display-email">email@example.com</p>
         </div>
+      </div>
 
-        <div class="settings-menu">
-            <div class="menu-item active" data-tab="account">
-                <i class="fas fa-user"></i> Thông tin tài khoản
-            </div>
-            <div class="menu-item" data-tab="security">
-                <i class="fas fa-lock"></i> Bảo mật
-            </div>
-            <div class="menu-item" data-tab="language">
-                <i class="fas fa-globe"></i> Ngôn ngữ
-            </div>
+      <div class="settings-menu">
+        <div class="menu-item active" data-tab="account">
+          <i class="fas fa-user"></i> Thông tin tài khoản
         </div>
+        <div class="menu-item" data-tab="security">
+          <i class="fas fa-lock"></i> Bảo mật
+        </div>
+        <div class="menu-item" data-tab="language">
+          <i class="fas fa-globe"></i> Ngôn ngữ
+        </div>
+      </div>
 
-        <div class="settings-content" id="account-settings">
-            <form id="profile-form">
-                <div class="form-group">
-                    <label for="fullName">Họ và tên</label>
-                    <input type="text" id="fullName" name="fullName">
-                </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email">
-                </div>
-                <div class="form-group">
-                    <label for="phone">Số điện thoại</label>
-                    <input type="tel" id="phone" name="phone">
-                </div>
-                <div class="form-group">
-                    <label for="company">Công ty</label>
-                    <input type="text" id="company" name="company">
-                </div>
-                <button type="submit" class="btn-save">Lưu thay đổi</button>
-            </form>
-        </div>
+      <div class="settings-content" id="account-settings">
+        <form id="profile-form">
+          <div class="form-group">
+            <label for="fullName">Họ và tên</label>
+            <input type="text" id="fullName" name="fullName" />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" />
+          </div>
+          <div class="form-group">
+            <label for="phone">Số điện thoại</label>
+            <input type="tel" id="phone" name="phone" />
+          </div>
+          <div class="form-group">
+            <label for="company">Công ty</label>
+            <input type="text" id="company" name="company" />
+          </div>
+          <button type="submit" class="btn-save">Lưu thay đổi</button>
+        </form>
+      </div>
 
-        <div class="settings-content" id="security-settings" style="display: none;">
-            <div class="security-option">
-                <h3>Đổi mật khẩu</h3>
-                <p>Thay đổi mật khẩu để bảo vệ tài khoản của bạn</p>
-                <button class="btn-change" id="change-password">Đổi mật khẩu</button>
-            </div>
-            <div class="security-option">
-                <h3>Thiết lập bảo mật</h3>
-                <p>Cài đặt xác thực hai lớp và các tùy chọn bảo mật khác</p>
-                <button class="btn-change" id="setup-security">Thiết lập</button>
-            </div>
+      <div
+        class="settings-content"
+        id="security-settings"
+        style="display: none"
+      >
+        <div class="security-option">
+          <h3>Đổi mật khẩu</h3>
+          <p>Thay đổi mật khẩu để bảo vệ tài khoản của bạn</p>
+          <button class="btn-change" id="change-password">Đổi mật khẩu</button>
         </div>
+        <div class="security-option">
+          <h3>Thiết lập bảo mật</h3>
+          <p>Cài đặt xác thực hai lớp và các tùy chọn bảo mật khác</p>
+          <button class="btn-change" id="setup-security">Thiết lập</button>
+        </div>
+      </div>
 
-        <div class="settings-content" id="language-settings" style="display: none;">
-            <div class="language-option">
-                <input type="radio" name="language" id="lang-vi" value="vi" checked>
-                <label for="lang-vi">Tiếng Việt</label>
-            </div>
-            <div class="language-option">
-                <input type="radio" name="language" id="lang-en" value="en">
-                <label for="lang-en">English</label>
-            </div>
+      <div
+        class="settings-content"
+        id="language-settings"
+        style="display: none"
+      >
+        <div class="language-option">
+          <input type="radio" name="language" id="lang-vi" value="vi" checked />
+          <label for="lang-vi">Tiếng Việt</label>
         </div>
+        <div class="language-option">
+          <input type="radio" name="language" id="lang-en" value="en" />
+          <label for="lang-en">English</label>
+        </div>
+      </div>
     </div>
 
-    <script src="js/components.js"></script>
-    <script src="js/profile-settings.js"></script>
-</body>
-</html> 
+    <div id="footer-container"></div>
+
+    <!-- JavaScript Modules -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/auth.js"></script>
+  </body>
+</html>

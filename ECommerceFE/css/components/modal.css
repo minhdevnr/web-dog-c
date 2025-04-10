@@ -1,0 +1,245 @@
+/* 
+ * modal.css - Stylesheet cho modal component
+ * Tuân thủ BEM methodology cho việc đặt tên class
+ */
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  outline: 0;
+  display: none;
+}
+
+.modal--open {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal__backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1040;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.modal--open .modal__backdrop {
+  opacity: 1;
+}
+
+.modal__dialog {
+  position: relative;
+  width: auto;
+  margin: 0.5rem;
+  pointer-events: none;
+  transform: translateY(-50px);
+  transition: transform 0.3s ease;
+  max-width: 500px;
+  z-index: 1050;
+}
+
+.modal--open .modal__dialog {
+  transform: translateY(0);
+}
+
+.modal__content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0.3rem;
+  outline: 0;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid #e9ecef;
+  border-top-left-radius: 0.3rem;
+  border-top-right-radius: 0.3rem;
+}
+
+.modal__title {
+  margin-bottom: 0;
+  line-height: 1.5;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.modal__close {
+  padding: 1rem;
+  margin: -1rem -1rem -1rem auto;
+  background-color: transparent;
+  border: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.modal__close:hover {
+  color: #000;
+  text-decoration: none;
+  opacity: 0.75;
+}
+
+.modal__body {
+  position: relative;
+  flex: 1 1 auto;
+  padding: 1rem;
+}
+
+.modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 1rem;
+  border-top: 1px solid #e9ecef;
+  border-bottom-right-radius: 0.3rem;
+  border-bottom-left-radius: 0.3rem;
+}
+
+.modal__footer > * {
+  margin: 0.25rem;
+}
+
+/* Modal sizes */
+.modal__dialog--sm {
+  max-width: 300px;
+}
+
+.modal__dialog--lg {
+  max-width: 800px;
+}
+
+.modal__dialog--xl {
+  max-width: 1140px;
+}
+
+/* Full screen modal */
+.modal__dialog--fullscreen {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  margin: 0;
+}
+
+.modal__dialog--fullscreen .modal__content {
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+}
+
+/* Center modal */
+.modal__dialog--centered {
+  display: flex;
+  align-items: center;
+  min-height: calc(100% - 1rem);
+}
+
+/* Modal with scrollable content */
+.modal__dialog--scrollable {
+  display: flex;
+  max-height: calc(100% - 1rem);
+}
+
+.modal__dialog--scrollable .modal__content {
+  max-height: calc(100vh - 1rem);
+  overflow: hidden;
+}
+
+.modal__dialog--scrollable .modal__body {
+  overflow-y: auto;
+}
+
+/* Modal animations */
+.modal--fade .modal__dialog {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  transform: translate(0);
+}
+
+.modal--fade.modal--open .modal__dialog {
+  opacity: 1;
+}
+
+.modal--slide-top .modal__dialog {
+  transform: translateY(-50px);
+}
+
+.modal--slide-top.modal--open .modal__dialog {
+  transform: translateY(0);
+}
+
+.modal--slide-right .modal__dialog {
+  transform: translateX(50px);
+}
+
+.modal--slide-right.modal--open .modal__dialog {
+  transform: translateX(0);
+}
+
+.modal--slide-bottom .modal__dialog {
+  transform: translateY(50px);
+}
+
+.modal--slide-bottom.modal--open .modal__dialog {
+  transform: translateY(0);
+}
+
+.modal--slide-left .modal__dialog {
+  transform: translateX(-50px);
+}
+
+.modal--slide-left.modal--open .modal__dialog {
+  transform: translateX(0);
+}
+
+.modal--zoom .modal__dialog {
+  transform: scale(0.9);
+}
+
+.modal--zoom.modal--open .modal__dialog {
+  transform: scale(1);
+}
+
+/* Modal with form styles */
+.modal--form .modal__body {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.modal--form .form__group:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive modals */
+@media (max-width: 576px) {
+  .modal__dialog {
+    margin: 0.5rem;
+  }
+  
+  .modal__dialog--centered {
+    min-height: calc(100% - 1rem);
+  }
+} 

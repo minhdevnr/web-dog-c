@@ -1,0 +1,262 @@
+/* 
+ * cards.css - Stylesheet cho các thành phần card
+ * Tuân thủ BEM methodology cho việc đặt tên class
+ */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid var(--border-color);
+  border-radius: 0.25rem;
+  box-shadow: var(--box-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card__image {
+  width: 100%;
+  height: auto;
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  overflow: hidden;
+}
+
+.card__img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.card:hover .card__img {
+  transform: scale(1.05);
+}
+
+.card__body {
+  flex: 1 1 auto;
+  padding: 1.25rem;
+}
+
+.card__title {
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.card__subtitle {
+  margin-top: -0.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--text-color-light);
+}
+
+.card__text {
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.card__text:last-child {
+  margin-bottom: 0;
+}
+
+.card__header {
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 0;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.card__footer {
+  padding: 0.75rem 1.25rem;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-top: 1px solid var(--border-color);
+}
+
+/* Card variations */
+
+.card--primary {
+  border-color: var(--primary-color);
+}
+
+.card--primary .card__header,
+.card--primary .card__footer {
+  background-color: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+}
+
+.card--outline {
+  background-color: transparent;
+  border: 2px solid var(--primary-color);
+}
+
+.card--no-border {
+  border: 0;
+}
+
+.card--shadow-hover {
+  box-shadow: none;
+}
+
+.card--shadow-hover:hover {
+  box-shadow: var(--box-shadow);
+}
+
+/* Card groups */
+
+.card-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-group .card {
+  margin-bottom: 15px;
+}
+
+.card-group .card:last-child {
+  margin-bottom: 0;
+}
+
+@media (min-width: 768px) {
+  .card-group {
+    flex-flow: row wrap;
+  }
+
+  .card-group .card {
+    flex: 1 0 0%;
+    margin-bottom: 0;
+    margin-right: 15px;
+  }
+
+  .card-group .card:last-child {
+    margin-right: 0;
+  }
+}
+
+/* Card overlay */
+
+.card--overlay {
+  position: relative;
+  overflow: hidden;
+}
+
+.card--overlay .card__image {
+  height: 250px;
+}
+
+.card--overlay .card__img {
+  height: 100%;
+  object-fit: cover;
+}
+
+.card--overlay .card__body {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+  color: #fff;
+  padding: 20px;
+}
+
+.card--overlay .card__title {
+  color: #fff;
+}
+
+.card--overlay .card__text {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Card horizontal */
+
+.card--horizontal {
+  flex-direction: row;
+}
+
+.card--horizontal .card__image {
+  width: 30%;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 0.25rem;
+}
+
+.card--horizontal .card__img {
+  height: 100%;
+  object-fit: cover;
+}
+
+.card--horizontal .card__body {
+  width: 70%;
+}
+
+@media (max-width: 768px) {
+  .card--horizontal {
+    flex-direction: column;
+  }
+
+  .card--horizontal .card__image {
+    width: 100%;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0.25rem;
+  }
+
+  .card--horizontal .card__body {
+    width: 100%;
+  }
+}
+
+/* Card with background image */
+
+.card--bg-image {
+  position: relative;
+  color: #fff;
+  min-height: 250px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.card--bg-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2));
+  border-radius: 0.25rem;
+  z-index: 1;
+}
+
+.card--bg-image .card__body {
+  position: relative;
+  z-index: 2;
+}
+
+.card--bg-image .card__title {
+  color: #fff;
+}
+
+.card--bg-image .card__text {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.card--bg-image .card__bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-size: cover;
+  background-position: center;
+  border-radius: 0.25rem;
+  z-index: 0;
+} 

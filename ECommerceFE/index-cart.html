@@ -16,7 +16,7 @@
   </head>
 
   <body>
-    <div id="header-placeholder"></div>
+    <div id="header-container"></div>
 
     <section class="cart-section" id="cart">
       <h1 class="heading"><span data-i18n="cart">Giỏ hàng</span></h1>
@@ -59,42 +59,13 @@
       </div>
     </section>
 
-    <div id="footer-placeholder"></div>
+    <div id="footer-container"></div>
 
-    <script src="js/translations.js"></script>
-    <script src="js/notification.js"></script>
+    <!-- JavaScript Modules -->
     <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
     <script src="js/cart.js"></script>
-    <script src="js/nav.js"></script>
-    <script src="js/user-auth.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // Load header and footer
-        const headerPlaceholder = document.getElementById("header-placeholder");
-        const footerPlaceholder = document.getElementById("footer-placeholder");
-
-        fetch("header.html")
-          .then((response) => response.text())
-          .then((data) => {
-            headerPlaceholder.innerHTML = data;
-
-            // Initialize header events after loading
-            if (typeof initHeaderEvents === "function") {
-              initHeaderEvents();
-            }
-
-            // Update cart items count
-            if (typeof updateCartCount === "function") {
-              updateCartCount();
-            }
-          });
-
-        fetch("footer.html")
-          .then((response) => response.text())
-          .then((data) => {
-            footerPlaceholder.innerHTML = data;
-          });
-      });
-    </script>
+    <script src="js/auth.js"></script>
   </body>
 </html>

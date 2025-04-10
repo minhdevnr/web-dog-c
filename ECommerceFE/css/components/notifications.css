@@ -1,0 +1,231 @@
+/* 
+ * notifications.css - Stylesheet cho notification component
+ * Tuân thủ BEM methodology cho việc đặt tên class
+ */
+
+.notification {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  min-width: 250px;
+  max-width: 450px;
+  padding: 1rem;
+  margin: 0.5rem;
+  border-radius: 0.25rem;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1060;
+  animation: notification-slide-in 0.3s ease-out forwards;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+@keyframes notification-slide-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes notification-slide-out {
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+.notification--closing {
+  animation: notification-slide-out 0.3s ease-out forwards;
+}
+
+/* Notification positions */
+.notification--top-right {
+  top: 0;
+  right: 0;
+}
+
+.notification--top-left {
+  top: 0;
+  left: 0;
+}
+
+.notification--top-center {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.notification--bottom-right {
+  bottom: 0;
+  right: 0;
+}
+
+.notification--bottom-left {
+  bottom: 0;
+  left: 0;
+}
+
+.notification--bottom-center {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Notification types */
+.notification--success {
+  background-color: #d4edda;
+  color: #155724;
+  border-left: 4px solid #28a745;
+}
+
+.notification--error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-left: 4px solid #dc3545;
+}
+
+.notification--warning {
+  background-color: #fff3cd;
+  color: #856404;
+  border-left: 4px solid #ffc107;
+}
+
+.notification--info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border-left: 4px solid #17a2b8;
+}
+
+/* Notification elements */
+.notification__icon {
+  margin-right: 0.75rem;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.notification__content {
+  flex: 1;
+}
+
+.notification__title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+}
+
+.notification__message {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.notification__close {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0.25rem;
+  margin-left: 0.75rem;
+  opacity: 0.7;
+  font-size: 1.25rem;
+  line-height: 1;
+  transition: opacity 0.15s;
+}
+
+.notification__close:hover {
+  opacity: 1;
+}
+
+/* Notification with progress bar */
+.notification--with-progress .notification__progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background-color: rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.notification--with-progress .notification__progress-bar {
+  height: 100%;
+  background-color: currentColor;
+  width: 100%;
+  transition: width linear;
+}
+
+/* Toast container for multiple notifications */
+.notification-container {
+  position: fixed;
+  z-index: 1060;
+  max-width: 450px;
+}
+
+.notification-container--top-right {
+  top: 1rem;
+  right: 1rem;
+}
+
+.notification-container--top-left {
+  top: 1rem;
+  left: 1rem;
+}
+
+.notification-container--top-center {
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.notification-container--bottom-right {
+  bottom: 1rem;
+  right: 1rem;
+}
+
+.notification-container--bottom-left {
+  bottom: 1rem;
+  left: 1rem;
+}
+
+.notification-container--bottom-center {
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.notification-container .notification {
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+
+/* Notification group */
+.notification-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.notification-group .notification {
+  margin-bottom: 0.5rem;
+}
+
+.notification-group .notification:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive notifications */
+@media (max-width: 576px) {
+  .notification {
+    min-width: auto;
+    width: calc(100% - 2rem);
+    max-width: none;
+  }
+  
+  .notification-container {
+    width: 100%;
+    max-width: none;
+    padding: 0 1rem;
+  }
+  
+  .notification-container--top-center,
+  .notification-container--bottom-center {
+    left: 0;
+    transform: none;
+  }
+} 

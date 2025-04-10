@@ -1,0 +1,256 @@
+/* 
+ * forms.css - Stylesheet cho các thành phần form
+ * Tuân thủ BEM methodology cho việc đặt tên class
+ */
+
+.form {
+  margin-bottom: 2rem;
+}
+
+.form__group {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.form__label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.form__input {
+  display: block;
+  width: 100%;
+  height: calc(2.5rem + 2px);
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text-color);
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid var(--border-color);
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form__input:focus {
+  color: var(--text-color);
+  background-color: #fff;
+  border-color: var(--primary-color);
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(199, 161, 122, 0.25);
+}
+
+.form__input--error {
+  border-color: #dc3545;
+}
+
+.form__input--error:focus {
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.form__textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form__select {
+  display: block;
+  width: 100%;
+  height: calc(2.5rem + 2px);
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text-color);
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid var(--border-color);
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath fill='%23333' d='M0 2l4 4 4-4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 8px 8px;
+}
+
+.form__select:focus {
+  border-color: var(--primary-color);
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(199, 161, 122, 0.25);
+}
+
+.form__checkbox,
+.form__radio {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.form__checkbox-input,
+.form__radio-input {
+  margin-right: 0.5rem;
+}
+
+.form__checkbox-label,
+.form__radio-label {
+  font-weight: 400;
+  margin-bottom: 0;
+}
+
+.form__help-text {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--text-color-light);
+}
+
+.form__error {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #dc3545;
+}
+
+/* Form layouts */
+.form--inline {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+.form--inline .form__group {
+  display: flex;
+  flex: 0 0 auto;
+  flex-flow: row wrap;
+  align-items: center;
+  margin-bottom: 0;
+  margin-right: 0.5rem;
+}
+
+.form--inline .form__label {
+  margin-right: 0.5rem;
+  margin-bottom: 0;
+}
+
+/* Floating labels */
+.form__group--floating {
+  position: relative;
+}
+
+.form__group--floating .form__label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  padding: 0.5rem 0.75rem;
+  pointer-events: none;
+  border: 1px solid transparent;
+  transform-origin: 0 0;
+  transition: color 0.15s ease-in-out, transform 0.15s ease-in-out;
+  margin-bottom: 0;
+  color: var(--text-color-light);
+}
+
+.form__group--floating .form__input::-webkit-input-placeholder,
+.form__group--floating .form__textarea::-webkit-input-placeholder {
+  color: transparent;
+}
+
+.form__group--floating .form__input:-ms-input-placeholder,
+.form__group--floating .form__textarea:-ms-input-placeholder {
+  color: transparent;
+}
+
+.form__group--floating .form__input::-ms-input-placeholder,
+.form__group--floating .form__textarea::-ms-input-placeholder {
+  color: transparent;
+}
+
+.form__group--floating .form__input::placeholder,
+.form__group--floating .form__textarea::placeholder {
+  color: transparent;
+}
+
+.form__group--floating .form__input:not(:placeholder-shown),
+.form__group--floating .form__textarea:not(:placeholder-shown) {
+  padding-top: 1.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.form__group--floating .form__input:not(:placeholder-shown) ~ .form__label,
+.form__group--floating .form__textarea:not(:placeholder-shown) ~ .form__label {
+  transform: translateY(-0.5rem) scale(0.85);
+  color: var(--primary-color);
+}
+
+.form__group--floating .form__input:focus ~ .form__label,
+.form__group--floating .form__textarea:focus ~ .form__label {
+  transform: translateY(-0.5rem) scale(0.85);
+  color: var(--primary-color);
+}
+
+/* Form validation states */
+.form__input--valid {
+  border-color: #28a745;
+}
+
+.form__input--valid:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.form__valid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #28a745;
+}
+
+/* Form with icons */
+.form__group--icon {
+  position: relative;
+}
+
+.form__icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  color: var(--text-color-light);
+}
+
+.form__icon--left {
+  left: 0.75rem;
+}
+
+.form__icon--right {
+  right: 0.75rem;
+}
+
+.form__group--icon .form__input {
+  padding-left: 2.5rem;
+}
+
+.form__group--icon-right .form__input {
+  padding-left: 0.75rem;
+  padding-right: 2.5rem;
+}
+
+/* Responsive forms */
+@media (max-width: 768px) {
+  .form--inline {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .form--inline .form__group {
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+} 

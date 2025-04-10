@@ -1,168 +1,232 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>Admin Dashboard - LH Coffee</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/ECommerceFE/css/admin-style.css">
-</head>
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="/ECommerceFE/css/admin-style.css" />
+    <link rel="stylesheet" href="/ECommerceFE/css/notification.css" />
+    <link rel="stylesheet" href="/ECommerceFE/css/admin-sidebar.css" />
 
-<body>
-    <input type="checkbox" id="sidebar-toggle">
+    <!-- Inline style để đảm bảo sidebar hiển thị -->
+    <style>
+      .sidebar {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+
+      /* Các quy tắc hiện đã được chuyển vào admin-sidebar.css */
+    </style>
+  </head>
+
+  <body>
+    <input type="checkbox" id="sidebar-toggle" />
     <div class="sidebar" id="sidebar-container"></div>
     <div class="main-content">
-        <header>
-            <div class="search-wrapper"><span class="fa fa-search"></span>
-                <input type="search" placeholder="Search">
+      <header>
+        <div class="search-wrapper">
+          <span class="fa fa-search"></span>
+          <input type="search" placeholder="Search" />
+        </div>
+        <div class="social-icons">
+          <span class="fa fa-bell"></span>
+          <span class="fa fa-comment"></span>
+          <div></div>
+        </div>
+      </header>
+      <main>
+        <h2 class="dash-title">Overview</h2>
+        <div class="dash-cards">
+          <div class="card-single">
+            <div class="card-body">
+              <span class="fa fa-briefcase"></span>
+              <div>
+                <h5>Account Balance</h5>
+                <h4>20.000.000 VND</h4>
+              </div>
             </div>
-            <div class="social-icons">
-                <span class="fa fa-bell"></span>
-                <span class="fa fa-comment"></span>
-                <div></div>
+            <div class="card-footer">
+              <a href="">View all</a>
             </div>
-        </header>
-        <main>
-            <h2 class="dash-title">Overview</h2>
-            <div class="dash-cards">
-                <div class="card-single">
-                    <div class="card-body">
-                        <span class="fa fa-briefcase"></span>
-                        <div>
-                            <h5>
-                                Account Balance
-                            </h5>
-                            <h4>20.000.000 VND</h4>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <a href="">View all</a>
-                    </div>
-                </div>
-                <div class="card-single">
-                    <div class="card-body">
-                        <span class="fa fa-check-square"></span>
-                        <div>
-                            <h5>
-                                Success
-                            </h5>
-                            <h4>20.000.000 VND</h4>
-                        </div>
-
-                    </div>
-                    <div class="card-footer">
-                        <a href="">View all</a>
-                    </div>
-                </div>
-                <div class="card-single">
-                    <div class="card-body">
-                        <span class="fa fa-sync"></span>
-                        <div>
-                            <h5>
-                                Pending
-                            </h5>
-                            <h4>20.000.000 VND</h4>
-                        </div>
-
-                    </div>
-                    <div class="card-footer">
-                        <a href="">View all</a>
-                    </div>
-                </div>
+          </div>
+          <div class="card-single">
+            <div class="card-body">
+              <span class="fa fa-check-square"></span>
+              <div>
+                <h5>Success</h5>
+                <h4>20.000.000 VND</h4>
+              </div>
             </div>
-            <section class="recent">
-                <div class="activity-grid">
-                    <div class="activity-card">
-                        <h3>Recent activity</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Project</th>
-                                    <th>Start Date</th>
-                                    <th>End Date</th>
-                                    <th>Team</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Coffee Startup</td>
-                                    <td>16 December, 2025</td>
-                                    <td>19 December, 2025</td>
-                                    <td class="td-team">
-                                        <div class="img-1"></div>
-                                        <div class="img-2"></div>
-                                        <div class="img-3"></div>
-                                    </td>
-                                    <td><span class="badge success">Success</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Coffee Startup</td>
-                                    <td>16 December, 2025</td>
-                                    <td>19 December, 2025</td>
-                                    <td class="td-team">
-                                        <div class="img-1"></div>
-                                        <div class="img-2"></div>
-                                        <div class="img-3"></div>
-                                    </td>
-                                    <td><span class="badge success">Success</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Coffee </td>
-                                    <td>16 December, 2025</td>
-                                    <td>19 December, 2025</td>
-                                    <td class="td-team">
-                                        <div class="img-1"></div>
-                                        <div class="img-2"></div>
-                                        <div class="img-3"></div>
-                                    </td>
-                                    <td><span class="badge success">Success</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Coffee Startup Large</td>
-                                    <td>16 December, 2025</td>
-                                    <td>19 December, 2025</td>
-                                    <td class="td-team">
-                                        <div class="img-1"></div>
-                                        <div class="img-2"></div>
-                                        <div class="img-3"></div>
-                                    </td>
-                                    <td><span class="badge warning">Failed</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Coffee Startup Mini</td>
-                                    <td>16 December, 2025</td>
-                                    <td>19 December, 2025</td>
-                                    <td class="td-team">
-                                        <div class="img-1"></div>
-                                        <div class="img-2"></div>
-                                        <div class="img-3"></div>
-                                    </td>
-                                    <td><span class="badge success">Success</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-
-            </section>
-        </main>
+            <div class="card-footer">
+              <a href="">View all</a>
+            </div>
+          </div>
+          <div class="card-single">
+            <div class="card-body">
+              <span class="fa fa-sync"></span>
+              <div>
+                <h5>Pending</h5>
+                <h4>20.000.000 VND</h4>
+              </div>
+            </div>
+            <div class="card-footer">
+              <a href="">View all</a>
+            </div>
+          </div>
+        </div>
+        <section class="recent">
+          <div class="activity-grid">
+            <div class="activity-card">
+              <h3>Recent activity</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Project</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Team</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Coffee Startup</td>
+                    <td>16 December, 2025</td>
+                    <td>19 December, 2025</td>
+                    <td class="td-team">
+                      <div class="img-1"></div>
+                      <div class="img-2"></div>
+                      <div class="img-3"></div>
+                    </td>
+                    <td><span class="badge success">Success</span></td>
+                  </tr>
+                  <tr>
+                    <td>Coffee Startup</td>
+                    <td>16 December, 2025</td>
+                    <td>19 December, 2025</td>
+                    <td class="td-team">
+                      <div class="img-1"></div>
+                      <div class="img-2"></div>
+                      <div class="img-3"></div>
+                    </td>
+                    <td><span class="badge success">Success</span></td>
+                  </tr>
+                  <tr>
+                    <td>Coffee</td>
+                    <td>16 December, 2025</td>
+                    <td>19 December, 2025</td>
+                    <td class="td-team">
+                      <div class="img-1"></div>
+                      <div class="img-2"></div>
+                      <div class="img-3"></div>
+                    </td>
+                    <td><span class="badge success">Success</span></td>
+                  </tr>
+                  <tr>
+                    <td>Coffee Startup Large</td>
+                    <td>16 December, 2025</td>
+                    <td>19 December, 2025</td>
+                    <td class="td-team">
+                      <div class="img-1"></div>
+                      <div class="img-2"></div>
+                      <div class="img-3"></div>
+                    </td>
+                    <td><span class="badge warning">Failed</span></td>
+                  </tr>
+                  <tr>
+                    <td>Coffee Startup Mini</td>
+                    <td>16 December, 2025</td>
+                    <td>19 December, 2025</td>
+                    <td class="td-team">
+                      <div class="img-1"></div>
+                      <div class="img-2"></div>
+                      <div class="img-3"></div>
+                    </td>
+                    <td><span class="badge success">Success</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
     </div>
-</body>
 
-<script src="/ECommerceFE/js/config.js"></script>
-<script src="/ECommerceFE/js/nav.js"></script>
-<script src="/ECommerceFE/js/notification.js"></script>
-<script src="/ECommerceFE/js/admin.js"></script>
-<script src="/ECommerceFE/js/loadSidebar.js"></script>
+    <!-- JavaScript Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
 
+    <!-- JavaScript Non-modules -->
+    <script src="/ECommerceFE/js/config.js"></script>
+    <script src="/ECommerceFE/js/api.js"></script>
+    <script src="/ECommerceFE/js/ui.js"></script>
+    <script src="/ECommerceFE/js/auth.js"></script>
+    <script src="/ECommerceFE/js/admin.js"></script>
+
+    <!-- Manual sidebar loader -->
+    <script>
+      // Tải sidebar trực tiếp nếu không được tải bởi admin.js
+      document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(function () {
+          const sidebarContainer = document.getElementById("sidebar-container");
+          if (!sidebarContainer || !sidebarContainer.innerHTML.trim()) {
+            console.log("Sidebar không được tải, thử tải trực tiếp...");
+
+            // Tải sidebar trực tiếp
+            fetch("sidebar.html")
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error(
+                    "Không thể tải sidebar từ đường dẫn tương đối"
+                  );
+                }
+                return response.text();
+              })
+              .then((data) => {
+                if (sidebarContainer) {
+                  sidebarContainer.innerHTML = data;
+                  console.log(
+                    "Đã tải sidebar thành công với đường dẫn tương đối"
+                  );
+
+                  // Highlight trang hiện tại
+                  const currentPath = window.location.pathname;
+                  console.log("Đường dẫn hiện tại:", currentPath);
+
+                  // Tìm menu phù hợp
+                  if (
+                    currentPath.endsWith("admin.html") ||
+                    currentPath.endsWith("/admin/")
+                  ) {
+                    const homeMenu = document.getElementById("menu-home");
+                    if (homeMenu) {
+                      homeMenu.classList.add("active");
+                      console.log("Đã đánh dấu menu home");
+                    }
+                  }
+                }
+              })
+              .catch((error) => {
+                console.error("Lỗi khi tải sidebar trực tiếp:", error);
+              });
+          }
+        }, 1000);
+      });
+    </script>
+  </body>
 </html>

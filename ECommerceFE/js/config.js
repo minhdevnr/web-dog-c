@@ -34,7 +34,12 @@ const PAGINATION_CONFIG = {
 // Cấu hình ảnh
 const IMAGE_CONFIG = {
   placeholder: 'img/placeholder.jpg',
-  defaultAvatar: 'img/default-avatar.png'
+  defaultAvatar: 'img/default-avatar.png',
+  quality: 0.8,
+  maxWidth: 800,
+  maxHeight: 600,
+  formats: ['webp', 'jpg'],
+  lazyLoading: true
 };
 
 // Trạng thái đơn hàng
@@ -62,22 +67,59 @@ const THEMES = {
   }
 };
 
+// Hàm chuyển đổi theme
+function switchTheme(theme) {
+  const root = document.documentElement;
+  const themeVars = THEMES[theme];
+  
+  for (const [key, value] of Object.entries(themeVars)) {
+    root.style.setProperty(key, value);
+  }
+  
+  localStorage.setItem('theme', theme);
+}
+
+// Kiểm tra và áp dụng theme đã lưu
+const savedTheme = localStorage.getItem('theme') || 'light';
+switchTheme(savedTheme);
+
 // Cấu hình đánh giá
 const RATING_CONFIG = {
   maxStars: 5,
   halfStar: true
 };
 
+/**
+ * CẤU HÌNH API THỐNG NHẤT CHO TOÀN BỘ ỨNG DỤNG
+ * Đây là định nghĩa duy nhất cho API_CONFIG, đảm bảo tính nhất quán
+ */
 const API_CONFIG = {
     BASE_URL: 'https://localhost:7175',
     ENDPOINTS: {
         LOGIN: '/api/user/login',
         REGISTER: '/api/user/register',
-        PRODUCTS: '/api/product',
         USERS: '/api/user',
         ORDERS: '/api/order',
         CART: '/api/cart',
         NEWS: '/api/news',
-        REVIEWS: '/api/review'
-    }
-}; 
+        REVIEWS: '/api/review',
+        PRODUCTS: '/api/product',
+        FORGOT_PASSWORD: '/api/auth/forgot-password',
+        RESET_PASSWORD: '/api/auth/reset-password',
+        PROFILE: '/api/user/profile',
+        CATEGORIES: '/api/category',
+        PING: '/api/ping'
+    },
+    TIMEOUT: 30000, // 30 giây timeout cho các request
+    RETRY_ATTEMPTS: 3 // Số lần thử lại nếu request thất bại
+};
+
+// Đặt vào window object để các file khác có thể sử dụng không cần import
+window.API_CONFIG = API_CONFIG;
+window.formatCurrency = formatCurrency;
+window.PAGINATION_CONFIG = PAGINATION_CONFIG;
+window.IMAGE_CONFIG = IMAGE_CONFIG;
+window.ORDER_STATUS = ORDER_STATUS;
+window.THEMES = THEMES;
+window.switchTheme = switchTheme;
+window.RATING_CONFIG = RATING_CONFIG; 

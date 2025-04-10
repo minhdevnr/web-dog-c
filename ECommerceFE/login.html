@@ -118,12 +118,12 @@
       </div>
       <form class="auth-form" id="login-form">
         <div class="form-group">
-          <label for="email">Email hoặc Số điện thoại</label>
-          <input type="text" id="email" name="email" required />
+          <label for="login-email">Email hoặc Số điện thoại</label>
+          <input type="text" id="login-email" name="email" required />
         </div>
         <div class="form-group">
-          <label for="password">Mật khẩu</label>
-          <input type="password" id="password" name="password" required />
+          <label for="login-password">Mật khẩu</label>
+          <input type="password" id="login-password" name="password" required />
         </div>
         <button type="submit" class="auth-btn">Đăng nhập</button>
       </form>
@@ -133,27 +133,9 @@
       </div>
     </div>
 
-    <script src="js/notification.js"></script>
-    <script src="js/user-auth.js"></script>
-    <script>
-      document
-        .getElementById("login-form")
-        .addEventListener("submit", async function (e) {
-          e.preventDefault();
-
-          const emailOrPhone = document.getElementById("email").value;
-          const password = document.getElementById("password").value;
-
-          try {
-            const data = await login(emailOrPhone, password);
-            showSuccess("Đăng nhập thành công, đang chuyển hướng...");
-            setTimeout(() => {
-              window.location.href = "index.html";
-            }, 1500);
-          } catch (error) {
-            showError(error.message || "Đăng nhập thất bại");
-          }
-        });
-    </script>
+    <!-- JavaScript Modules -->
+    <script src="js/ui.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
   </body>
 </html>

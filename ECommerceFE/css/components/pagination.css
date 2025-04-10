@@ -1,0 +1,199 @@
+/* 
+ * pagination.css - Stylesheet cho pagination component
+ * Tuân thủ BEM methodology cho việc đặt tên class
+ */
+
+.pagination {
+  display: flex;
+  padding-left: 0;
+  list-style: none;
+  border-radius: 0.25rem;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.pagination__item {
+  position: relative;
+  display: block;
+  margin: 0 2px;
+}
+
+.pagination__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.75rem;
+  margin-left: -1px;
+  line-height: 1.25;
+  color: var(--primary-color);
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  text-decoration: none;
+  transition: var(--transition);
+  min-width: 2.5rem;
+  height: 2.5rem;
+}
+
+.pagination__link:hover {
+  color: var(--primary-color-dark);
+  background-color: #e9ecef;
+  border-color: var(--border-color);
+  z-index: 2;
+}
+
+.pagination__link:focus {
+  z-index: 3;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(199, 161, 122, 0.25);
+}
+
+.pagination__item:first-child .pagination__link {
+  margin-left: 0;
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+
+.pagination__item:last-child .pagination__link {
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.pagination__item--active .pagination__link {
+  z-index: 3;
+  color: var(--white);
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.pagination__item--active .pagination__link:hover {
+  background-color: var(--primary-color-dark);
+  border-color: var(--primary-color-dark);
+  color: var(--white);
+  cursor: default;
+}
+
+.pagination__item--disabled .pagination__link {
+  color: var(--text-color-light);
+  pointer-events: none;
+  cursor: auto;
+  background-color: var(--white);
+  border-color: var(--border-color);
+}
+
+/* Pagination sizes */
+.pagination--sm .pagination__link {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  min-width: 2rem;
+  height: 2rem;
+}
+
+.pagination--lg .pagination__link {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.125rem;
+  line-height: 1.5;
+  min-width: 3rem;
+  height: 3rem;
+}
+
+/* Pagination variants */
+.pagination--rounded .pagination__link {
+  border-radius: 50%;
+  margin: 0 0.25rem;
+}
+
+.pagination--rounded .pagination__item:first-child .pagination__link,
+.pagination--rounded .pagination__item:last-child .pagination__link {
+  border-radius: 50%;
+}
+
+/* Pagination with ellipsis */
+.pagination__ellipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.75rem;
+  line-height: 1.25;
+  color: var(--text-color-light);
+  background-color: var(--white);
+  border: 1px solid transparent;
+  pointer-events: none;
+  min-width: 2.5rem;
+  height: 2.5rem;
+}
+
+/* Pagination with icons */
+.pagination__icon {
+  font-size: 0.85rem;
+}
+
+/* Pagination with border style */
+.pagination--border-none {
+  border: none;
+}
+
+.pagination--border-none .pagination__link {
+  border: none;
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+}
+
+/* Pagination alignment */
+.pagination--left {
+  justify-content: flex-start;
+}
+
+.pagination--right {
+  justify-content: flex-end;
+}
+
+/* Pagination with background */
+.pagination--light .pagination__link {
+  background-color: #f8f9fa;
+}
+
+.pagination--dark {
+  background-color: #343a40;
+}
+
+.pagination--dark .pagination__link {
+  background-color: #343a40;
+  border-color: #454d55;
+  color: #fff;
+}
+
+.pagination--dark .pagination__link:hover {
+  background-color: #23272b;
+  border-color: #454d55;
+  color: #fff;
+}
+
+.pagination--dark .pagination__item--active .pagination__link {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.pagination--dark .pagination__item--disabled .pagination__link {
+  background-color: #343a40;
+  border-color: #454d55;
+  color: #6c757d;
+}
+
+/* Responsive pagination */
+@media (max-width: 576px) {
+  .pagination__item--hide-mobile {
+    display: none;
+  }
+  
+  .pagination__link {
+    padding: 0.4rem 0.65rem;
+    min-width: 2rem;
+    height: 2rem;
+  }
+  
+  .pagination--compact-mobile .pagination__item:not(.pagination__item--active):not(:first-child):not(:last-child):not(.pagination__item--ellipsis) {
+    display: none;
+  }
+} 

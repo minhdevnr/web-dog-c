@@ -1,0 +1,153 @@
+/* 
+ * header.css - Stylesheet cho component header
+ * Tuân thủ BEM methodology cho việc đặt tên class
+ */
+
+.site-header {
+  width: 100%;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.site-header__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+}
+
+.site-header__logo {
+  display: flex;
+  align-items: center;
+}
+
+.site-header__logo-img {
+  max-height: 50px;
+}
+
+.site-header__nav {
+  display: flex;
+  align-items: center;
+}
+
+.site-header__nav-list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.site-header__nav-item {
+  margin: 0 10px;
+}
+
+.site-header__nav-link {
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+  padding: 10px;
+  transition: color 0.3s ease;
+}
+
+.site-header__nav-link:hover {
+  color: #c7a17a; /* Màu coffee */
+}
+
+.site-header__nav-link--active {
+  color: #c7a17a;
+  border-bottom: 2px solid #c7a17a;
+}
+
+.site-header__actions {
+  display: flex;
+  align-items: center;
+}
+
+.site-header__action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 15px;
+  position: relative;
+  color: #333;
+  font-size: 20px;
+}
+
+.site-header__action-btn:hover {
+  color: #c7a17a;
+}
+
+.site-header__cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #c7a17a;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.site-header__menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #333;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .site-header__menu-toggle {
+    display: block;
+  }
+
+  .site-header__nav {
+    position: absolute;
+    top: 80px;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .site-header__nav--open {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .site-header__nav-list {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .site-header__nav-item {
+    margin: 10px 0;
+    width: 100%;
+  }
+
+  .site-header__nav-link {
+    display: block;
+    padding: 10px 0;
+  }
+} 

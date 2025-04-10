@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quản lý Sản phẩm - LH Coffee</title>
+    <title>Quản lý Danh mục - LH Coffee</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -25,7 +25,6 @@
     />
     <link rel="stylesheet" href="/ECommerceFE/css/admin-style.css" />
     <link rel="stylesheet" href="/ECommerceFE/css/notification.css" />
-    <link rel="stylesheet" href="/ECommerceFE/css/admin-sidebar.css" />
     <!-- Thêm vào phần head của tất cả các file HTML -->
     <link
       rel="stylesheet"
@@ -42,8 +41,8 @@
           <span class="fa fa-search"></span>
           <input
             type="search"
-            placeholder="Tìm kiếm sản phẩm..."
-            id="productSearchInput"
+            placeholder="Tìm kiếm danh mục..."
+            id="categorySearchInput"
           />
         </div>
         <div class="social-icons">
@@ -54,32 +53,31 @@
       </header>
       <main>
         <div class="admin-header">
-          <h2>Quản lý Sản phẩm</h2>
+          <h2>Quản lý Danh mục</h2>
           <div class="right-controls">
-            <button class="btn btn-primary" id="newProductBtn">
-              <i class="fas fa-plus"></i> Thêm Sản phẩm
+            <button class="btn btn-primary" id="newCategoryBtn">
+              <i class="fas fa-plus"></i> Thêm Danh mục
             </button>
           </div>
         </div>
 
         <div class="recent-grid">
-          <div class="products">
+          <div class="categories">
             <div class="card">
               <div class="card-body">
                 <div class="table-responsive">
                   <table class="table">
                     <thead>
                       <tr>
-                        <th>Ảnh</th>
-                        <th>Tên sản phẩm</th>
-                        <th>Giá</th>
-                        <th>Danh mục</th>
+                        <th>ID</th>
+                        <th>Tên danh mục</th>
                         <th>Mô tả</th>
+                        <th>Số sản phẩm</th>
                         <th>Thao tác</th>
                       </tr>
                     </thead>
-                    <tbody id="productTable">
-                      <!-- Product data will be filled here -->
+                    <tbody id="categoryTable">
+                      <!-- Category data will be filled here -->
                     </tbody>
                   </table>
                 </div>
@@ -90,20 +88,20 @@
       </main>
     </div>
 
-    <!-- Product Modal -->
+    <!-- Category Modal -->
     <div
       class="modal fade"
-      id="productModal"
+      id="categoryModal"
       tabindex="-1"
       role="dialog"
-      aria-labelledby="productModalLabel"
+      aria-labelledby="categoryModalLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="productModalLabel">
-              Thêm Sản phẩm mới
+            <h5 class="modal-title" id="categoryModalLabel">
+              Thêm Danh mục mới
             </h5>
             <button
               type="button"
@@ -115,61 +113,24 @@
             </button>
           </div>
           <div class="modal-body">
-            <form id="productForm">
-              <input type="hidden" id="productId" />
+            <form id="categoryForm">
+              <input type="hidden" id="categoryId" />
               <div class="form-group">
-                <label for="productName">Tên sản phẩm</label>
+                <label for="categoryName">Tên danh mục</label>
                 <input
                   type="text"
                   class="form-control"
-                  id="productName"
+                  id="categoryName"
                   required
                 />
               </div>
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label for="productPrice">Giá (VNĐ)</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="productPrice"
-                    required
-                  />
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="productCategory">Danh mục</label>
-                  <select class="form-control" id="productCategory" required>
-                    <!-- Categories will be filled here -->
-                  </select>
-                </div>
-              </div>
               <div class="form-group">
-                <label for="productDescription">Mô tả</label>
+                <label for="categoryDescription">Mô tả</label>
                 <textarea
                   class="form-control"
-                  id="productDescription"
+                  id="categoryDescription"
                   rows="3"
                 ></textarea>
-              </div>
-              <div class="form-group">
-                <label for="productImage">Ảnh sản phẩm</label>
-                <input
-                  type="file"
-                  class="form-control-file"
-                  id="productImage"
-                />
-                <div
-                  id="imagePreviewContainer"
-                  class="mt-2"
-                  style="display: none"
-                >
-                  <img
-                    id="imagePreview"
-                    src=""
-                    alt="Preview"
-                    style="max-width: 200px; max-height: 200px"
-                  />
-                </div>
               </div>
             </form>
           </div>
@@ -181,7 +142,7 @@
             >
               Hủy
             </button>
-            <button type="button" class="btn btn-primary" id="saveProductBtn">
+            <button type="button" class="btn btn-primary" id="saveCategoryBtn">
               Lưu
             </button>
           </div>
@@ -213,7 +174,7 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">Bạn có chắc chắn muốn xóa sản phẩm này?</div>
+          <div class="modal-body">Bạn có chắc chắn muốn xóa danh mục này?</div>
           <div class="modal-footer">
             <button
               type="button"
@@ -233,7 +194,6 @@
     <!-- Notification container -->
     <div id="notification-container"></div>
 
-    <!-- JavaScript Dependencies -->
     <script
       src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
       integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -250,12 +210,12 @@
       crossorigin="anonymous"
     ></script>
 
-    <!-- JavaScript Non-modules -->
-    <script src="/ECommerceFE/js/config.js"></script>
-    <script src="/ECommerceFE/js/api.js"></script>
-    <script src="/ECommerceFE/js/ui.js"></script>
-    <script src="/ECommerceFE/js/custom-utils.js"></script>
-    <script src="/ECommerceFE/js/admin.js"></script>
-    <script src="/ECommerceFE/js/admin-product.js"></script>
+    <!-- Các module JavaScript -->
+    <script type="module" src="/ECommerceFE/js/modules/config.js"></script>
+    <script type="module" src="/ECommerceFE/js/modules/api.js"></script>
+    <script type="module" src="/ECommerceFE/js/modules/ui.js"></script>
+    <script type="module" src="/ECommerceFE/js/modules/auth.js"></script>
+    <script type="module" src="/ECommerceFE/js/modules/admin.js"></script>
+    <script type="module" src="/ECommerceFE/js/modules/category.js"></script>
   </body>
 </html>

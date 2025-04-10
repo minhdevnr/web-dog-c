@@ -1,0 +1,231 @@
+/* 
+ * breadcrumbs.css - Stylesheet cho breadcrumb component
+ * Tuân thủ BEM methodology cho việc đặt tên class
+ */
+
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  list-style: none;
+  background-color: var(--background-color);
+  border-radius: 0.25rem;
+}
+
+.breadcrumb__item {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb__item:not(:last-child)::after {
+  display: inline-block;
+  margin: 0 0.5rem;
+  content: "/";
+  color: var(--text-color-light);
+}
+
+.breadcrumb__link {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.breadcrumb__link:hover {
+  color: var(--primary-color-dark);
+  text-decoration: underline;
+}
+
+.breadcrumb__item--active .breadcrumb__link {
+  color: var(--text-color-light);
+  pointer-events: none;
+}
+
+/* Breadcrumb variants */
+
+.breadcrumb--arrow .breadcrumb__item:not(:last-child)::after {
+  content: "›";
+  font-size: 1.2em;
+  line-height: 1;
+}
+
+.breadcrumb--chevron .breadcrumb__item:not(:last-child)::after {
+  content: "›";
+  font-size: 1.2em;
+  line-height: 1;
+}
+
+.breadcrumb--bullet .breadcrumb__item:not(:last-child)::after {
+  content: "•";
+  font-size: 1em;
+}
+
+.breadcrumb--dash .breadcrumb__item:not(:last-child)::after {
+  content: "-";
+}
+
+/* Breadcrumb with icons */
+
+.breadcrumb__icon {
+  margin-right: 0.5rem;
+  font-size: 0.875em;
+}
+
+.breadcrumb--icons .breadcrumb__item:not(:last-child)::after {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "\f054"; /* Font Awesome chevron-right */
+  font-size: 0.7em;
+}
+
+/* Breadcrumb styles */
+
+.breadcrumb--light {
+  background-color: transparent;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.breadcrumb--bordered {
+  border: 1px solid var(--border-color);
+}
+
+.breadcrumb--rounded {
+  border-radius: 2rem;
+  padding: 0.5rem 1.5rem;
+}
+
+.breadcrumb--shadow {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+/* Breadcrumb with background */
+
+.breadcrumb--primary {
+  background-color: var(--primary-color);
+}
+
+.breadcrumb--primary .breadcrumb__link {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.breadcrumb--primary .breadcrumb__link:hover {
+  color: #fff;
+}
+
+.breadcrumb--primary .breadcrumb__item--active .breadcrumb__link {
+  color: #fff;
+}
+
+.breadcrumb--primary .breadcrumb__item:not(:last-child)::after {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.breadcrumb--dark {
+  background-color: #343a40;
+}
+
+.breadcrumb--dark .breadcrumb__link {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.breadcrumb--dark .breadcrumb__link:hover {
+  color: #fff;
+}
+
+.breadcrumb--dark .breadcrumb__item--active .breadcrumb__link {
+  color: #fff;
+}
+
+.breadcrumb--dark .breadcrumb__item:not(:last-child)::after {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Breadcrumb overflow handling */
+
+.breadcrumb--truncate .breadcrumb__link {
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+
+.breadcrumb--collapse {
+  position: relative;
+}
+
+.breadcrumb--collapse .breadcrumb__item:not(:first-child):not(:last-child):not(.breadcrumb__item--show) {
+  display: none;
+}
+
+.breadcrumb--collapse .breadcrumb__item--more {
+  cursor: pointer;
+  color: var(--primary-color);
+}
+
+.breadcrumb--collapse .breadcrumb__item--more:hover {
+  color: var(--primary-color-dark);
+}
+
+.breadcrumb--collapse .breadcrumb__dropdown {
+  position: absolute;
+  top: 100%;
+  z-index: 1000;
+  display: none;
+  min-width: 10rem;
+  padding: 0.5rem 0;
+  margin: 0.125rem 0 0;
+  font-size: 1rem;
+  color: var(--text-color);
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.175);
+}
+
+.breadcrumb--collapse .breadcrumb__dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.25rem 1.5rem;
+  clear: both;
+  font-weight: 400;
+  color: var(--text-color);
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+  text-decoration: none;
+}
+
+.breadcrumb--collapse .breadcrumb__dropdown-item:hover {
+  color: var(--primary-color);
+  text-decoration: none;
+  background-color: var(--background-color);
+}
+
+.breadcrumb--collapse .breadcrumb__dropdown.show {
+  display: block;
+}
+
+/* Responsive breadcrumbs */
+
+@media (max-width: 576px) {
+  .breadcrumb {
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+  }
+  
+  .breadcrumb--responsive .breadcrumb__item:not(:last-child):not(:first-child) {
+    display: none;
+  }
+  
+  .breadcrumb--responsive .breadcrumb__item:first-child::after {
+    content: "...";
+    margin: 0 0.5rem;
+  }
+} 

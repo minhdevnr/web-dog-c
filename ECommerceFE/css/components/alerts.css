@@ -1,0 +1,241 @@
+/* 
+ * alerts.css - Stylesheet cho alert component
+ * Tuân thủ BEM methodology cho việc đặt tên class
+ */
+
+.alert {
+  position: relative;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+}
+
+.alert__heading {
+  color: inherit;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.alert__content {
+  color: inherit;
+}
+
+.alert__content:last-child {
+  margin-bottom: 0;
+}
+
+.alert__link {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.alert__link:hover {
+  text-decoration: none;
+}
+
+.alert__icon {
+  margin-right: 0.75rem;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.alert--with-icon {
+  display: flex;
+  align-items: center;
+}
+
+.alert--with-icon .alert__icon {
+  flex-shrink: 0;
+  font-size: 1.25rem;
+}
+
+.alert--with-icon .alert__content-wrapper {
+  flex: 1;
+}
+
+/* Alert variants */
+
+.alert--primary {
+  color: #004085;
+  background-color: #cce5ff;
+  border-color: #b8daff;
+}
+
+.alert--secondary {
+  color: #383d41;
+  background-color: #e2e3e5;
+  border-color: #d6d8db;
+}
+
+.alert--success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.alert--danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.alert--warning {
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+}
+
+.alert--info {
+  color: #0c5460;
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+}
+
+.alert--light {
+  color: #818182;
+  background-color: #fefefe;
+  border-color: #fdfdfe;
+}
+
+.alert--dark {
+  color: #1b1e21;
+  background-color: #d6d8d9;
+  border-color: #c6c8ca;
+}
+
+/* Alert with dismiss button */
+
+.alert--dismissible {
+  padding-right: 4rem;
+}
+
+.alert__close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.75rem 1.25rem;
+  color: inherit;
+  background-color: transparent;
+  border: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  opacity: .5;
+  cursor: pointer;
+}
+
+.alert__close:hover {
+  opacity: 1;
+}
+
+/* Alert animations */
+
+.alert--fade {
+  opacity: 0;
+  transition: opacity 0.3s linear;
+}
+
+.alert--fade.alert--show {
+  opacity: 1;
+}
+
+.alert--slide-up {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.alert--slide-up.alert--show {
+  max-height: 200px;
+}
+
+/* Alert with border styles */
+
+.alert--border-left {
+  border-left-width: 4px;
+}
+
+.alert--border-top {
+  border-top-width: 4px;
+}
+
+.alert--outline {
+  background-color: transparent;
+}
+
+.alert--outline.alert--primary {
+  color: #004085;
+}
+
+.alert--outline.alert--secondary {
+  color: #383d41;
+}
+
+.alert--outline.alert--success {
+  color: #155724;
+}
+
+.alert--outline.alert--danger {
+  color: #721c24;
+}
+
+.alert--outline.alert--warning {
+  color: #856404;
+}
+
+.alert--outline.alert--info {
+  color: #0c5460;
+}
+
+/* Alert sizes */
+
+.alert--sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.alert--lg {
+  padding: 1rem 1.5rem;
+  font-size: 1.125rem;
+}
+
+/* Alert groups */
+
+.alert-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.alert-group .alert {
+  margin-bottom: 0.5rem;
+}
+
+.alert-group .alert:last-child {
+  margin-bottom: 0;
+}
+
+/* Alert with background gradient */
+
+.alert--gradient {
+  background-image: linear-gradient(45deg, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent);
+  background-size: 1rem 1rem;
+}
+
+/* Responsive alerts */
+
+@media (max-width: 576px) {
+  .alert {
+    padding: 0.5rem 1rem;
+  }
+  
+  .alert--dismissible {
+    padding-right: 3rem;
+  }
+  
+  .alert__close {
+    padding: 0.5rem 1rem;
+  }
+} 

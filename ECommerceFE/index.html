@@ -23,10 +23,68 @@
   </head>
 
   <body>
-    <!-- Thay thế toàn bộ header hiện có bằng placeholder -->
-    <div id="header-container"></div>
+    <!-- Header Section Starts -->
+    <header class="header">
+      <a href="#" class="logo">
+        <img src="img/logo.png" alt="LH Coffee" />
+      </a>
 
-    <!-- Giữ nội dung trang, nhưng thêm data-i18n vào các phần tử cần dịch -->
+      <nav class="navbar">
+        <a href="#home">Trang Chủ</a>
+        <a href="#about">Giới Thiệu</a>
+        <a href="#products">Sản Phẩm</a>
+        <a href="#review">Đánh Giá</a>
+        <a href="#contact">Liên Hệ</a>
+      </nav>
+
+      <div class="icons">
+        <div id="search-btn" class="fas fa-search"></div>
+        <div id="cart-btn" class="fas fa-shopping-cart">
+          <span class="cart-count" id="cart-count">0</span>
+        </div>
+        <div id="login-btn" class="fas fa-user"></div>
+        <div id="bars-btn" class="fas fa-bars"></div>
+      </div>
+
+      <div class="search-form">
+        <form id="search-form" onsubmit="return false;">
+          <input
+            type="search"
+            id="search-box"
+            placeholder="Tìm kiếm sản phẩm..."
+            aria-label="Tìm kiếm sản phẩm"
+          />
+          <label for="search-box" class="fas fa-search"></label>
+        </form>
+      </div>
+
+      <div class="cart-item-container" id="cart-container">
+        <div class="cart-heading">Giỏ Hàng</div>
+        <div id="cart-items">
+          <!-- Cart items will be dynamically added here -->
+          <div class="cart-empty">Giỏ hàng trống</div>
+        </div>
+        <div class="cart-footer">
+          <div class="cart-total">
+            Tổng: <span class="cart-total-price">0đ</span>
+          </div>
+          <a href="cart.html" class="btn">Xem Giỏ Hàng</a>
+          <a href="checkout.html" class="btn">Thanh Toán</a>
+        </div>
+      </div>
+
+      <div class="user-profile-dropdown">
+        <!-- User profile will be dynamically updated based on login status -->
+        <h3>Tài Khoản</h3>
+        <div id="user-profile-content">
+          <a href="login.html"><i class="fas fa-sign-in-alt"></i>Đăng Nhập</a>
+          <a href="register.html"><i class="fas fa-user-plus"></i>Đăng Ký</a>
+        </div>
+      </div>
+    </header>
+    <!-- Header Section Ends -->
+
+    <!-- Home Section Starts -->
     <section class="home" id="home">
       <div class="content">
         <h3 data-i18n="coffee_slogan">Cà phê tươi sạch nhất Sài Gòn</h3>
@@ -35,14 +93,14 @@
           lưỡng từ cao nguyên Việt Nam. Mỗi tách cà phê là một hành trình khám
           phá đầy cảm xúc.
         </p>
-        <a href="#" class="btn" data-i18n="get_yours">Mua ngay</a>
+        <a href="#products" class="btn">Mua Sắm Ngay</a>
       </div>
     </section>
+    <!-- Home Section Ends -->
 
+    <!-- About Section Starts -->
     <section class="about" id="about">
-      <h1 class="heading" data-i18n="about_section">
-        Giới thiệu <span data-i18n="about_us_span">về chúng tôi</span>
-      </h1>
+      <h1 class="heading"><span>Về</span> Chúng Tôi</h1>
       <div class="row">
         <div class="image">
           <img src="./img/coffee-2225564_960_720.jpg" alt="cà phê" />
@@ -70,369 +128,186 @@
         </div>
       </div>
     </section>
+    <!-- About Section Ends -->
 
-    <section class="menu" id="menu">
-      <h1 class="heading" data-i18n="our_menu">
-        Thực đơn <span data-i18n="menu_span">của chúng tôi</span>
-      </h1>
-      <div class="box-container">
-        <div class="box-menu">
-          <img src="./img/coffee1.jpg" alt="coffee" />
-          <h3 data-i18n="traditional_coffee">Cà Phê Phin Truyền Thống</h3>
-          <p data-i18n="traditional_coffee_desc">
-            Hương vị đậm đà, đắng nhẹ và hậu vị ngọt sâu của cà phê rang xay
-            truyền thống Việt Nam. Được pha từ loại Robusta nguyên chất vùng Tây
-            Nguyên, mang đến trải nghiệm thưởng thức đích thực cho những người
-            yêu cà phê.
-          </p>
-          <div class="price">20.000 <span>15.000</span></div>
-          <a class="btn" href="index-cart.html" data-i18n="add_to_cart"
-            >Thêm vào giỏ hàng</a
-          >
-        </div>
-        <div class="box-menu">
-          <img src="./img/coffee2.jpg" alt="coffee" />
-          <h3 data-i18n="coffee_name">Cà Phê Arabica Cầu Đất</h3>
-          <p data-i18n="coffee_description">
-            Tinh tế với hương thơm ngọt nhẹ của trái cây và hoa, kết hợp với vị
-            chua dịu mang đặc trưng của vùng đất cao nguyên Đà Lạt. Là lựa chọn
-            hoàn hảo cho những người thích thưởng thức cà phê theo phong cách
-            hiện đại.
-          </p>
-          <div class="price">20.000 <span>15.000</span></div>
-          <a class="btn" href="index-cart.html" data-i18n="add_to_cart"
-            >Thêm vào giỏ hàng</a
-          >
-        </div>
-        <div class="box-menu">
-          <img src="./img/tea1.jpg" alt="coffee" />
-          <h3 data-i18n="product_name">Tên sản phẩm</h3>
-          <p data-i18n="product_description">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsa fuga
-            porro reprehenderit quo nulla aliquam ut aut, pariatur explicabo
-            modi voluptates mollitia commodi ipsam odio cupiditate quae illum?
-            Facilis illo omnis deserunt a ipsam tempore voluptas ex debitis
-            necessitatibus reprehenderit.
-          </p>
-          <div class="price">20.000 <span>15.000</span></div>
-          <a class="btn" href="index-cart.html" data-i18n="add_to_cart"
-            >Thêm vào giỏ hàng</a
-          >
-        </div>
-        <div class="box-menu">
-          <img src="./img/coffee3.jpg" alt="coffee" />
-          <h3 data-i18n="product_name">Tên sản phẩm</h3>
-          <p data-i18n="product_description">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsa fuga
-            porro reprehenderit quo nulla aliquam ut aut, pariatur explicabo
-            modi voluptates mollitia commodi ipsam odio cupiditate quae illum?
-            Facilis illo omnis deserunt a ipsam tempore voluptas ex debitis
-            necessitatibus reprehenderit.
-          </p>
-          <div class="price">20.000 <span>15.000</span></div>
-          <a class="btn" href="index-cart.html" data-i18n="add_to_cart"
-            >Thêm vào giỏ hàng</a
-          >
-        </div>
-      </div>
-    </section>
+    <!-- Products Section Starts -->
     <section class="products" id="products">
-      <h1 class="heading" data-i18n="products_title">our product</h1>
-      <div class="box-container">
-        <div class="box">
-          <div class="icons">
-            <a href="index-cart.html" class="fa fa-shopping-cart"></a>
-            <a href="#" class="fa fa-heart"></a>
-            <a href="#" class="fa fa-eye"></a>
-          </div>
-          <div class="image">
-            <img src="img/coffee1.jpg" alt="" srcset="" />
-          </div>
-          <div class="content">
-            <h3 data-i18n="product_name">Cà phê tươi</h3>
-            <div class="stars">
-              <i class="fa fa-star" aria-hidden="true"></i>
-              <i class="fa fa-star" aria-hidden="true"></i>
-              <i class="fa fa-star" aria-hidden="true"></i>
-              <i class="fa fa-star" aria-hidden="true"></i>
-              <i class="fa fa-star" aria-hidden="true"></i>
-              <i class="fa fa-star-half-alt" aria-hidden="true"></i>
-            </div>
-            <div class="price">20.000 <span>15.000</span></div>
-          </div>
-        </div>
-        <div class="box">
-          <div class="icons">
-            <a href="index-cart.html" class="fa fa-shopping-cart"></a>
-            <a href="#" class="fa fa-heart"></a>
-            <a href="#" class="fa fa-eye"></a>
-          </div>
-          <div class="image">
-            <img src="img/coffee1.jpg" alt="" srcset="" />
-          </div>
-          <div class="content">
-            <h3 data-i18n="product_name">Cà phê tươi</h3>
-            <div class="stars">
-              <i class="fa fa-star" aria-hidden="true"></i>
-              <i class="fa fa-star" aria-hidden="true"></i>
-              <i class="fa fa-star" aria-hidden="true"></i>
-              <i class="fa fa-star" aria-hidden="true"></i>
-              <i class="fa fa-star" aria-hidden="true"></i>
-              <i class="fa fa-star-half-alt" aria-hidden="true"></i>
-            </div>
-            <div class="price">20.000 <span>15.000</span></div>
-          </div>
-        </div>
-        <div class="box">
-          <div class="icons">
-            <a href="index-cart.html" class="fa fa-shopping-cart"></a>
-            <a href="#" class="fa fa-heart"></a>
-            <a href="#" class="fa fa-eye"></a>
-          </div>
-          <div class="image">
-            <img src="img/coffee3.jpg" alt="" srcset="" />
-          </div>
-          <div class="content">
-            <h3 data-i18n="product_name">Cà phê tươi</h3>
-            <div class="stars">
-              <i class="fa fa-star" aria-hidden="true"></i>
-              <i class="fa fa-star" aria-hidden="true"></i>
-              <i class="fa fa-star" aria-hidden="true"></i>
-              <i class="fa fa-star" aria-hidden="true"></i>
-              <i class="fa fa-star" aria-hidden="true"></i>
-              <i class="fa fa-star-half-alt" aria-hidden="true"></i>
-            </div>
-            <div class="price">20.000 <span>15.000</span></div>
-          </div>
-        </div>
-        <div class="box">
-          <div class="icons">
-            <a href="index-cart.html" class="fa fa-shopping-cart"></a>
-            <a href="#" class="fa fa-heart"></a>
-            <a href="#" class="fa fa-eye"></a>
-          </div>
-          <div class="image">
-            <img src="img/coffee2.jpg" alt="" srcset="" />
-          </div>
-          <div class="content">
-            <h3 data-i18n="product_name">Cà phê tươi</h3>
-            <div class="stars">
-              <i class="fa fa-star" aria-hidden="true"></i>
-              <i class="fa fa-star" aria-hidden="true"></i>
-              <i class="fa fa-star" aria-hidden="true"></i>
-              <i class="fa fa-star" aria-hidden="true"></i>
-              <i class="fa fa-star" aria-hidden="true"></i>
-              <i class="fa fa-star-half-alt" aria-hidden="true"></i>
-            </div>
-            <div class="price">20.000 <span>15.000</span></div>
-          </div>
+      <h1 class="heading">Sản Phẩm <span>Của Chúng Tôi</span></h1>
+      <div class="box-container" id="products-container">
+        <!-- Products will be dynamically loaded here -->
+        <div class="loading">
+          <div class="spinner"></div>
         </div>
       </div>
     </section>
+    <!-- Products Section Ends -->
+
+    <!-- Reviews Section Starts -->
     <section class="review" id="review">
-      <h1 class="heading" data-i18n="review_title">
-        Ý kiến <span>Khách hàng</span>
-      </h1>
+      <h1 class="heading">Khách Hàng <span>Đánh Giá</span></h1>
       <div class="box-container">
         <div class="box">
-          <i class="fa fa-quote-right"></i>
-          <p data-i18n="review_description">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolor,
-            possimus blanditiis. Nesciunt hic iste explicabo, voluptatibus illum
-            veniam eum repellat animi exercitationem dolores provident a
-            perspiciatis neque praesentium sed quidem.
+          <p>
+            Tôi rất thích hương vị cà phê tại LH Coffee. Đúng chất cà phê Việt
+            Nam truyền thống nhưng được pha chế tinh tế và phục vụ trong không
+            gian hiện đại.
           </p>
-          <img src="./img/customer.jpg" class="user" alt="" />
-          <h3 data-i18n="customer_name">John Deo</h3>
+          <img src="img/review-1.jpg" alt="Reviewer" class="user" />
+          <h3>Nguyễn Văn A</h3>
+          <div class="stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
         </div>
+
         <div class="box">
-          <i class="fa fa-quote-right"></i>
-          <p data-i18n="review_description">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolor,
-            possimus blanditiis. Nesciunt hic iste explicabo, voluptatibus illum
-            veniam eum repellat animi exercitationem dolores provident a
-            perspiciatis neque praesentium sed quidem.
+          <p>
+            Cà phê Arabica tại đây thực sự mang đến trải nghiệm tuyệt vời. Hương
+            thơm đặc trưng và vị chua nhẹ rất hấp dẫn. Tôi sẽ quay lại thường
+            xuyên.
           </p>
-          <img src="./img/customer.jpg" class="user" alt="" />
-          <h3 data-i18n="customer_name">John Deo</h3>
+          <img src="img/review-2.jpg" alt="Reviewer" class="user" />
+          <h3>Trần Thị B</h3>
+          <div class="stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+          </div>
+        </div>
+
+        <div class="box">
+          <p>
+            Không gian quán rất thoáng đãng và yên tĩnh, rất phù hợp để làm việc
+            hoặc trò chuyện. Cà phê sữa đá ở đây là món tôi yêu thích nhất.
+          </p>
+          <img src="img/review-3.jpg" alt="Reviewer" class="user" />
+          <h3>Lê Văn C</h3>
+          <div class="stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="far fa-star"></i>
+          </div>
         </div>
       </div>
     </section>
+    <!-- Reviews Section Ends -->
+
+    <!-- Contact Section Starts -->
     <section class="contact" id="contact">
-      <h1 class="heading">contact <span>us</span></h1>
+      <h1 class="heading"><span>Liên Hệ</span> Chúng Tôi</h1>
       <div class="row">
         <iframe
           class="map"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.127786891462!2d106.7292934!3d10.8015236!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752d33d4a21d21%3A0x6efb856cd8d033af!2zTUFaREEgVEjhuqJPIMSQSeG7gE4!5e0!3m2!1svi!2s!4v1734271412484!5m2!1svi!2s"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.5177580567147!2d106.69916347465837!3d10.771600089387617!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f4670702e31%3A0xe4199763687a59b!2sHo%20Chi%20Minh%20City%2C%20Vietnam!5e0!3m2!1sen!2s!4v1659178288461!5m2!1sen!2s"
           allowfullscreen=""
           loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
         ></iframe>
-        <form action="">
-          <h3 data-i18n="get_in_touch">Get in touch</h3>
+
+        <form>
+          <h3>Liên Hệ Ngay</h3>
           <div class="inputBox">
-            <span class="fa fa-user"></span>
-            <input type="text" placeholder="Name" />
+            <span class="fas fa-user"></span>
+            <input type="text" placeholder="Tên" />
           </div>
           <div class="inputBox">
-            <span class="fa fa-phone"></span>
-            <input type="number" placeholder="Numbers" />
-          </div>
-          <div class="inputBox">
-            <span class="fa fa-envelope"></span>
+            <span class="fas fa-envelope"></span>
             <input type="email" placeholder="Email" />
           </div>
-          <input type="submit" value="contact now" class="btn" />
+          <div class="inputBox">
+            <span class="fas fa-phone"></span>
+            <input type="number" placeholder="Số Điện Thoại" />
+          </div>
+          <div class="inputBox">
+            <span class="fas fa-comment"></span>
+            <textarea placeholder="Lời Nhắn"></textarea>
+          </div>
+          <input type="submit" value="Liên Hệ Ngay" class="btn" />
         </form>
       </div>
     </section>
-    <section class="blogs" id="blogs">
-      <h1 class="heading">our <span>blog</span></h1>
-      <div class="box-container">
-        <div class="box">
-          <div class="image">
-            <img src="./img/blogs.jpg" alt="" />
-          </div>
-          <div class="content">
-            <a href="index-blog.html" class="title"
-              >Lorem ipsum dolor sit amet.</a
-            >
-            <span>by admin / 15 - 12 -2024</span>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima,
-              facere!
-            </p>
-            <a href="index-blog.html" class="btn">Read more</a>
-          </div>
-        </div>
-        <div class="box">
-          <div class="image">
-            <img src="./img/blogs.jpg" alt="" />
-          </div>
-          <div class="content">
-            <a href="index-blog.html" class="title"
-              >Lorem ipsum dolor sit amet.</a
-            >
-            <span>by admin / 15 - 12 -2024</span>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima,
-              facere!
-            </p>
-            <a href="index-blog.html" class="btn">Read more</a>
-          </div>
-        </div>
-        <div class="box">
-          <div class="image">
-            <img src="./img/blogs.jpg" alt="" />
-          </div>
-          <div class="content">
-            <a href="index-blog.html" class="title"
-              >Lorem ipsum dolor sit amet.</a
-            >
-            <span>by admin / 15 - 12 -2024</span>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima,
-              facere!
-            </p>
-            <a href="index-blog.html" class="btn">Read more</a>
-          </div>
-        </div>
-        <div class="box">
-          <div class="image">
-            <img src="./img/blogs.jpg" alt="" />
-          </div>
-          <div class="content">
-            <a href="index-blog.html" class="title"
-              >Lorem ipsum dolor sit amet.</a
-            >
-            <span>by admin / 15 - 12 -2024</span>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima,
-              facere!
-            </p>
-            <a href="index-blog.html" class="btn">Read more</a>
-          </div>
-        </div>
-        <div class="box">
-          <div class="image">
-            <img src="./img/blogs.jpg" alt="" />
-          </div>
-          <div class="content">
-            <a href="index-blog.html" class="title"
-              >Lorem ipsum dolor sit amet.</a
-            >
-            <span>by admin / 15 - 12 -2024</span>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima,
-              facere!
-            </p>
-            <a href="index-blog.html" class="btn">Read more</a>
-          </div>
-        </div>
-        <div class="box">
-          <div class="image">
-            <img src="./img/blogs.jpg" alt="" />
-          </div>
-          <div class="content">
-            <a href="index-blog.html" class="title"
-              >Lorem ipsum dolor sit amet.</a
-            >
-            <span>by admin / 15 - 12 -2024</span>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima,
-              facere!
-            </p>
-            <a href="index-blog.html" class="btn">Read more</a>
-          </div>
-        </div>
+    <!-- Contact Section Ends -->
+
+    <!-- Footer Section Starts -->
+    <section class="footer">
+      <div class="share">
+        <a href="#" class="fab fa-facebook-f"></a>
+        <a href="#" class="fab fa-twitter"></a>
+        <a href="#" class="fab fa-instagram"></a>
+        <a href="#" class="fab fa-linkedin"></a>
+        <a href="#" class="fab fa-pinterest"></a>
+      </div>
+
+      <div class="links">
+        <a href="#home">Trang Chủ</a>
+        <a href="#about">Giới Thiệu</a>
+        <a href="#products">Sản Phẩm</a>
+        <a href="#review">Đánh Giá</a>
+        <a href="#contact">Liên Hệ</a>
+        <a href="blog.html">Blog</a>
+      </div>
+
+      <div class="credit">
+        Được Tạo Bởi <span>LH Coffee</span> | Bản Quyền © 2023
       </div>
     </section>
+    <!-- Footer Section Ends -->
 
-    <!-- Thay thế footer bằng placeholder -->
-    <div id="footer-placeholder"></div>
+    <!-- Notification Container -->
+    <div class="notification-container" id="notification-container"></div>
 
-    <!-- Thêm các script translations.js và components.js -->
-    <script src="js/translations.js"></script>
-    <script src="js/components.js"></script>
-
-    <!-- Giữ nguyên các script khác -->
-    <script src="js/notification.js"></script>
-    <script src="js/config.js"></script>
-    <script src="js/cart.js"></script>
-    <script src="js/productList.js"></script>
-    <script src="js/nav.js"></script>
-    <script src="js/user-auth.js"></script>
+    <!-- Script Links -->
+    <script src="js/app.js"></script>
+    <script src="js/product.js"></script>
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // Tải header và footer
-        const headerContainer = document.getElementById("header-container");
-        const footerContainer = document.getElementById("footer-placeholder");
+      // Khởi tạo quản lý sản phẩm khi trang đã tải xong
+      document.addEventListener("DOMContentLoaded", () => {
+        // Khởi tạo ProductManager
+        if (typeof ProductManager !== "undefined") {
+          ProductManager.init();
+        }
 
-        // Tải header
-        fetch("header.html")
-          .then((response) => response.text())
-          .then((data) => {
-            headerContainer.innerHTML = data;
+        // Thêm xử lý cho form tìm kiếm
+        const searchForm = document.getElementById("search-form");
+        const searchBox = document.getElementById("search-box");
+        const searchBtn = document.querySelector(".search-form label");
 
-            // Khởi tạo các sự kiện header sau khi đã tải thành công
-            if (typeof initHeaderEvents === "function") {
-              initHeaderEvents();
+        if (searchForm && searchBox && searchBtn) {
+          // Xử lý sự kiện submit form
+          searchForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            if (searchBox.value.trim() !== "") {
+              if (typeof ProductManager !== "undefined") {
+                ProductManager.searchProductsAndDisplay(searchBox.value.trim());
+              }
             }
+          });
 
-            // Cập nhật số lượng sản phẩm trong giỏ hàng
-            if (typeof updateCartCount === "function") {
-              updateCartCount();
+          // Xử lý sự kiện click vào nút tìm kiếm
+          searchBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (searchBox.value.trim() !== "") {
+              if (typeof ProductManager !== "undefined") {
+                ProductManager.searchProductsAndDisplay(searchBox.value.trim());
+              }
             }
-          })
-          .catch((error) => console.error("Lỗi khi tải header:", error));
+          });
 
-        // Tải footer
-        fetch("footer.html")
-          .then((response) => response.text())
-          .then((data) => {
-            footerContainer.innerHTML = data;
-          })
-          .catch((error) => console.error("Lỗi khi tải footer:", error));
+          // Xử lý sự kiện nhấn Enter trong ô tìm kiếm
+          searchBox.addEventListener("keyup", (e) => {
+            if (e.key === "Enter" && searchBox.value.trim() !== "") {
+              if (typeof ProductManager !== "undefined") {
+                ProductManager.searchProductsAndDisplay(searchBox.value.trim());
+              }
+            }
+          });
+        }
       });
     </script>
   </body>
