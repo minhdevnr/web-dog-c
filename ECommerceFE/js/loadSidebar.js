@@ -90,6 +90,7 @@
                     <ul>
                         <li id="menu-home"><a href="admin.html"><span class="fa fa-home"></span><span>Trang chủ</span></a></li>
                         <li id="menu-product"><a href="admin-product.html"><span class="fa fa-coffee"></span><span>Quản lý sản phẩm</span></a></li>
+                        <li id="menu-category"><a href="admin-category.html"><span class="fa fa-tags"></span><span>Quản lý loại sản phẩm</span></a></li>
                         <li id="menu-news"><a href="admin-news.html"><span class="fa fa-newspaper"></span><span>Quản lý bài viết</span></a></li>
                         <li id="menu-user"><a href="admin-user.html"><span class="fa fa-user"></span><span>Quản lý user</span></a></li>
                         <li id="menu-order"><a href="admin-project.html"><span class="fa fa-truck-loading"></span><span>Quản lý đơn hàng</span></a></li>
@@ -130,17 +131,20 @@
             if (page === 'admin.html' || page === '' || page === 'admin') {
                 const homeMenu = document.getElementById('menu-home') || document.querySelector('.sidebar-menu li:first-child');
                 if (homeMenu) homeMenu.classList.add('active');
-            } else if (page.includes('product')) {
+            } else if (page.includes('product') && !page.includes('category')) {
                 const productMenu = document.getElementById('menu-product') || document.querySelector('.sidebar-menu li:nth-child(2)');
                 if (productMenu) productMenu.classList.add('active');
+            } else if (page.includes('category')) {
+                const categoryMenu = document.getElementById('menu-category') || document.querySelector('.sidebar-menu li:nth-child(3)');
+                if (categoryMenu) categoryMenu.classList.add('active');
             } else if (page.includes('news')) {
-                const newsMenu = document.getElementById('menu-news') || document.querySelector('.sidebar-menu li:nth-child(3)');
+                const newsMenu = document.getElementById('menu-news') || document.querySelector('.sidebar-menu li:nth-child(4)');
                 if (newsMenu) newsMenu.classList.add('active');
             } else if (page.includes('user')) {
-                const userMenu = document.getElementById('menu-user') || document.querySelector('.sidebar-menu li:nth-child(4)');
+                const userMenu = document.getElementById('menu-user') || document.querySelector('.sidebar-menu li:nth-child(5)');
                 if (userMenu) userMenu.classList.add('active');
             } else if (page.includes('project')) {
-                const orderMenu = document.getElementById('menu-order') || document.querySelector('.sidebar-menu li:nth-child(5)');
+                const orderMenu = document.getElementById('menu-order') || document.querySelector('.sidebar-menu li:nth-child(6)');
                 if (orderMenu) orderMenu.classList.add('active');
             }
         }

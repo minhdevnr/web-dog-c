@@ -1,14 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using ECommerceAPI.Models;
 using ECommerceAPI.Services;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http;
-using System.IO;
+using System.Security.Claims;
+using ECommerceAPI.Models.Responses;
+using ECommerceAPI.Helpers;
 
 namespace ECommerceAPI.Controllers
 {
@@ -17,6 +14,8 @@ namespace ECommerceAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private const int DEFAULT_PAGE_SIZE = 10;
+        private const int MAX_PAGE_SIZE = 50;
 
         public UserController(IUserService userService)
         {
@@ -37,8 +36,8 @@ namespace ECommerceAPI.Controllers
                     DateOfBirth = request.DateOfBirth
                 };
 
-                var result = await _userService.RegisterAsync(user, request.Password, GetIpAddress());
-                return Ok(new { message = "Đăng ký thành công. Vui lòng kiểm tra email để xác nhận tài khoản." });
+                var result = await _userService.RegisterAsync(user, request.Password,null);
+                return Ok(new { message = "Đăng ký thành công", userId = result });
             }
             catch (Exception ex)
             {
@@ -46,166 +45,122 @@ namespace ECommerceAPI.Controllers
             }
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        //[HttpPost("login")]
+        //public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        //{
+        //    try
+        //    {
+        //        var result = await _userService.(request.EmailOrPhone, request.Password, GetIpAddress());
+        //        return Ok(new
+        //        {
+        //            token = result.JwtToken,
+        //            refreshToken = result.RefreshToken,
+        //            expiration = result.Expiration,
+        //            user = result.User
+        //        });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(new { message = ex.Message });
+        //    }
+        //}
+
+        [HttpPost("verify-email")]
+        public async Task<IActionResult> VerifyEmail([FromBody] VerifyEmailRequest request)
         {
-            var (user, token) = await _userService.AuthenticateAsync(request.EmailOrPhone, request.Password, GetIpAddress());
-
-            if (user == null)
-                return BadRequest(new { message = "Email/Số điện thoại hoặc mật khẩu không đúng" });
-
-            if (!user.IsEmailVerified)
-                return BadRequest(new { message = "Vui lòng xác nhận email trước khi đăng nhập" });
-
-            return Ok(new
-            {
-                id = user.Id,
-                username = user.Username,
-                email = user.Email,
-                role = user.Role,
-                token = token
-            });
+            await _userService.VerifyEmailAsync(request.Email);
+            return Ok(new { message = "Xác thực email thành công" });
         }
 
-        [HttpGet("verify-email")]
-        public async Task<IActionResult> VerifyEmail([FromQuery] string token)
-        {
-            if (await _userService.VerifyEmailAsync(token))
-                return Ok(new { message = "Email đã được xác nhận thành công" });
-
-            return BadRequest(new { message = "Link xác nhận không hợp lệ hoặc đã hết hạn" });
-        }
-
-        [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
-        {
-            await _userService.RequestPasswordResetAsync(request.Email);
-            return Ok(new { message = "Nếu email tồn tại trong hệ thống, bạn sẽ nhận được link đặt lại mật khẩu" });
-        }
+        //[HttpPost("forgot-password")]
+        //public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        //{
+        //    await _userService.fo(request.Email);
+        //    return Ok(new { message = "Đã gửi email khôi phục mật khẩu" });
+        //}
 
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
         {
-            if (await _userService.ResetPasswordAsync(request.Token, request.NewPassword))
-                return Ok(new { message = "Mật khẩu đã được đặt lại thành công" });
-
-            return BadRequest(new { message = "Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn" });
+            await _userService.ResetPasswordAsync(request.Token, request.NewPassword);
+            return Ok(new { message = "Đặt lại mật khẩu thành công" });
         }
 
         [HttpGet("profile")]
         [Authorize]
-        public async Task<ActionResult<UserProfileResponse>> GetProfile()
+        public async Task<ActionResult<UserResponse>> GetProfile()
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var user = await _userService.GetUserByIdAsync(userId);
 
             if (user == null)
-                return NotFound();
+                return NotFound(new { message = "Người dùng không tồn tại" });
 
-            return new UserProfileResponse
-            {
-                Id = user.Id,
-                Username = user.Username,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                IsEmailVerified = user.IsEmailVerified,
-                IsPhoneVerified = user.IsPhoneVerified,
-                IsTwoFactorEnabled = user.IsTwoFactorEnabled,
-                ProfilePicture = user.ProfilePicture,
-                Address = user.Address,
-                DateOfBirth = user.DateOfBirth,
-                CreatedAt = user.CreatedAt
-            };
+            return MapToUserResponse(user);
         }
 
         [HttpPut("profile")]
         [Authorize]
-        public async Task<ActionResult<UserProfileResponse>> UpdateProfile([FromBody] UpdateProfileRequest request)
+        public async Task<ActionResult<UserResponse>> UpdateProfile([FromBody] UpdateProfileRequest request)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var user = await _userService.GetUserByIdAsync(userId);
 
             if (user == null)
-                return NotFound();
+                return NotFound(new { message = "Người dùng không tồn tại" });
 
             user.Username = request.Username;
             user.Address = request.Address;
-            user.ProfilePicture = request.ProfilePicture;
 
-            var updatedUser = await _userService.UpdateProfileAsync(userId, user);
-            return new UserProfileResponse
-            {
-                Id = updatedUser.Id,
-                Username = updatedUser.Username,
-                Email = updatedUser.Email,
-                PhoneNumber = updatedUser.PhoneNumber,
-                IsEmailVerified = updatedUser.IsEmailVerified,
-                IsPhoneVerified = updatedUser.IsPhoneVerified,
-                IsTwoFactorEnabled = updatedUser.IsTwoFactorEnabled,
-                ProfilePicture = updatedUser.ProfilePicture,
-                Address = updatedUser.Address,
-                DateOfBirth = updatedUser.DateOfBirth,
-                CreatedAt = updatedUser.CreatedAt
-            };
+            if (!string.IsNullOrWhiteSpace(request.ProfilePicture))
+                user.ProfilePicture = request.ProfilePicture;
+
+            await _userService.UpdateUserAsync(user.Id,user);
+
+            return MapToUserResponse(user);
         }
 
         [HttpPost("change-password")]
         [Authorize]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var result = await _userService.ChangePasswordAsync(userId, request.CurrentPassword, request.NewPassword);
-
-            if (!result)
-                return BadRequest("Invalid current password");
-
-            return Ok();
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            await _userService.ChangePasswordAsync(userId, request.CurrentPassword, request.NewPassword);
+            return Ok(new { message = "Đổi mật khẩu thành công" });
         }
 
         [HttpPost("enable-2fa")]
         [Authorize]
         public async Task<IActionResult> EnableTwoFactor()
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var result = await _userService.EnableTwoFactorAsync(userId);
-
-            if (!result)
-                return BadRequest("Failed to enable 2FA");
-
-            return Ok();
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var secretKey = await _userService.EnableTwoFactorAsync(userId);
+            return Ok(new { secretKey, message = "Đã bật xác thực hai lớp" });
         }
 
         [HttpPost("disable-2fa")]
         [Authorize]
         public async Task<IActionResult> DisableTwoFactor()
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var result = await _userService.DisableTwoFactorAsync(userId);
-
-            if (!result)
-                return BadRequest("Failed to disable 2FA");
-
-            return Ok();
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            await _userService.DisableTwoFactorAsync(userId);
+            return Ok(new { message = "Đã tắt xác thực hai lớp" });
         }
 
         [HttpPost("verify-2fa")]
         [Authorize]
         public async Task<IActionResult> VerifyTwoFactorCode([FromBody] VerifyTwoFactorRequest request)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var result = await _userService.VerifyTwoFactorCodeAsync(userId, request.Code);
-
-            if (!result)
-                return BadRequest("Invalid 2FA code");
-
-            return Ok();
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var isValid = await _userService.VerifyTwoFactorCodeAsync(userId, request.Code);
+            return Ok(new { isValid });
         }
 
         [HttpGet("activities")]
         [Authorize]
         public async Task<ActionResult<IEnumerable<UserActivity>>> GetActivities()
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var activities = await _userService.GetUserActivitiesAsync(userId);
             return Ok(activities);
         }
@@ -214,32 +169,25 @@ namespace ECommerceAPI.Controllers
         [HttpPost("deactivate")]
         public async Task<IActionResult> DeactivateAccount()
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-
-            if (await _userService.DeactivateAccountAsync(userId))
-                return Ok(new { message = "Tài khoản đã được vô hiệu hóa" });
-
-            return BadRequest(new { message = "Không thể vô hiệu hóa tài khoản" });
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            await _userService.DeactivateAccountAsync(userId);
+            return Ok(new { message = "Tài khoản đã bị vô hiệu hóa" });
         }
 
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
         {
-            var refreshToken = await _userService.RefreshTokenAsync(request.Token, GetIpAddress());
-            if (refreshToken == null)
-                return BadRequest(new { message = "Token không hợp lệ hoặc đã hết hạn" });
-
-            return Ok(new { token = refreshToken.Token });
+            var result = await _userService.RefreshTokenAsync(request.Token,null);
+            return Ok(result);
         }
 
         [Authorize]
         [HttpPost("revoke-token")]
         public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenRequest request)
         {
-            if (await _userService.RevokeTokenAsync(request.Token, GetIpAddress()))
-                return Ok(new { message = "Token đã được thu hồi" });
-
-            return BadRequest(new { message = "Token không hợp lệ" });
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var result = await _userService.RevokeTokenAsync(request.Token,null);
+            return Ok(new { message = result ? "Token đã bị hủy" : "Token không tồn tại" });
         }
 
         [HttpPost("profile-picture")]
@@ -247,41 +195,227 @@ namespace ECommerceAPI.Controllers
         public async Task<ActionResult<string>> UploadProfilePicture([FromForm] IFormFile file)
         {
             if (file == null || file.Length == 0)
-                return BadRequest(new { message = "Vui lòng chọn file ảnh" });
+                return BadRequest(new { message = "Không có file nào được tải lên" });
 
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+            var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+            if (!allowedExtensions.Contains(extension))
+                return BadRequest(new { message = "Chỉ chấp nhận file ảnh (.jpg, .jpeg, .png)" });
+
+            if (file.Length > 5 * 1024 * 1024) // 5MB
+                return BadRequest(new { message = "Kích thước file không được vượt quá 5MB" });
+
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var user = await _userService.GetUserByIdAsync(userId);
 
             if (user == null)
-                return NotFound();
+                return NotFound(new { message = "Người dùng không tồn tại" });
 
-            // Kiểm tra định dạng file
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
-            var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
-            if (!allowedExtensions.Contains(fileExtension))
-                return BadRequest(new { message = "Chỉ chấp nhận file ảnh định dạng JPG, JPEG hoặc PNG" });
+            // Save file
+            var fileName = $"{Guid.NewGuid()}{extension}";
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "profiles", fileName);
+            var fileUrl = $"/uploads/profiles/{fileName}";
 
-            // Tạo tên file mới
-            var fileName = $"{userId}_{DateTime.UtcNow.Ticks}{fileExtension}";
-            var filePath = Path.Combine("wwwroot", "uploads", "avatars", fileName);
-
-            // Đảm bảo thư mục tồn tại
             Directory.CreateDirectory(Path.GetDirectoryName(filePath));
 
-            // Lưu file
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
 
-            // Cập nhật đường dẫn ảnh trong database
-            var imageUrl = $"/uploads/avatars/{fileName}";
-            user.ProfilePicture = imageUrl;
-            await _userService.UpdateProfileAsync(userId, user);
+            // Update user profile
+            user.ProfilePicture = fileUrl;
+            await _userService.UpdateUserAsync(user.Id, user);
 
-            return Ok(new { profilePicture = imageUrl });
+            return Ok(new { url = fileUrl });
         }
 
+        [HttpGet]
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<PagedResponse<UserResponse>>> GetUsers(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = DEFAULT_PAGE_SIZE,
+            [FromQuery] string keyword = null,
+            [FromQuery] string role = null,
+            [FromQuery] bool? isActive = null,
+            [FromQuery] string sortBy = "Id",
+            [FromQuery] bool desc = false)
+        {
+            // Validate page size
+            if (pageSize <= 0) pageSize = DEFAULT_PAGE_SIZE;
+            if (pageSize > MAX_PAGE_SIZE) pageSize = MAX_PAGE_SIZE;
+            
+            // Ensure valid page number
+            if (pageNumber <= 0) pageNumber = 1;
+            
+            // Get all users
+            var allUsers = await _userService.GetAllUsersAsync();
+            var query = allUsers.AsQueryable();
+            
+            // Apply filters
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                keyword = keyword.ToLower();
+                query = query.Where(u =>
+                    u.Username.ToLower().Contains(keyword) ||
+                    u.Email.ToLower().Contains(keyword) ||
+                    (u.PhoneNumber != null && u.PhoneNumber.Contains(keyword)));
+            }
+            
+            if (!string.IsNullOrEmpty(role))
+            {
+                query = query.Where(u => u.Role == role);
+            }
+            
+            if (isActive.HasValue)
+            {
+                query = query.Where(u => u.IsActive == isActive.Value);
+            }
+            
+            // Apply sorting
+            query = ApplySorting(query, sortBy, desc);
+            
+            // Get total count for pagination
+            var totalCount = query.Count();
+            
+            // Apply pagination
+            var users = query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+            
+            // Map to response model
+            var userResponses = users.Select(MapToUserResponse).ToList();
+            
+            // Create paged response
+            return PaginationHelper.CreatePagedResponse(
+                userResponses,
+                pageNumber,
+                pageSize,
+                totalCount,
+                Request,
+                "users");
+        }
+
+        [HttpGet("{id}")]
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<UserResponse>> GetUserById(int id)
+        {
+            var user = await _userService.GetUserByIdAsync(id);
+
+            if (user == null)
+                return NotFound(new { message = "Người dùng không tồn tại" });
+
+            return MapToUserResponse(user);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<UserResponse>> CreateUser([FromBody] CreateUserRequest request)
+        {
+            var user = new User
+            {
+                Username = request.Username,
+                Email = request.Email,
+                PhoneNumber = request.PhoneNumber,
+                Address = request.Address,
+                DateOfBirth = request.DateOfBirth.GetValueOrDefault(),
+                Role = request.Role,
+            };
+
+            try
+            {
+                var result = await _userService.CreateUserAsync(user, request.Password);
+                return MapToUserResponse(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<UserResponse>> UpdateUser(int id, [FromBody] UpdateUserRequest request)
+        {
+            var user = await _userService.GetUserByIdAsync(id);
+            if (user == null)
+                return NotFound(new { message = "Người dùng không tồn tại" });
+
+            user.Email = request.Email;
+            user.PhoneNumber = request.PhoneNumber;
+            user.Address = request.Address;
+
+            if (request.DateOfBirth.HasValue)
+                user.DateOfBirth = request.DateOfBirth.Value;
+
+            user.Role = request.Role;
+            user.IsActive = request.IsActive;
+
+            try
+            {
+                await _userService.UpdateUserAsync(user.Id, user);
+                return MapToUserResponse(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var result = await _userService.DeleteUserAsync(id);
+            if (!result)
+                return NotFound(new { message = "Người dùng không tồn tại" });
+
+            return Ok(new { message = "Xóa người dùng thành công" });
+        }
+
+        #region Helper Methods
+        
+        // Map User to UserResponse
+        private UserResponse MapToUserResponse(User user)
+        {
+            return new UserResponse
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Address = user.Address,
+                ProfilePicture = user.ProfilePicture,
+                IsEmailVerified = user.IsEmailVerified,
+                IsPhoneVerified = user.IsPhoneVerified,
+                IsTwoFactorEnabled = user.IsTwoFactorEnabled,
+                DateOfBirth = user.DateOfBirth,
+                CreatedAt = user.CreatedAt,
+                Role = user.Role,
+                IsActive = user.IsActive
+            };
+        }
+        
+        // Apply sorting to user query
+        private IQueryable<User> ApplySorting(IQueryable<User> query, string sortBy, bool desc)
+        {
+            switch (sortBy.ToLower())
+            {
+                case "username":
+                    return desc ? query.OrderByDescending(u => u.Username) : query.OrderBy(u => u.Username);
+                case "email":
+                    return desc ? query.OrderByDescending(u => u.Email) : query.OrderBy(u => u.Email);
+                case "createdat":
+                    return desc ? query.OrderByDescending(u => u.CreatedAt) : query.OrderBy(u => u.CreatedAt);
+                case "role":
+                    return desc ? query.OrderByDescending(u => u.Role) : query.OrderBy(u => u.Role);
+                default:
+                    return desc ? query.OrderByDescending(u => u.Id) : query.OrderBy(u => u.Id);
+            }
+        }
+        
         private string GetIpAddress()
         {
             if (Request.Headers.ContainsKey("X-Forwarded-For"))
@@ -289,6 +423,8 @@ namespace ECommerceAPI.Controllers
             else
                 return HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString();
         }
+        
+        #endregion
     }
 
     public class RegisterRequest
@@ -331,6 +467,7 @@ namespace ECommerceAPI.Controllers
         public bool IsTwoFactorEnabled { get; set; }
         public DateTime DateOfBirth { get; set; }
         public DateTime CreatedAt { get; set; }
+        public string Role { get; set; }
     }
 
     public class UpdateProfileRequest
@@ -370,4 +507,33 @@ namespace ECommerceAPI.Controllers
     {
         public string Token { get; set; }
     }
-} 
+
+    public class CreateUserRequest
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string Email { get; set; }
+        public string FullName { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Address { get; set; }
+        public DateTime? DateOfBirth { get; set; }
+        public string Role { get; set; }
+    }
+
+    public class UpdateUserRequest
+    {
+        public string FullName { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Address { get; set; }
+        public DateTime? DateOfBirth { get; set; }
+        public string Role { get; set; }
+        public bool IsActive { get; set; }
+    }
+
+    public class VerifyEmailRequest
+    {
+        public string Email { get; set; }
+        public string Code { get; set; }
+    }
+}

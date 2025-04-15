@@ -248,7 +248,78 @@ namespace ECommerceAPI.Services
 
         public async Task<User> GetUserByUsernameAsync(string username)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            return await _context.Users.FirstOrDefaultAsync(x => x.Username == username);
+        }
+
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        {
+            return await _context.Users
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync();
+        }
+
+        public async Task<User> CreateUserAsync(User user, string password)
+        {
+            // Kiểm tra email/phone đã tồn tại
+            if (await _context.Users.AnyAsync(x => x.Email == user.Email))
+                throw new Exception("Email đã được đăng ký");
+
+            if (!string.IsNullOrEmpty(user.PhoneNumber) && 
+                await _context.Users.AnyAsync(x => x.PhoneNumber == user.PhoneNumber))
+                throw new Exception("Số điện thoại đã được đăng ký");
+
+            // Hash password
+            user.Password = HashPassword(password);
+            user.CreatedAt = DateTime.UtcNow;
+            user.IsActive = true;
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return user;
+        }
+
+        public async Task<User> UpdateUserAsync(int id, User userUpdateData)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+                throw new Exception("Không tìm thấy người dùng");
+
+            // Kiểm tra email/phone đã tồn tại (nếu có thay đổi)
+            if (userUpdateData.Email != user.Email && 
+                await _context.Users.AnyAsync(x => x.Email == userUpdateData.Email))
+                throw new Exception("Email đã được đăng ký");
+
+            if (!string.IsNullOrEmpty(userUpdateData.PhoneNumber) && 
+                userUpdateData.PhoneNumber != user.PhoneNumber && 
+                await _context.Users.AnyAsync(x => x.PhoneNumber == userUpdateData.PhoneNumber))
+                throw new Exception("Số điện thoại đã được đăng ký");
+
+            // Cập nhật thông tin
+            //user.FullName = userUpdateData.FullName;
+            user.Email = userUpdateData.Email;
+            user.PhoneNumber = userUpdateData.PhoneNumber;
+            user.Address = userUpdateData.Address;
+            user.DateOfBirth = userUpdateData.DateOfBirth;
+            user.Role = userUpdateData.Role;
+            user.IsActive = userUpdateData.IsActive;
+            //user.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            return user;
+        }
+
+        public async Task<bool> DeleteUserAsync(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+                return false;
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
         private string HashPassword(string password)

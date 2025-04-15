@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ECommerceAPI.Entities;
+using ECommerceAPI.Models.Responses;
 
 namespace ECommerceAPI.Models
 {
-    public class Order
+    public class Order1
     {
         [Key]
         public int Id { get; set; }
@@ -109,7 +110,7 @@ namespace ECommerceAPI.Models
         public bool IsDefault { get; set; }
     }
 
-    public class ProductResponse
+    public class ProductResponse1
     {
         public int Id { get; set; }
         public string Name { get; set; }

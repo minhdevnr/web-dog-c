@@ -2,11 +2,23 @@
  * api.js - Quản lý các cuộc gọi API
  */
 
-import { API_CONFIG } from './config.js';
-import { showNotification } from './utils.js';
+// Thay thế import bằng truy cập biến toàn cục
+// import { API_CONFIG } from './config.js';
+// import { showNotification } from './utils.js';
+
+// API_CONFIG đã được đặt là biến toàn cục trong config.js
 
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000; // 1 second
+
+// Hàm thông báo đơn giản nếu utils.js không có sẵn
+function showNotification(type, message) {
+  console.log(`${type}: ${message}`);
+  // Nếu có toast UI, sử dụng nó
+  if (typeof showToast === 'function') {
+    showToast(message, type === 'success' ? 'success' : 'error');
+  }
+}
 
 async function fetchWithRetry(url, options = {}, retries = MAX_RETRIES) {
   try {
@@ -265,82 +277,85 @@ window.API = {
   categories: CategoryAPI,
   auth: AuthAPI,
   users: UserAPI,
-  orders: OrderAPI
+  orders: OrderAPI,
+  // Thêm các hàm tiện ích vào API object
+  getProducts: async function() {
+    debugger;
+    try {
+      const response = await fetchWithRetry(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PRODUCTS}`);
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      return [];
+    }
+  },
+
+  getProduct: async function(id) {
+    try {
+      const response = await fetchWithRetry(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PRODUCTS}/${id}`);
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching product:', error);
+      return null;
+    }
+  },
+
+  addToCart: async function(productId, quantity = 1) {
+    try {
+      const response = await fetchWithRetry(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CART}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ productId, quantity })
+      });
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      return null;
+    }
+  },
+
+  getCart: async function() {
+    try {
+      const response = await fetchWithRetry(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CART}`);
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching cart:', error);
+      return [];
+    }
+  },
+
+  updateCartItem: async function(productId, quantity) {
+    try {
+      const response = await fetchWithRetry(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CART}/${productId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ quantity })
+      });
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Error updating cart:', error);
+      return null;
+    }
+  },
+
+  removeFromCart: async function(productId) {
+    try {
+      const response = await fetchWithRetry(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CART}/${productId}`, {
+        method: 'DELETE'
+      });
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Error removing from cart:', error);
+      return null;
+    }
+  }
 };
 
-export async function getProducts() {
-  try {
-    const response = await fetchWithRetry(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PRODUCTS}`);
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching products:', error);
-    return [];
-  }
-}
-
-export async function getProduct(id) {
-  try {
-    const response = await fetchWithRetry(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PRODUCTS}/${id}`);
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching product:', error);
-    return null;
-  }
-}
-
-export async function addToCart(productId, quantity = 1) {
-  try {
-    const response = await fetchWithRetry(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CART}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ productId, quantity })
-    });
-    
-    return await response.json();
-  } catch (error) {
-    console.error('Error adding to cart:', error);
-    return null;
-  }
-}
-
-export async function getCart() {
-  try {
-    const response = await fetchWithRetry(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CART}`);
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching cart:', error);
-    return [];
-  }
-}
-
-export async function updateCartItem(productId, quantity) {
-  try {
-    const response = await fetchWithRetry(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CART}/${productId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ quantity })
-    });
-    
-    return await response.json();
-  } catch (error) {
-    console.error('Error updating cart:', error);
-    return null;
-  }
-}
-
-export async function removeFromCart(productId) {
-  try {
-    const response = await fetchWithRetry(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CART}/${productId}`, {
-      method: 'DELETE'
-    });
-    
-    return await response.json();
-  } catch (error) {
-    console.error('Error removing from cart:', error);
-    return null;
-  }
-} 
+// Xóa các export function riêng lẻ đã được chuyển vào API object ở trên 

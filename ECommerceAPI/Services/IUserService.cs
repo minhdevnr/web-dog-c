@@ -24,5 +24,11 @@ namespace ECommerceAPI.Services
         Task<User> GetUserByEmailAsync(string email);
         Task<User> GetUserByUsernameAsync(string username);
         string GenerateJwtToken(User user);
+
+        // Thêm các phương thức mới cho quản lý người dùng
+        Task<IEnumerable<User>> GetAllUsersAsync();
+        Task<User> CreateUserAsync(User user, string password);
+        Task<User> UpdateUserAsync(int id, User user);
+        Task<bool> DeleteUserAsync(int id);
     }
 } 

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quản lý Người dùng - LH Coffee</title>
+    <title>Quản lý User - LH Coffee</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -12,34 +12,39 @@
     />
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
-      crossorigin="anonymous"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
     />
-    <link rel="stylesheet" href="/ECommerceFE/css/admin-style.css" />
-    <link rel="stylesheet" href="/ECommerceFE/css/notification.css" />
-    <link rel="stylesheet" href="/ECommerceFE/css/admin-sidebar.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-    />
+    <link rel="stylesheet" href="../css/admin-style.css" />
+    <link rel="stylesheet" href="../css/admin-sidebar.css" />
+    <link rel="stylesheet" href="../css/admin-common.css" />
+    <link rel="stylesheet" href="../css/notification.css" />
+    <style>
+      .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1050;
+      }
+    </style>
   </head>
 
   <body>
     <input type="checkbox" id="sidebar-toggle" />
     <div class="sidebar" id="sidebar-container"></div>
+
     <div class="main-content">
       <header>
         <div class="search-wrapper">
           <span class="fa fa-search"></span>
-          <input type="search" placeholder="Search" />
+          <input
+            type="search"
+            id="searchUser"
+            placeholder="Tìm kiếm người dùng..."
+          />
         </div>
         <div class="social-icons">
           <span class="fa fa-bell"></span>
@@ -47,180 +52,150 @@
           <div></div>
         </div>
       </header>
+
       <main>
-        <div class="search-wrapper">
-          <input
-            type="text"
-            id="searchInput"
-            placeholder="Tìm kiếm theo tên hoặc username..."
-            class="form-control"
-          />
+        <div class="page-header">
+          <h1>Quản lý Người dùng</h1>
+          <button class="btn btn-primary" id="addUserBtn">
+            <i class="fas fa-plus me-2"></i>Thêm Người dùng
+          </button>
         </div>
-        <div id="userContainer"></div>
-        <button type="button" class="btn btn-dark" id="addUserButton">
-          Thêm người dùng
-        </button>
-        <table class="table" id="userTable">
-          <thead>
-            <tr>
-              <th>Tên</th>
-              <th>Vai trò</th>
-              <th>Địa chỉ</th>
-              <th>Ngày sinh</th>
-              <th>Email</th>
-              <th>Số điện thoại</th>
-              <th>Username</th>
-              <th>Thao tác</th>
-            </tr>
-          </thead>
-          <tbody id="userTableBody">
-            <!-- Dữ liệu người dùng sẽ được thêm ở đây bằng JavaScript -->
-          </tbody>
-        </table>
-        <div
-          class="modal fade"
-          id="userModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="userModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="userModalLabel">
-                  Thêm/Sửa Người Dùng
-                </h5>
-                <button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-label="Close"
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <form id="userForm">
-                  <div class="form-group">
-                    <label for="userName">Tên</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="userName"
-                      required
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label for="userRole">Vai trò</label>
-                    <select class="form-control" id="userRole" required>
-                      <option value="">Chọn vai trò</option>
-                      <option value="admin">Admin</option>
-                      <option value="user">User</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label for="userAddress">Địa chỉ</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="userAddress"
-                      required
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label for="userDob">Ngày sinh</label>
-                    <input
-                      type="date"
-                      class="form-control"
-                      id="userDob"
-                      required
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label for="userEmail">Email</label>
-                    <input
-                      type="email"
-                      class="form-control"
-                      id="userEmail"
-                      required
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label for="userPhone">Số điện thoại</label>
-                    <input
-                      type="tel"
-                      class="form-control"
-                      id="userPhone"
-                      required
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label for="userUsername">Username</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="userUsername"
-                      required
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label for="userPassword">Mật khẩu</label>
-                    <input
-                      type="password"
-                      class="form-control"
-                      id="userPassword"
-                      required
-                    />
-                  </div>
-                  <input type="hidden" id="userId" />
-                  <!-- Trường ẩn để lưu ID người dùng -->
-                </form>
-              </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-dismiss="modal"
-                >
-                  Đóng
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  onclick="saveUser()"
-                >
-                  Lưu
-                </button>
+
+        <!-- Search and Filter -->
+        <div class="search-filter-section">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="fas fa-search"></i
+                ></span>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="searchUser"
+                  placeholder="Tìm kiếm người dùng..."
+                />
               </div>
             </div>
+            <div class="col-md-4">
+              <select class="form-select" id="roleFilter">
+                <option value="">Tất cả vai trò</option>
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="table-container">
+          <div class="table-responsive">
+            <table class="table table-striped table-hover" id="userTable">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Tên</th>
+                  <th>Email</th>
+                  <th>Số điện thoại</th>
+                  <th>Vai trò</th>
+                  <th>Trạng thái</th>
+                  <th>Thao tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- User data will be loaded here -->
+              </tbody>
+            </table>
           </div>
         </div>
       </main>
     </div>
-    <!-- JavaScript Dependencies -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
-      integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
-      crossorigin="anonymous"
-    ></script>
 
-    <!-- JavaScript Non-modules -->
-    <script src="/ECommerceFE/js/config.js"></script>
-    <script src="/ECommerceFE/js/api.js"></script>
-    <script src="/ECommerceFE/js/ui.js"></script>
-    <script src="/ECommerceFE/js/auth.js"></script>
-    <script src="/ECommerceFE/js/admin.js"></script>
-    <script src="/ECommerceFE/js/user.js"></script>
+    <!-- Add/Edit User Modal -->
+    <div class="modal fade" id="userModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="userModalTitle">Thêm Người dùng</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="userForm">
+              <input type="hidden" id="userId" />
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label">Tên người dùng</label>
+                  <input type="text" class="form-control" id="name" required />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label">Số điện thoại</label>
+                  <input type="tel" class="form-control" id="phone" required />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Vai trò</label>
+                  <select class="form-select" id="role" required>
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label">Mật khẩu</label>
+                  <input type="password" class="form-control" id="password" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Trạng thái</label>
+                  <select class="form-select" id="status" required>
+                    <option value="active">Hoạt động</option>
+                    <option value="inactive">Không hoạt động</option>
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Hủy
+            </button>
+            <button type="button" class="btn btn-primary" id="saveUserBtn">
+              Lưu
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/ui.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/admin-user.js"></script>
+    <script src="../js/loadSidebar.js"></script>
   </body>
 </html>

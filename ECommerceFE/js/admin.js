@@ -182,6 +182,7 @@ function createFallbackSidebar() {
             <ul>
                 <li id="menu-home"><a href="admin.html"><span class="fa fa-home"></span><span>Trang chủ</span></a></li>
                 <li id="menu-product"><a href="admin-product.html"><span class="fa fa-coffee"></span><span>Quản lý sản phẩm</span></a></li>
+                <li id="menu-category"><a href="admin-category.html"><span class="fa fa-tags"></span><span>Quản lý loại sản phẩm</span></a></li>
                 <li id="menu-news"><a href="admin-news.html"><span class="fa fa-newspaper"></span><span>Quản lý bài viết</span></a></li>
                 <li id="menu-user"><a href="admin-user.html"><span class="fa fa-user"></span><span>Quản lý user</span></a></li>
                 <li id="menu-order"><a href="admin-project.html"><span class="fa fa-truck-loading"></span><span>Quản lý đơn hàng</span></a></li>

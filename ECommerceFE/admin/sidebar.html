@@ -19,6 +19,12 @@
         <span>Quản lý sản phẩm</span>
       </a>
     </li>
+    <li id="menu-category">
+      <a href="admin-category.html">
+        <span class="fa fa-tags"></span>
+        <span>Quản lý loại sản phẩm</span>
+      </a>
+    </li>
     <li id="menu-news">
       <a href="admin-news.html">
         <span class="fa fa-newspaper"></span>
@@ -61,8 +67,10 @@
     // Đánh dấu menu tương ứng
     if (page === "admin.html" || page === "" || page === "admin") {
       document.getElementById("menu-home").classList.add("active");
-    } else if (page.includes("product")) {
+    } else if (page.includes("product") && !page.includes("category")) {
       document.getElementById("menu-product").classList.add("active");
+    } else if (page.includes("category")) {
+      document.getElementById("menu-category").classList.add("active");
     } else if (page.includes("news")) {
       document.getElementById("menu-news").classList.add("active");
     } else if (page.includes("user")) {

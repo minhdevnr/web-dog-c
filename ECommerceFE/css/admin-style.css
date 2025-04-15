@@ -28,24 +28,27 @@
 
 #sidebar-toggle:checked ~ .main-content {
   margin-left: 70px;
-  transition: margin-left 0.3s ease;
+  width: calc(100% - 70px);
+  transition: all 0.3s ease;
 }
 
 #sidebar-toggle:checked ~ .main-content header {
-  left: 50px;
+  left: 70px;
+  width: calc(100% - 70px);
 }
 
 .sidebar {
-  height: 100%;
-  width: 240px;
+  height: 100vh;
+  width: 250px;
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 100;
-  background: var(--main-color);
-  color: var(--color-dark);
+  z-index: 1000;
+  background: linear-gradient(to bottom, #3a3f44, #1e2126);
+  color: #fff;
   overflow-y: auto;
   transition: all 0.3s ease;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
 }
 
 .sidebar-header {
@@ -108,25 +111,25 @@
 }
 
 .main-content {
-  position: relative;
-  margin-left: 240px;
-  transition: margin-left 1s;
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  transition: all 0.3s ease;
 }
+
 header {
-  /* position: fixed; */
-  left: 240px;
+  position: relative;
+  left: 0;
   top: 0;
-  z-index: 100;
-  width: calc(100% - 240px);
+  width: 100%;
   height: 60px;
   padding: 0rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* border-bottom: 1px solid #ccc; */
-  background: none;
-  transition: left 1s;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
+
 .search-wrapper {
   display: flex;
   align-items: center;
@@ -286,40 +289,24 @@ tbody tr:nth-child(even) {
 .img-3 {
   background: url(./img/coffee1.jpg);
 }
-@media only screen and(max-width:1200px) {
+@media only screen and (max-width: 768px) {
   .sidebar {
-    width: 60px;
+    width: 0;
+    overflow: hidden;
   }
-  .sidebar .sidebar-header h3 span,
-  .sidebar li a span {
-    display: flex;
-    justify-content: center;
-  }
-  .main-content {
-    margin-left: 45px;
-  }
-  .main-content header {
-    left: 50px;
-  }
+  
   #sidebar-toggle:checked ~ .sidebar {
-    width: 240px;
+    width: 250px;
   }
-  #sidebar-toggle:checked ~ .sidebar .sidebar-header h3 span:last-child,
-  #sidebar-toggle:checked ~ .sidebar li a span:last-child {
-    display: inline;
+  
+  .main-content {
+    margin-left: 0;
+    width: 100%;
   }
-  #sidebar-toggle:checked ~ .sidebar .sidebar-header {
-    display: flex;
-    justify-content: space-between;
-  }
-  #sidebar-toggle:checked ~ .sidebar li {
-    display: block;
-  }
+  
   #sidebar-toggle:checked ~ .main-content {
-    margin-left: 45px;
-  }
-  #sidebar-toggle:checked ~ .main-content header {
-    left: 50px;
+    margin-left: 250px;
+    width: calc(100% - 250px);
   }
 }
 

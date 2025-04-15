@@ -13,6 +13,7 @@ namespace ECommerceAPI.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
         public DbSet<ECommerceAPI.Entities.Order> Orders { get; set; }
         public DbSet<ECommerceAPI.Entities.OrderItem> OrderItems { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
@@ -50,6 +51,13 @@ namespace ECommerceAPI.Data
             modelBuilder.Entity<Product>()
                 .Property(p => p.Price)
                 .HasColumnType("decimal(18,2)");
+
+            // Configure Product-Category relationship
+            modelBuilder.Entity<Product>()
+                .HasOne(p => p.Category)
+                .WithMany(c => c.Products)
+                .HasForeignKey(p => p.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Configure Order entity
             modelBuilder.Entity<ECommerceAPI.Entities.Order>()

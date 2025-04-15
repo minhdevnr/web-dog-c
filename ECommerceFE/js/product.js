@@ -672,6 +672,8 @@ class ProductManager {
     } catch (error) {
       console.error('Error loading products:', error);
       if (productTableBody) {
+debugger;
+
         productTableBody.innerHTML = `<tr><td colspan="6" class="text-center">Lỗi khi tải danh sách sản phẩm: ${error.message}</td></tr>`;
       }
     }

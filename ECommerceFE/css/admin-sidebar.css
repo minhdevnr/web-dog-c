@@ -4,12 +4,19 @@
  * Main sidebar styling - Thêm gradient màu tốt hơn
  */
 .sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 250px;
   background: linear-gradient(to bottom, #3a3f44, #1e2126);
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
   transition: width 0.3s ease;
+  overflow-y: auto;
+  z-index: 1000;
 }
 
 /* Sidebar header styling */
@@ -95,7 +102,31 @@
   }
   
   #sidebar-toggle:checked ~ .sidebar {
-    width: 200px;
+    width: 250px;
+  }
+
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+/* Main content adjustment */
+.main-content {
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+  width: calc(100% - 250px);
+}
+
+@media only screen and (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  #sidebar-toggle:checked ~ .main-content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
   }
 }
 

@@ -1,15 +1,13 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
 using ECommerceAPI.Data;
 using ECommerceAPI.Entities;
+using ECommerceAPI.Helpers;
 using ECommerceAPI.Models;
-using System;
+using ECommerceAPI.Models.Responses;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
 
 namespace ECommerceAPI.Controllers
 {
@@ -19,6 +17,8 @@ namespace ECommerceAPI.Controllers
     public class OrderController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private const int DEFAULT_PAGE_SIZE = 10;
+        private const int MAX_PAGE_SIZE = 50;
 
         public OrderController(ApplicationDbContext context)
         {
@@ -26,15 +26,58 @@ namespace ECommerceAPI.Controllers
         }
 
         [HttpGet("my-orders")]
-        public async Task<ActionResult<IEnumerable<OrderResponse>>> GetMyOrders()
+        public async Task<ActionResult<PagedResponse<OrderResponse>>> GetMyOrders(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = DEFAULT_PAGE_SIZE,
+            [FromQuery] string status = null,
+            [FromQuery] DateTime? fromDate = null,
+            [FromQuery] DateTime? toDate = null,
+            [FromQuery] string sortBy = "CreatedAt",
+            [FromQuery] bool desc = true)
         {
+            // Validate page size
+            if (pageSize <= 0) pageSize = DEFAULT_PAGE_SIZE;
+            if (pageSize > MAX_PAGE_SIZE) pageSize = MAX_PAGE_SIZE;
+
+            // Ensure valid page number
+            if (pageNumber <= 0) pageNumber = 1;
+
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var orders = await _context.Orders
+
+            // Start query
+            var query = _context.Orders
                 .Include(o => o.User)
                 .Include(o => o.OrderItems)
                 .ThenInclude(i => i.Product)
                 .Where(o => o.User.Id == userId)
-                .OrderByDescending(o => o.CreatedAt)
+                .AsQueryable();
+
+            // Apply filters
+            if (!string.IsNullOrEmpty(status))
+            {
+                query = query.Where(o => o.Status == status);
+            }
+
+            if (fromDate.HasValue)
+            {
+                query = query.Where(o => o.CreatedAt >= fromDate.Value);
+            }
+
+            if (toDate.HasValue)
+            {
+                query = query.Where(o => o.CreatedAt <= toDate.Value);
+            }
+
+            // Apply sorting
+            query = ApplySorting(query, sortBy, desc);
+
+            // Get total count for pagination
+            var totalCount = await query.CountAsync();
+
+            // Apply pagination
+            var orders = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .Select(o => new OrderResponse
                 {
                     Id = o.Id,
@@ -71,7 +114,14 @@ namespace ECommerceAPI.Controllers
                 })
                 .ToListAsync();
 
-            return orders;
+            // Create paged response
+            return PaginationHelper.CreatePagedResponse(
+                orders,
+                pageNumber,
+                pageSize,
+                totalCount,
+                Request,
+                "my-orders");
         }
 
         [HttpGet("{id}")]
@@ -193,7 +243,7 @@ namespace ECommerceAPI.Controllers
                         UnitPrice = product.Price,
                         TotalPrice = product.Price * item.Quantity
                     };
-                    
+
                     totalAmount += orderItem.TotalPrice;
                     order.OrderItems.Add(orderItem);
                 }
@@ -207,7 +257,7 @@ namespace ECommerceAPI.Controllers
         }
 
         // PUT: api/order/{id}
-        [HttpPut("{id}")]   
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateOrder(int id, [FromBody] UpdateOrderRequest request)
         {
             var order = await _context.Orders
@@ -268,6 +318,29 @@ namespace ECommerceAPI.Controllers
         {
             return _context.Orders.Any(e => e.Id == id);
         }
+
+        #region Helper Methods
+
+        // Apply sorting to query
+        private IQueryable<Order> ApplySorting(IQueryable<Order> query, string sortBy, bool desc)
+        {
+            switch (sortBy.ToLower())
+            {
+                case "createdat":
+                    return desc ? query.OrderByDescending(o => o.CreatedAt) : query.OrderBy(o => o.CreatedAt);
+
+                case "totalamount":
+                    return desc ? query.OrderByDescending(o => o.TotalAmount) : query.OrderBy(o => o.TotalAmount);
+
+                case "status":
+                    return desc ? query.OrderByDescending(o => o.Status) : query.OrderBy(o => o.Status);
+
+                default:
+                    return desc ? query.OrderByDescending(o => o.Id) : query.OrderBy(o => o.Id);
+            }
+        }
+
+        #endregion Helper Methods
     }
 
     public class CreateOrderRequest
@@ -306,4 +379,4 @@ namespace ECommerceAPI.Controllers
         [Required]
         public string Status { get; set; }
     }
-} 
+}
