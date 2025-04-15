@@ -122,6 +122,7 @@ class Auth {
    * Đăng nhập người dùng
    */
   static async login() {
+    debugger
     const email = document.getElementById('login-email').value || document.getElementById('login-email-phone').value;
     const password = document.getElementById('login-password').value;
 
@@ -144,16 +145,16 @@ class Auth {
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.message || 'Đăng nhập thất bại');
+        throw new Error(data.Message || 'Đăng nhập thất bại');
       }
       
       // Lưu token và thông tin người dùng vào localStorage
-      localStorage.setItem('token', data.token);
+      localStorage.setItem('token', data.Token);
       localStorage.setItem('user', JSON.stringify({
-        id: data.id,
-        username: data.username,
-        email: data.email,
-        role: data.role
+        id: data.Id,
+        username: data.Username,
+        email: data.Email,
+        role: data.Role
       }));
       
       // Hiển thị thông báo thành công
@@ -169,7 +170,7 @@ class Auth {
         const isAdminLogin = currentPath.includes('/admin/');
         
         // Chuyển hướng dựa trên vai trò và trang hiện tại
-        if (data.role && data.role.toLowerCase() === 'admin') {
+        if (data.Role && data.Role.toLowerCase() === 'admin') {
           // Nếu là admin, chuyển đến trang admin
           window.location.href = '/ECommerceFE/admin/admin.html';
         } else {
@@ -192,13 +193,16 @@ class Auth {
    * Đăng ký người dùng mới
    */
   static async register() {
-    const name = document.getElementById('register-name').value;
-    const email = document.getElementById('register-email').value;
-    const password = document.getElementById('register-password').value;
-    const confirmPassword = document.getElementById('register-confirm-password').value;
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const phoneNumber = document.getElementById('phone').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+    const address = document.getElementById('address').value;
+    const dateOfBirth = document.getElementById('birthdate').value;
 
     // Kiểm tra dữ liệu
-    if (!name || !email || !password) {
+    if (!username || !email || !phoneNumber || !password || !address || !dateOfBirth) {
       this.showError('Vui lòng điền đầy đủ thông tin');
       return;
     }
@@ -208,17 +212,27 @@ class Auth {
       return;
     }
 
+    // Kiểm tra độ mạnh của mật khẩu
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.valid) {
+      this.showError(passwordValidation.message);
+      return;
+    }
+
     try {
       const userData = {
-        name,
-        email,
-        password
+        Username: username,
+        Email: email,
+        PhoneNumber: phoneNumber,
+        Password: password,
+        Address: address,
+        DateOfBirth: dateOfBirth
       };
       
-      console.log('Đang gửi yêu cầu đăng ký đến:', `${API_URL}/user/register`);
+      console.log('Đang gửi yêu cầu đăng ký đến:', `${API_URL}/Auth/register`);
       console.log('Dữ liệu gửi đi:', userData);
       
-      const response = await fetch(`${API_URL}/user/register`, {
+      const response = await fetch(`${API_URL}/Auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -241,7 +255,7 @@ class Auth {
       }
       
       if (!response.ok) {
-        throw new Error(data.message || 'Đăng ký thất bại');
+        throw new Error(data.Message || 'Đăng ký thất bại');
       }
 
       this.showSuccess('Đăng ký thành công! Vui lòng đăng nhập.');

@@ -35,6 +35,8 @@ namespace ECommerceAPI.Entities
 
         [Required]
         public Product Product { get; set; }
+        
+        public Order Order { get; set; }
 
         public int Quantity { get; set; }
 

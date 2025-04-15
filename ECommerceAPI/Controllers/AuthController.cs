@@ -31,7 +31,8 @@ namespace ECommerceAPI.Controllers
                 Id = user.Id,
                 Username = user.Username,
                 Email = user.Email,
-                Token = token
+                Token = token,
+                Role = user.Role
             };
         }
 
@@ -57,7 +58,7 @@ namespace ECommerceAPI.Controllers
                 DateOfBirth = request.DateOfBirth,
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                Role = UserRole.Customer.ToString()
+                Role = UserRole.User.ToString()
             };
 
             var registeredUser = await _userService.RegisterAsync(user, request.Password, ipAddress);
@@ -95,7 +96,8 @@ namespace ECommerceAPI.Controllers
                 Id = user.Id,
                 Username = user.Username,
                 Email = user.Email,
-                Token = jwtToken
+                Token = jwtToken,
+                Role = user.Role
             };
         }
 
@@ -134,5 +136,6 @@ namespace ECommerceAPI.Controllers
         public string Username { get; set; }
         public string Email { get; set; }
         public string Token { get; set; }
+        public string Role { get; set; }
     }
 } 

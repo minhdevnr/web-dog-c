@@ -114,7 +114,6 @@ class AdminCategoryManager {
                     <td>${category.Id || category.id}</td>
                     <td>${category.Name || category.name}</td>
                     <td>${(category.Description || category.description) || 'Không có mô tả'}</td>
-                    <td>${(category.Products ? category.Products.length : (category.ProductCount || category.productCount)) || 0}</td>
                     <td>
                         <button class="btn btn-sm btn-info view-category" data-id="${category.Id || category.id}" title="Xem chi tiết">
                             <i class="fas fa-eye"></i>

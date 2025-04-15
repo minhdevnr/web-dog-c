@@ -189,7 +189,7 @@ class AdminUserManager {
             
             // Nếu có địa chỉ, hiển thị
             if (user.Address) {
-                $('#detailAddress').text(user.Address);
+                $('#shippingAddress').text(user.Address);
                 $('.address-info').show();
             } else {
                 $('.address-info').hide();

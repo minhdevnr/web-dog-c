@@ -38,8 +38,8 @@
       </a>
     </li>
     <li id="menu-order">
-      <a href="admin-project.html">
-        <span class="fa fa-truck-loading"></span>
+      <a href="admin-order.html">
+        <span class="fa fa-truck"></span>
         <span>Quản lý đơn hàng</span>
       </a>
     </li>
@@ -51,6 +51,49 @@
     </li>
   </ul>
 </div>
+
+<style>
+  /* Đảm bảo sidenar được hiển thị đúng */
+  .sidebar {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Điều chỉnh kích thước của các item menu */
+  .sidebar-menu li {
+    margin-bottom: 0.3rem !important;
+    padding-top: 0.3rem !important;
+  }
+
+  .sidebar-menu a {
+    padding: 0.5rem 0.8rem !important;
+    font-size: 0.85rem !important;
+  }
+
+  .sidebar-menu a span:first-child {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+    min-width: 30px !important;
+  }
+
+  /* Thay đổi padding của sidebar-menu */
+  .sidebar-menu {
+    padding: 0.5rem !important;
+  }
+
+  /* Thiết lập cho sidebar trên mobile */
+  @media only screen and (max-width: 768px) {
+    #sidebar-toggle:not(:checked) ~ .sidebar {
+      width: 0 !important;
+      overflow: hidden !important;
+    }
+
+    #sidebar-toggle:checked ~ .sidebar {
+      width: 250px !important;
+    }
+  }
+</style>
 
 <script>
   // Script nhỏ để đánh dấu trang hiện tại
@@ -75,7 +118,7 @@
       document.getElementById("menu-news").classList.add("active");
     } else if (page.includes("user")) {
       document.getElementById("menu-user").classList.add("active");
-    } else if (page.includes("project")) {
+    } else if (page.includes("order")) {
       document.getElementById("menu-order").classList.add("active");
     }
   })();

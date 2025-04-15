@@ -35,7 +35,7 @@ namespace ECommerceAPI.Controllers
         /// <returns>Danh sách tin tức đã phân trang</returns>
         [HttpGet]
         [ProducesResponseType(typeof(PagedResponse<NewsResponse>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<PagedResponse<News>>> GetNews([FromQuery] NewsFilterRequest filter)
+        public async Task<ActionResult<PagedResponse<NewsResponse>>> GetNews([FromQuery] NewsFilterRequest filter)
         {
             // Thiết lập giá trị mặc định nếu không có
             filter ??= new NewsFilterRequest();
@@ -48,7 +48,7 @@ namespace ECommerceAPI.Controllers
             if (filter.PageNumber <= 0) filter.PageNumber = 1;
             
             // Start query
-            var query = _context.News.AsQueryable();
+            var query = _context.News.Include(n => n.CategoryInfo).AsQueryable();
                 
             // Apply filters
             if (!string.IsNullOrEmpty(filter.Keyword))
@@ -80,15 +80,18 @@ namespace ECommerceAPI.Controllers
                 .Take(filter.PageSize)
                 .ToListAsync();
                 
-            // Process image URLs
-            foreach (var item in news)
-            {
+            // Process image URLs and map to response
+            var newsResponses = news.Select(item => {
+                // Update image URL
                 item.ImageUrl = GetFullImageUrl(item.ImageUrl);
-            }
+                
+                // Map to NewsResponse
+                return MapToNewsResponse(item);
+            }).ToList();
             
             // Create paged response
             return PaginationHelper.CreatePagedResponse(
-                news, 
+                newsResponses, 
                 filter.PageNumber, 
                 filter.PageSize, 
                 totalCount, 
@@ -104,16 +107,16 @@ namespace ECommerceAPI.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(NewsResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<News>> GetNews(int id)
+        public async Task<ActionResult<NewsResponse>> GetNews(int id)
         {
-            var news = await _context.News.FindAsync(id);
+            var news = await _context.News.Include(n => n.CategoryInfo).FirstOrDefaultAsync(n => n.Id == id);
             if (news == null)
             {
                 return NotFound();
             }
 
             news.ImageUrl = GetFullImageUrl(news.ImageUrl);
-            return news;
+            return MapToNewsResponse(news);
         }
 
         /// <summary>
@@ -124,7 +127,7 @@ namespace ECommerceAPI.Controllers
         /// <returns>Danh sách tin tức đã phân trang</returns>
         [HttpGet("category/{category}")]
         [ProducesResponseType(typeof(PagedResponse<NewsResponse>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<PagedResponse<News>>> GetNewsByCategory(
+        public async Task<ActionResult<PagedResponse<NewsResponse>>> GetNewsByCategory(
             string category,
             [FromQuery] NewsFilterRequest filter)
         {
@@ -140,6 +143,7 @@ namespace ECommerceAPI.Controllers
             
             // Start query
             var query = _context.News
+                .Include(n => n.CategoryInfo)
                 .Where(n => n.Category == category)
                 .AsQueryable();
                 
@@ -163,15 +167,18 @@ namespace ECommerceAPI.Controllers
                 .Take(filter.PageSize)
                 .ToListAsync();
                 
-            // Process image URLs
-            foreach (var item in news)
-            {
+            // Process image URLs and map to response
+            var newsResponses = news.Select(item => {
+                // Update image URL
                 item.ImageUrl = GetFullImageUrl(item.ImageUrl);
-            }
+                
+                // Map to NewsResponse
+                return MapToNewsResponse(item);
+            }).ToList();
             
             // Create paged response
             return PaginationHelper.CreatePagedResponse(
-                news, 
+                newsResponses, 
                 filter.PageNumber, 
                 filter.PageSize, 
                 totalCount, 
@@ -376,6 +383,29 @@ namespace ECommerceAPI.Controllers
                 default:
                     return desc ? query.OrderByDescending(n => n.Id) : query.OrderBy(n => n.Id);
             }
+        }
+
+        // Thêm phương thức map từ News entity sang NewsResponse
+        private NewsResponse MapToNewsResponse(News news)
+        {
+            return new NewsResponse
+            {
+                Id = news.Id,
+                Title = news.Title,
+                Content = news.Content,
+                ImageUrl = news.ImageUrl,
+                Author = news.Author,
+                Status = news.Status,
+                CreatedAt = news.CreatedAt,
+                UpdatedAt = news.UpdatedAt,
+                ViewCount = news.ViewCount,
+                Category = news.CategoryInfo != null ? new CategoryResponse
+                {
+                    Id = news.CategoryInfo.Id,
+                    Name = news.CategoryInfo.Name,
+                    Description = news.CategoryInfo.Description
+                } : null
+            };
         }
     }
 } 

@@ -900,6 +900,7 @@ class UI {
    * @returns {Element} - Element thông báo
    */
   static createNotification(message, type = 'info', duration = 3000) {
+    debugger
     // Tạo container cho notifications nếu chưa tồn tại
     let notificationsContainer = document.getElementById('notifications-container');
     if (!notificationsContainer) {

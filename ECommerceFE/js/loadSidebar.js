@@ -93,7 +93,7 @@
                         <li id="menu-category"><a href="admin-category.html"><span class="fa fa-tags"></span><span>Quản lý loại sản phẩm</span></a></li>
                         <li id="menu-news"><a href="admin-news.html"><span class="fa fa-newspaper"></span><span>Quản lý bài viết</span></a></li>
                         <li id="menu-user"><a href="admin-user.html"><span class="fa fa-user"></span><span>Quản lý user</span></a></li>
-                        <li id="menu-order"><a href="admin-project.html"><span class="fa fa-truck-loading"></span><span>Quản lý đơn hàng</span></a></li>
+                        <li id="menu-order"><a href="admin-order.html"><span class="fa fa-truck-loading"></span><span>Quản lý đơn hàng</span></a></li>
                         <li id="menu-logout"><a href="#" id="logoutButton"><span class="fa fa-sign-out-alt"></span><span>Đăng xuất</span></a></li>
                     </ul>
                 </div>

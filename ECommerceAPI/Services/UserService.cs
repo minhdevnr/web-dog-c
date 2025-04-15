@@ -69,7 +69,7 @@ namespace ECommerceAPI.Services
             user.Password = HashPassword(password);
             user.CreatedAt = DateTime.UtcNow;
             user.IsActive = true;
-            user.Role = UserRole.Customer.ToString(); // Default role
+            user.Role = UserRole.User.ToString(); // Default role
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();

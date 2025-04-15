@@ -344,6 +344,13 @@ namespace ECommerceAPI.Controllers
             if (string.IsNullOrEmpty(imageUrl))
                 return null;
 
+            if (imageUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                return imageUrl;
+
+            // Đảm bảo rằng imageUrl bắt đầu bằng /
+            if (!imageUrl.StartsWith("/"))
+                imageUrl = "/" + imageUrl;
+
             return $"{Request.Scheme}://{Request.Host}{imageUrl}";
         }
 

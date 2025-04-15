@@ -60,7 +60,7 @@ namespace ECommerceAPI.Models
 
     public enum UserRole
     {
-        Customer,
+        User,
         Admin,
         Vendor
     }

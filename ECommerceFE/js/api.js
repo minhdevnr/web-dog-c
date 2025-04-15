@@ -271,7 +271,6 @@ class OrderAPI {
 
 // Export các API
 window.API = {
-  config: API_CONFIG,
   core: API,
   products: ProductAPI,
   categories: CategoryAPI,

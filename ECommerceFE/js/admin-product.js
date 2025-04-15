@@ -87,14 +87,17 @@ class AdminProductManager {
         
         // Hiển thị danh sách sản phẩm
         response.Items.forEach(product => {
-            // Kiểm tra biến hình ảnh có thể là ImageUrl hoặc Image
-            const productImage = product.ImageUrl || product.Image || '../images/default-product.jpg';
+            // Debug để xem URL hình ảnh
+            console.log('Product image URL:', product.ImageUrl);
+            
+            // Sử dụng URL hình ảnh trực tiếp từ API response
+            const productImage = product.ImageUrl || '../images/default-product.jpg';
             
             const row = `
                 <tr>
                     <td>${product.Id}</td>
                     <td>
-                        <img src="${productImage}" class="product-image" alt="${product.Name}">
+                        <img src="${productImage}" class="product-image" alt="${product.Name}" onerror="this.src='../images/default-product.jpg'">
                     </td>
                     <td>${product.Name}</td>
                     <td>${product.Category?.Name || 'Không có'}</td>
@@ -186,6 +189,7 @@ class AdminProductManager {
     }
 
     openProductModal(product = null) {
+        debugger;
         const modal = $('#productModal');
         const form = $('#productForm')[0];
         form.reset();
@@ -201,6 +205,9 @@ class AdminProductManager {
 
         if (product) {
             console.log('Editing product:', product);
+            // Debug thông tin hình ảnh
+            console.log('Product image URL in edit:', product.ImageUrl);
+            
             $('#productModalTitle').text('Sửa Sản phẩm');
             $('#productId').val(product.Id);
             $('#name').val(product.Name);
@@ -220,10 +227,9 @@ class AdminProductManager {
                 $('#expiryDate').val(expiryDate.toISOString().split('T')[0]);
             }
             
-            // Xử lý hình ảnh (có thể là ImageUrl hoặc Image)
-            const productImage = product.ImageUrl || product.Image;
-            if (productImage) {
-                $('#imagePreview').html(`<img src="${productImage}" class="img-thumbnail" style="max-height: 200px;">`);
+            // Xử lý hình ảnh - sử dụng trực tiếp URL từ API
+            if (product.ImageUrl) {
+                $('#imagePreview').html(`<img src="${product.ImageUrl}" class="img-thumbnail" style="max-height: 200px;" onerror="this.src='../images/default-product.jpg'">`);
             }
         } else {
             $('#productModalTitle').text('Thêm Sản phẩm');
@@ -356,6 +362,8 @@ class AdminProductManager {
             const product = await response.json();
             
             console.log('Product detail:', product);
+            // Debug thông tin hình ảnh
+            console.log('Product image URL in detail:', product.ImageUrl);
 
             $('#detailName').text(product.Name);
             $('#detailCategory').text(product.Category?.Name || 'Không có');
@@ -374,9 +382,12 @@ class AdminProductManager {
             $('#detailStatus').html(`<span class="badge bg-${product.Status === 'Active' ? 'success' : 'danger'}">${this.getStatusLabel(product.Status)}</span>`);
             $('#detailDescription').html(product.Description || 'Không có mô tả');
             
-            // Sử dụng ImageUrl hoặc Image
-            const productImage = product.ImageUrl || product.Image || '../images/default-product.jpg';
-            $('#detailImage').attr('src', productImage);
+            // Sử dụng URL hình ảnh trực tiếp từ API response
+            const productImage = product.ImageUrl || '../images/default-product.jpg';
+            $('#detailImage').attr('src', productImage)
+                             .on('error', function() {
+                                 $(this).attr('src', '../images/default-product.jpg');
+                             });
 
             $('#productId').val(product.Id);
             $('#productDetailModal').modal('show');

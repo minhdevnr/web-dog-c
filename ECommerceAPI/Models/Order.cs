@@ -80,6 +80,7 @@ namespace ECommerceAPI.Models
     {
         public int Id { get; set; }
         public string Status { get; set; }
+        public string PhoneNumber { get; set; }
         public decimal SubTotal { get; set; }
         public decimal ShippingFee { get; set; }
         public decimal Total { get; set; }
@@ -87,6 +88,7 @@ namespace ECommerceAPI.Models
         public DateTime CreatedAt { get; set; }
         public AddressResponse Address { get; set; }
         public List<OrderItemResponse> Items { get; set; }
+        public UserBasicResponse User { get; set; }
     }
 
     public class OrderItemResponse
@@ -116,5 +118,12 @@ namespace ECommerceAPI.Models
         public string Name { get; set; }
         public string Image { get; set; }
         public decimal Price { get; set; }
+    }
+
+    public class UserBasicResponse
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
     }
 } 

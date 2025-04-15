@@ -72,6 +72,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
+// Thêm hỗ trợ cho các tệp tĩnh
+builder.Services.AddDirectoryBrowser();
+
 // Learn more about configuring Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -86,6 +89,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Cấu hình phục vụ tệp tĩnh từ thư mục wwwroot
+app.UseStaticFiles();
 
 // Thêm middleware CORS trước Authentication và Authorization
 app.UseCors();

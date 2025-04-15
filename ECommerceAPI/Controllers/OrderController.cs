@@ -11,7 +11,7 @@ using System.Security.Claims;
 
 namespace ECommerceAPI.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class OrderController : ControllerBase
@@ -25,11 +25,113 @@ namespace ECommerceAPI.Controllers
             _context = context;
         }
 
-        [HttpGet("my-orders")]
-        public async Task<ActionResult<PagedResponse<OrderResponse>>> GetMyOrders(
+        //[HttpGet("my-orders")]
+        //public async Task<ActionResult<PagedResponse<OrderResponse>>> GetMyOrders(
+        //    [FromQuery] int pageNumber = 1,
+        //    [FromQuery] int pageSize = DEFAULT_PAGE_SIZE,
+        //    [FromQuery] string status = null,
+        //    [FromQuery] DateTime? fromDate = null,
+        //    [FromQuery] DateTime? toDate = null,
+        //    [FromQuery] string sortBy = "CreatedAt",
+        //    [FromQuery] bool desc = true)
+        //{
+        //    // Validate page size
+        //    if (pageSize <= 0) pageSize = DEFAULT_PAGE_SIZE;
+        //    if (pageSize > MAX_PAGE_SIZE) pageSize = MAX_PAGE_SIZE;
+
+        //    // Ensure valid page number
+        //    if (pageNumber <= 0) pageNumber = 1;
+
+        //    var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+        //    // Start query
+        //    var query = _context.Orders
+        //        .Include(o => o.User)
+        //        .Include(o => o.OrderItems)
+        //        .ThenInclude(i => i.Product)
+        //        .Where(o => o.User.Id == userId)
+        //        .AsQueryable();
+
+        //    // Apply filters
+        //    if (!string.IsNullOrEmpty(status))
+        //    {
+        //        query = query.Where(o => o.Status == status);
+        //    }
+
+        //    if (fromDate.HasValue)
+        //    {
+        //        query = query.Where(o => o.CreatedAt >= fromDate.Value);
+        //    }
+
+        //    if (toDate.HasValue)
+        //    {
+        //        query = query.Where(o => o.CreatedAt <= toDate.Value);
+        //    }
+
+        //    // Apply sorting
+        //    query = ApplySorting(query, sortBy, desc);
+
+        //    // Get total count for pagination
+        //    var totalCount = await query.CountAsync();
+
+        //    // Apply pagination
+        //    var orders = await query
+        //        .Skip((pageNumber - 1) * pageSize)
+        //        .Take(pageSize)
+        //        .Select(o => new OrderResponse
+        //        {
+        //            Id = o.Id,
+        //            Status = o.Status,
+        //            SubTotal = o.TotalAmount - 30000, // Giả định phí vận chuyển là 30000
+        //            ShippingFee = 30000,
+        //            Total = o.TotalAmount,
+        //            Note = string.Empty,
+        //            CreatedAt = o.CreatedAt,
+        //            Address = new AddressResponse
+        //            {
+        //                Id = 0,
+        //                ReceiverName = o.User.Username,
+        //                Phone = o.PhoneNumber,
+        //                AddressLine = o.ShippingAddress,
+        //                Ward = string.Empty,
+        //                District = string.Empty,
+        //                City = string.Empty
+        //            },
+        //            Items = o.OrderItems.Select(i => new OrderItemResponse
+        //            {
+        //                Id = i.Id,
+        //                Product = new ProductResponse
+        //                {
+        //                    Id = i.Product.Id,
+        //                    Name = i.Product.Name,
+        //                    Image = i.Product.ImageUrl ?? string.Empty,
+        //                    Price = i.UnitPrice
+        //                },
+        //                Quantity = i.Quantity,
+        //                Price = i.UnitPrice,
+        //                Total = i.TotalPrice
+        //            }).ToList()
+        //        })
+        //        .ToListAsync();
+
+        //    // Create paged response
+        //    return PaginationHelper.CreatePagedResponse(
+        //        orders,
+        //        pageNumber,
+        //        pageSize,
+        //        totalCount,
+        //        Request,
+        //        "my-orders");
+        //}
+
+        // GET: api/order
+        [HttpGet]
+        //[Authorize(Roles = "Admin")]
+        public async Task<ActionResult<PagedResponse<OrderResponse>>> GetAllOrders(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = DEFAULT_PAGE_SIZE,
             [FromQuery] string status = null,
+            [FromQuery] int? userId = null,
             [FromQuery] DateTime? fromDate = null,
             [FromQuery] DateTime? toDate = null,
             [FromQuery] string sortBy = "CreatedAt",
@@ -42,20 +144,22 @@ namespace ECommerceAPI.Controllers
             // Ensure valid page number
             if (pageNumber <= 0) pageNumber = 1;
 
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-
             // Start query
             var query = _context.Orders
                 .Include(o => o.User)
                 .Include(o => o.OrderItems)
                 .ThenInclude(i => i.Product)
-                .Where(o => o.User.Id == userId)
                 .AsQueryable();
 
             // Apply filters
             if (!string.IsNullOrEmpty(status))
             {
                 query = query.Where(o => o.Status == status);
+            }
+
+            if (userId.HasValue)
+            {
+                query = query.Where(o => o.User.Id == userId.Value);
             }
 
             if (fromDate.HasValue)
@@ -82,6 +186,7 @@ namespace ECommerceAPI.Controllers
                 {
                     Id = o.Id,
                     Status = o.Status,
+                    PhoneNumber = o.PhoneNumber,
                     SubTotal = o.TotalAmount - 30000, // Giả định phí vận chuyển là 30000
                     ShippingFee = 30000,
                     Total = o.TotalAmount,
@@ -110,7 +215,13 @@ namespace ECommerceAPI.Controllers
                         Quantity = i.Quantity,
                         Price = i.UnitPrice,
                         Total = i.TotalPrice
-                    }).ToList()
+                    }).ToList(),
+                    User = new UserBasicResponse
+                    {
+                        Id = o.User.Id,
+                        Name = o.User.Username,
+                        Email = o.User.Email
+                    }
                 })
                 .ToListAsync();
 
@@ -121,18 +232,30 @@ namespace ECommerceAPI.Controllers
                 pageSize,
                 totalCount,
                 Request,
-                "my-orders");
+                "orders");
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<OrderResponse>> GetOrder(int id)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var order = await _context.Orders
+            // Kiểm tra xem người dùng có phải admin không
+            bool isAdmin = User.IsInRole("Admin");
+            
+            // Khởi tạo query ban đầu
+            var query = _context.Orders
                 .Include(o => o.User)
                 .Include(o => o.OrderItems)
                 .ThenInclude(i => i.Product)
-                .Where(o => o.Id == id && o.User.Id == userId)
+                .Where(o => o.Id == id);
+            
+            // Nếu không phải admin, chỉ cho phép xem đơn hàng của chính họ
+            //if (!isAdmin)
+            //{
+            //    var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            //    query = query.Where(o => o.User.Id == userId);
+            //}
+            
+            var order = await query
                 .Select(o => new OrderResponse
                 {
                     Id = o.Id,
@@ -141,6 +264,7 @@ namespace ECommerceAPI.Controllers
                     ShippingFee = 30000,
                     Total = o.TotalAmount,
                     Note = string.Empty,
+                    PhoneNumber = o.PhoneNumber,
                     CreatedAt = o.CreatedAt,
                     Address = new AddressResponse
                     {
@@ -165,7 +289,13 @@ namespace ECommerceAPI.Controllers
                         Quantity = i.Quantity,
                         Price = i.UnitPrice,
                         Total = i.TotalPrice
-                    }).ToList()
+                    }).ToList(),
+                    User = new UserBasicResponse
+                    {
+                        Id = o.User.Id,
+                        Name = o.User.Username,
+                        Email = o.User.Email
+                    }
                 })
                 .FirstOrDefaultAsync();
 
@@ -239,6 +369,7 @@ namespace ECommerceAPI.Controllers
                     var orderItem = new ECommerceAPI.Entities.OrderItem
                     {
                         Product = product,
+                        Order = order,
                         Quantity = item.Quantity,
                         UnitPrice = product.Price,
                         TotalPrice = product.Price * item.Quantity
@@ -262,6 +393,8 @@ namespace ECommerceAPI.Controllers
         {
             var order = await _context.Orders
                 .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product)
+                .Include(o => o.User)
                 .FirstOrDefaultAsync(o => o.Id == id);
 
             if (order == null)
@@ -278,6 +411,40 @@ namespace ECommerceAPI.Controllers
             order.PhoneNumber = request.PhoneNumber;
             order.Status = request.Status;
             order.UpdatedAt = DateTime.UtcNow;
+
+            // Xử lý cập nhật các OrderItems
+            if (request.Items != null && request.Items.Any())
+            {
+                // Xóa tất cả các OrderItems hiện có
+                _context.OrderItems.RemoveRange(order.OrderItems);
+                
+                // Tạo lại danh sách OrderItems mới
+                order.OrderItems = new List<ECommerceAPI.Entities.OrderItem>();
+                decimal totalAmount = 0;
+
+                foreach (var item in request.Items)
+                {
+                    var product = await _context.Products.FindAsync(item.ProductId);
+                    if (product == null)
+                    {
+                        return BadRequest($"Product with ID {item.ProductId} not found");
+                    }
+
+                    var orderItem = new ECommerceAPI.Entities.OrderItem
+                    {
+                        Product = product,
+                        Order = order,
+                        Quantity = item.Quantity,
+                        UnitPrice = product.Price,
+                        TotalPrice = product.Price * item.Quantity
+                    };
+
+                    totalAmount += orderItem.TotalPrice;
+                    order.OrderItems.Add(orderItem);
+                }
+
+                order.TotalAmount = totalAmount;
+            }
 
             try
             {
@@ -378,5 +545,7 @@ namespace ECommerceAPI.Controllers
 
         [Required]
         public string Status { get; set; }
+        
+        public List<OrderItemRequest> Items { get; set; }
     }
 }
