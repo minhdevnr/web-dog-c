@@ -232,7 +232,7 @@ namespace ECommerceAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         public async Task<ActionResult<PagedResponse<UserResponse>>> GetUsers(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = DEFAULT_PAGE_SIZE,
@@ -299,7 +299,7 @@ namespace ECommerceAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         public async Task<ActionResult<UserResponse>> GetUserById(int id)
         {
             var user = await _userService.GetUserByIdAsync(id);
@@ -311,7 +311,7 @@ namespace ECommerceAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         public async Task<ActionResult<UserResponse>> CreateUser([FromBody] CreateUserRequest request)
         {
             var user = new User
@@ -336,7 +336,7 @@ namespace ECommerceAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         public async Task<ActionResult<UserResponse>> UpdateUser(int id, [FromBody] UpdateUserRequest request)
         {
             var user = await _userService.GetUserByIdAsync(id);
@@ -365,7 +365,7 @@ namespace ECommerceAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             var result = await _userService.DeleteUserAsync(id);
@@ -513,7 +513,6 @@ namespace ECommerceAPI.Controllers
         public string Username { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
-        public string FullName { get; set; }
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
         public DateTime? DateOfBirth { get; set; }
@@ -522,7 +521,6 @@ namespace ECommerceAPI.Controllers
 
     public class UpdateUserRequest
     {
-        public string FullName { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string Address { get; set; }

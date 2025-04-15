@@ -167,6 +167,16 @@
                   </select>
                 </div>
               </div>
+              <div class="row mb-3">
+                <div class="col-md-12">
+                  <label class="form-label">Địa chỉ</label>
+                  <textarea
+                    class="form-control"
+                    id="address"
+                    rows="2"
+                  ></textarea>
+                </div>
+              </div>
             </form>
           </div>
           <div class="modal-footer">
@@ -179,6 +189,104 @@
             </button>
             <button type="button" class="btn btn-primary" id="saveUserBtn">
               Lưu
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Detail Modal -->
+    <div class="modal fade" id="userDetailModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Chi tiết Người dùng</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-12">
+                <h4 id="detailUsername" class="mb-3"></h4>
+                <p><strong>Email:</strong> <span id="detailEmail"></span></p>
+                <p>
+                  <strong>Số điện thoại:</strong> <span id="detailPhone"></span>
+                </p>
+                <p><strong>Vai trò:</strong> <span id="detailRole"></span></p>
+                <p>
+                  <strong>Trạng thái:</strong> <span id="detailStatus"></span>
+                </p>
+                <div class="address-info">
+                  <p>
+                    <strong>Địa chỉ:</strong> <span id="detailAddress"></span>
+                  </p>
+                </div>
+                <div class="creation-info">
+                  <p>
+                    <strong>Ngày tạo:</strong>
+                    <span id="detailCreatedAt"></span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Đóng
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary edit-user"
+              data-id=""
+              id="editFromDetailBtn"
+            >
+              <i class="fas fa-edit me-2"></i>Sửa
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger delete-user"
+              data-id=""
+              id="deleteFromDetailBtn"
+            >
+              <i class="fas fa-trash me-2"></i>Xóa
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Xác nhận xóa</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>Bạn có chắc chắn muốn xóa người dùng này?</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Hủy
+            </button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+              Xóa
             </button>
           </div>
         </div>

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using ECommerceAPI.Data;
 using ECommerceAPI.Entities;
 using ECommerceAPI.Models.Responses;
+using ECommerceAPI.Models.Requests;
 using ECommerceAPI.Helpers;
 
 namespace ECommerceAPI.Controllers
@@ -27,55 +28,56 @@ namespace ECommerceAPI.Controllers
             _context = context;
         }
 
-        // GET: api/news
+        /// <summary>
+        /// Lấy danh sách tin tức có phân trang và lọc
+        /// </summary>
+        /// <param name="filter">Thông tin lọc và phân trang</param>
+        /// <returns>Danh sách tin tức đã phân trang</returns>
         [HttpGet]
-        public async Task<ActionResult<PagedResponse<News>>> GetNews(
-            [FromQuery] int pageNumber = 1, 
-            [FromQuery] int pageSize = DEFAULT_PAGE_SIZE,
-            [FromQuery] string keyword = null,
-            [FromQuery] string category = null,
-            [FromQuery] string status = null,
-            [FromQuery] string sortBy = "CreatedAt",
-            [FromQuery] bool desc = true)
+        [ProducesResponseType(typeof(PagedResponse<NewsResponse>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<PagedResponse<News>>> GetNews([FromQuery] NewsFilterRequest filter)
         {
+            // Thiết lập giá trị mặc định nếu không có
+            filter ??= new NewsFilterRequest();
+            
             // Validate page size
-            if (pageSize <= 0) pageSize = DEFAULT_PAGE_SIZE;
-            if (pageSize > MAX_PAGE_SIZE) pageSize = MAX_PAGE_SIZE;
+            if (filter.PageSize <= 0) filter.PageSize = DEFAULT_PAGE_SIZE;
+            if (filter.PageSize > MAX_PAGE_SIZE) filter.PageSize = MAX_PAGE_SIZE;
             
             // Ensure valid page number
-            if (pageNumber <= 0) pageNumber = 1;
+            if (filter.PageNumber <= 0) filter.PageNumber = 1;
             
             // Start query
             var query = _context.News.AsQueryable();
                 
             // Apply filters
-            if (!string.IsNullOrEmpty(keyword))
+            if (!string.IsNullOrEmpty(filter.Keyword))
             {
-                keyword = keyword.ToLower();
+                var keyword = filter.Keyword.ToLower();
                 query = query.Where(n => n.Title.ToLower().Contains(keyword) || 
                                         n.Content.ToLower().Contains(keyword));
             }
             
-            if (!string.IsNullOrEmpty(category))
+            if (!string.IsNullOrEmpty(filter.Category))
             {
-                query = query.Where(n => n.Category == category);
+                query = query.Where(n => n.Category == filter.Category);
             }
             
-            if (!string.IsNullOrEmpty(status))
+            if (!string.IsNullOrEmpty(filter.Status))
             {
-                query = query.Where(n => n.Status == status);
+                query = query.Where(n => n.Status == filter.Status);
             }
             
             // Apply sorting
-            query = ApplySorting(query, sortBy, desc);
+            query = ApplySorting(query, filter.SortBy, filter.Desc);
             
             // Get total count for pagination
             var totalCount = await query.CountAsync();
             
             // Apply pagination
             var news = await query
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
+                .Take(filter.PageSize)
                 .ToListAsync();
                 
             // Process image URLs
@@ -87,15 +89,21 @@ namespace ECommerceAPI.Controllers
             // Create paged response
             return PaginationHelper.CreatePagedResponse(
                 news, 
-                pageNumber, 
-                pageSize, 
+                filter.PageNumber, 
+                filter.PageSize, 
                 totalCount, 
                 Request, 
                 "news");
         }
 
-        // GET: api/news/{id}
+        /// <summary>
+        /// Lấy thông tin chi tiết một tin tức theo ID
+        /// </summary>
+        /// <param name="id">ID của tin tức</param>
+        /// <returns>Thông tin chi tiết tin tức</returns>
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(NewsResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<News>> GetNews(int id)
         {
             var news = await _context.News.FindAsync(id);
@@ -108,22 +116,27 @@ namespace ECommerceAPI.Controllers
             return news;
         }
 
-        // GET: api/news/category/{category}
+        /// <summary>
+        /// Lấy danh sách tin tức theo danh mục
+        /// </summary>
+        /// <param name="category">Tên danh mục</param>
+        /// <param name="filter">Thông tin lọc và phân trang</param>
+        /// <returns>Danh sách tin tức đã phân trang</returns>
         [HttpGet("category/{category}")]
+        [ProducesResponseType(typeof(PagedResponse<NewsResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<PagedResponse<News>>> GetNewsByCategory(
             string category,
-            [FromQuery] int pageNumber = 1, 
-            [FromQuery] int pageSize = DEFAULT_PAGE_SIZE,
-            [FromQuery] string keyword = null,
-            [FromQuery] string sortBy = "CreatedAt",
-            [FromQuery] bool desc = true)
+            [FromQuery] NewsFilterRequest filter)
         {
+            // Thiết lập giá trị mặc định nếu không có
+            filter ??= new NewsFilterRequest();
+            
             // Validate page size
-            if (pageSize <= 0) pageSize = DEFAULT_PAGE_SIZE;
-            if (pageSize > MAX_PAGE_SIZE) pageSize = MAX_PAGE_SIZE;
+            if (filter.PageSize <= 0) filter.PageSize = DEFAULT_PAGE_SIZE;
+            if (filter.PageSize > MAX_PAGE_SIZE) filter.PageSize = MAX_PAGE_SIZE;
             
             // Ensure valid page number
-            if (pageNumber <= 0) pageNumber = 1;
+            if (filter.PageNumber <= 0) filter.PageNumber = 1;
             
             // Start query
             var query = _context.News
@@ -131,23 +144,23 @@ namespace ECommerceAPI.Controllers
                 .AsQueryable();
                 
             // Apply filters
-            if (!string.IsNullOrEmpty(keyword))
+            if (!string.IsNullOrEmpty(filter.Keyword))
             {
-                keyword = keyword.ToLower();
+                var keyword = filter.Keyword.ToLower();
                 query = query.Where(n => n.Title.ToLower().Contains(keyword) || 
                                         n.Content.ToLower().Contains(keyword));
             }
             
             // Apply sorting
-            query = ApplySorting(query, sortBy, desc);
+            query = ApplySorting(query, filter.SortBy, filter.Desc);
             
             // Get total count for pagination
             var totalCount = await query.CountAsync();
             
             // Apply pagination
             var news = await query
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
+                .Take(filter.PageSize)
                 .ToListAsync();
                 
             // Process image URLs
@@ -159,38 +172,56 @@ namespace ECommerceAPI.Controllers
             // Create paged response
             return PaginationHelper.CreatePagedResponse(
                 news, 
-                pageNumber, 
-                pageSize, 
+                filter.PageNumber, 
+                filter.PageSize, 
                 totalCount, 
                 Request, 
                 "news-by-category");
         }
 
-        // POST: api/news
+        /// <summary>
+        /// Tạo tin tức mới
+        /// </summary>
+        /// <param name="request">Thông tin tin tức mới</param>
+        /// <returns>Thông tin tin tức đã tạo</returns>
         [HttpPost]
-        public async Task<ActionResult<News>> CreateNews([FromForm] News news, IFormFile image)
+        [ProducesResponseType(typeof(NewsResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<News>> CreateNews([FromForm] NewsRequest request)
         {
-            if (image != null)
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var news = new News
+            {
+                Title = request.Title,
+                Content = request.Content,
+                Status = request.Status ?? "Published",
+                Author = request.Author ?? "Admin",
+                Category = "News", // Mặc định
+                CategoryId = request.CategoryId,
+                CreatedAt = DateTime.Now
+            };
+
+            if (request.Image != null)
             {
                 if (!Directory.Exists(_imagePath))
                 {
                     Directory.CreateDirectory(_imagePath);
                 }
 
-                var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(image.FileName)}";
+                var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(request.Image.FileName)}";
                 var filePath = Path.Combine(_imagePath, fileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    await image.CopyToAsync(stream);
+                    await request.Image.CopyToAsync(stream);
                 }
 
                 news.ImageUrl = $"/images/news/{fileName}";
             }
-
-            news.CreatedAt = DateTime.Now;
-            news.Status = news.Status ?? "Published";
-            news.Author = news.Author ?? "Admin";
 
             _context.News.Add(news);
             await _context.SaveChangesAsync();
@@ -199,13 +230,26 @@ namespace ECommerceAPI.Controllers
             return CreatedAtAction(nameof(GetNews), new { id = news.Id }, news);
         }
 
-        // PUT: api/news/{id}
+        /// <summary>
+        /// Cập nhật tin tức
+        /// </summary>
+        /// <param name="id">ID của tin tức</param>
+        /// <param name="request">Thông tin cập nhật</param>
+        /// <returns>Không có nội dung trả về nếu thành công</returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateNews(int id, [FromForm] News news, IFormFile image)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateNews(int id, [FromForm] NewsRequest request)
         {
-            if (id != news.Id)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
+            }
+
+            if (id != request.Id)
+            {
+                return BadRequest("ID không khớp");
             }
 
             var existingNews = await _context.News.FindAsync(id);
@@ -214,8 +258,15 @@ namespace ECommerceAPI.Controllers
                 return NotFound();
             }
 
+            // Cập nhật các thông tin cơ bản
+            existingNews.Title = request.Title;
+            existingNews.Content = request.Content;
+            existingNews.Status = request.Status;
+            existingNews.CategoryId = request.CategoryId;
+            existingNews.UpdatedAt = DateTime.Now;
+
             // Handle image update
-            if (image != null)
+            if (request.Image != null)
             {
                 if (!Directory.Exists(_imagePath))
                 {
@@ -233,25 +284,16 @@ namespace ECommerceAPI.Controllers
                 }
 
                 // Save new image
-                var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(image.FileName)}";
+                var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(request.Image.FileName)}";
                 var filePath = Path.Combine(_imagePath, fileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    await image.CopyToAsync(stream);
+                    await request.Image.CopyToAsync(stream);
                 }
 
-                news.ImageUrl = $"/images/news/{fileName}";
+                existingNews.ImageUrl = $"/images/news/{fileName}";
             }
-            else
-            {
-                news.ImageUrl = existingNews.ImageUrl;
-            }
-
-            news.UpdatedAt = DateTime.Now;
-            news.CreatedAt = existingNews.CreatedAt;
-
-            _context.Entry(existingNews).CurrentValues.SetValues(news);
 
             try
             {
@@ -272,8 +314,14 @@ namespace ECommerceAPI.Controllers
             return NoContent();
         }
 
-        // DELETE: api/news/{id}
+        /// <summary>
+        /// Xóa tin tức
+        /// </summary>
+        /// <param name="id">ID của tin tức cần xóa</param>
+        /// <returns>Không có nội dung trả về nếu thành công</returns>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteNews(int id)
         {
             var news = await _context.News.FindAsync(id);
