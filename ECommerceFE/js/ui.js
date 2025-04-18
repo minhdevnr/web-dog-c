@@ -27,19 +27,19 @@ class UI {
     console.log('Debug: Header container:', headerContainer);
     
     if (headerContainer) {
-      // Thử tải từ các vị trí có thể
-      fetch('header.html')
+      // Luôn tải từ thư mục components
+      fetch('components/header.html')
         .then(response => {
-          console.log('Debug: Header response status:', response.status);
+          console.log('Debug: Components header response status:', response.status);
           if (!response.ok) {
-            throw new Error('Không thể tải header từ thư mục gốc');
+            throw new Error('Không thể tải header từ components/');
           }
           return response.text();
         })
         .then(data => {
-          console.log('Debug: Header data received, length:', data.length);
+          console.log('Debug: Components header data received, length:', data.length);
           headerContainer.innerHTML = data;
-          console.log('Debug: Header appended to container');
+          console.log('Debug: Header appended from components/');
           
           // Trigger event khi header đã load xong
           document.dispatchEvent(new Event('headerLoaded'));
@@ -47,68 +47,33 @@ class UI {
           // Khởi tạo sự kiện header sau khi tải
           this.initHeaderEvents();
         })
-        .catch(error => {
-          console.error('Error loading header from root:', error);
-          
-          // Thử tải từ thư mục components
-          fetch('components/header.html')
-            .then(response => {
-              console.log('Debug: Components header response status:', response.status);
-              if (!response.ok) {
-                throw new Error('Không thể tải header từ components/');
-              }
-              return response.text();
-            })
-            .then(data => {
-              console.log('Debug: Components header data received, length:', data.length);
-              headerContainer.innerHTML = data;
-              console.log('Debug: Header appended from components/');
-              
-              // Trigger event khi header đã load xong
-              document.dispatchEvent(new Event('headerLoaded'));
-              
-              // Khởi tạo sự kiện header sau khi tải
-              this.initHeaderEvents();
-            })
-            .catch(componentsError => {
-              console.error('Error loading header from components:', componentsError);
-              headerContainer.innerHTML = '<div class="header-error">Không thể tải header</div>';
-            });
+        .catch(componentsError => {
+          console.error('Error loading header from components:', componentsError);
+          headerContainer.innerHTML = '<div class="header-error">Không thể tải header</div>';
         });
     }
     
-    // Tương tự cho footer
-    const footerPlaceholder = document.getElementById('footer-placeholder');
+    // Tải footer
+    const footerContainer = document.getElementById('footer-container');
     
-    if (footerPlaceholder) {
-      fetch('footer.html')
+    if (footerContainer) {
+      // Luôn tải từ thư mục components
+      fetch('components/footer.html')
         .then(response => {
+          console.log('Debug: Components footer response status:', response.status);
           if (!response.ok) {
-            throw new Error('Không thể tải footer từ thư mục gốc');
+            throw new Error('Không thể tải footer từ components/');
           }
           return response.text();
         })
         .then(data => {
-          footerPlaceholder.innerHTML = data;
+          console.log('Debug: Components footer data received, length:', data.length);
+          footerContainer.innerHTML = data;
+          console.log('Debug: Footer appended from components/');
         })
-        .catch(error => {
-          console.error('Error loading footer from root:', error);
-          
-          // Thử tải từ thư mục components
-          fetch('components/footer.html')
-            .then(response => {
-              if (!response.ok) {
-                throw new Error('Không thể tải footer từ components/');
-              }
-              return response.text();
-            })
-            .then(data => {
-              footerPlaceholder.innerHTML = data;
-            })
-            .catch(componentsError => {
-              console.error('Error loading footer from components:', componentsError);
-              footerPlaceholder.innerHTML = '<div class="footer-error">Không thể tải footer</div>';
-            });
+        .catch(componentsError => {
+          console.error('Error loading footer from components:', componentsError);
+          footerContainer.innerHTML = '<div class="footer-error">Không thể tải footer</div>';
         });
     }
   }
@@ -171,6 +136,7 @@ class UI {
     const searchBtn = document.querySelector("#search-btn");
     const cartBtn = document.querySelector("#cart-btn");
     const loginBtn = document.querySelector("#login-btn");
+    const logoutBtn = document.querySelector("#logout-btn");
     const userProfileBtn = document.querySelector("#user-profile-btn");
     const registerBtn = document.querySelector("#register-btn");
     const barsBtn = document.querySelector("#bars-btn");
@@ -182,6 +148,8 @@ class UI {
     console.log('Debug: DOM elements found:', {
       searchBtn: !!searchBtn,
       cartBtn: !!cartBtn,
+      loginBtn: !!loginBtn,
+      logoutBtn: !!logoutBtn,
       navbar: !!navbar,
       searchForm: !!searchForm,
       cartItemContainer: !!cartItemContainer
@@ -256,7 +224,6 @@ class UI {
     }
     
     // Xử lý đăng xuất
-    const logoutBtn = document.querySelector("#logout-btn");
     if (logoutBtn) {
       logoutBtn.addEventListener("click", function(e) {
         e.preventDefault();
@@ -455,13 +422,13 @@ class UI {
       
       cartItemElement.innerHTML = `
         <span class="fa fa-times"></span>
-        <img src="${item.image}" alt="${item.name}" width="100px" height="100px" />
+        <img src="${item.ImageUrl}" alt="${item.Name}" width="100px" height="100px" />
         <div class="content">
-          <h3>${item.name}</h3>
-          <div class="price">${item.price.toLocaleString()}₫</div>
+          <h3>${item.Name}</h3>
+          <div class="price">${item.Price.toLocaleString()}₫</div>
           <div class="quantity">
             <button class="decrease-qty">-</button>
-            <span class="qty">${item.quantity}</span>
+            <span class="qty">${item.Quantity}</span>
             <button class="increase-qty">+</button>
           </div>
         </div>
@@ -548,6 +515,9 @@ class UI {
    * Cập nhật số lượng sản phẩm trong giỏ hàng
    */
   static updateCartCount() {
+    
+    debugger
+
     const cartCount = document.querySelector('.cart-count');
     if (cartCount) {
       const cartItems = document.querySelectorAll('.cart-item');
@@ -591,6 +561,7 @@ class UI {
     const token = localStorage.getItem("token");
     const userProfileBtn = document.getElementById("user-profile-btn");
     const loginBtn = document.getElementById("login-btn");
+    const logoutBtn = document.getElementById("logout-btn");
     const registerBtn = document.getElementById("register-btn");
     const cartBtn = document.getElementById("cart-btn");
     
@@ -598,6 +569,7 @@ class UI {
       // Người dùng đã đăng nhập
       if (userProfileBtn) userProfileBtn.style.display = "block";
       if (loginBtn) loginBtn.style.display = "none";
+      if (logoutBtn) logoutBtn.style.display = "block";
       if (registerBtn) registerBtn.style.display = "none";
       if (cartBtn) cartBtn.style.display = "block";
       
@@ -614,13 +586,13 @@ class UI {
       const ordersLink = document.getElementById("orders-link");
       const wishlistLink = document.getElementById("wishlist-link");
       const adminLink = document.getElementById("admin-link");
-      const logoutBtn = document.getElementById("logout-btn");
+      const logoutBtnLink = document.getElementById("logout-btn");
       const loginLink = document.getElementById("login-link");
       
       if (profileLink) profileLink.style.display = "block";
       if (ordersLink) ordersLink.style.display = "block";
       if (wishlistLink) wishlistLink.style.display = "block";
-      if (logoutBtn) logoutBtn.style.display = "block";
+      if (logoutBtnLink) logoutBtnLink.style.display = "block";
       if (loginLink) loginLink.style.display = "none";
       
       // Hiển thị menu admin nếu là admin
@@ -631,6 +603,7 @@ class UI {
       // Người dùng chưa đăng nhập
       if (userProfileBtn) userProfileBtn.style.display = "none";
       if (loginBtn) loginBtn.style.display = "block";
+      if (logoutBtn) logoutBtn.style.display = "none";
       if (registerBtn) registerBtn.style.display = "block";
       if (cartBtn) cartBtn.style.display = "block";
     }
@@ -900,7 +873,7 @@ class UI {
    * @returns {Element} - Element thông báo
    */
   static createNotification(message, type = 'info', duration = 3000) {
-    debugger
+    
     // Tạo container cho notifications nếu chưa tồn tại
     let notificationsContainer = document.getElementById('notifications-container');
     if (!notificationsContainer) {
@@ -1209,11 +1182,12 @@ class UI {
       ];
       localStorage.setItem('cartItems', JSON.stringify(cartItems));
     }
+     
     
     // Cập nhật số lượng sản phẩm hiển thị trên biểu tượng giỏ hàng
     const cartCount = document.querySelector('.cart-count');
     if (cartCount) {
-      const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+      const totalQuantity = cartItems.reduce((sum, item) => sum + item.Quantity, 0);
       cartCount.textContent = totalQuantity;
       cartCount.style.display = totalQuantity > 0 ? 'flex' : 'none';
     }
@@ -1229,14 +1203,14 @@ class UI {
       
       cartItem.innerHTML = `
         <div class="image">
-          <img src="${item.image}" alt="${item.name}" width="50" height="50">
+          <img src="${item.ImageUrl}" alt="${item.Name}" width="50" height="50">
         </div>
         <div class="content">
-          <h3>${item.name}</h3>
-          <div class="price">${this.formatCurrency(item.price)}</div>
+          <h3>${item.Name}</h3>
+          <div class="price">${this.formatCurrency(item.Price)}</div>
           <div class="quantity">
             <button class="decrease"><i class="fas fa-minus"></i></button>
-            <span class="qty">${item.quantity}</span>
+            <span class="qty">${item.Quantity}</span>
             <button class="increase"><i class="fas fa-plus"></i></button>
           </div>
         </div>
@@ -1247,7 +1221,7 @@ class UI {
     });
     
     // Thêm phần tổng tiền
-    const totalAmount = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const totalAmount = cartItems.reduce((sum, item) => sum + (item.Price * item.Quantity), 0);
     const cartTotal = document.createElement('div');
     cartTotal.classList.add('cart-total');
     cartTotal.innerHTML = `
@@ -1258,7 +1232,7 @@ class UI {
     
     // Thêm nút thanh toán
     const checkoutButton = document.createElement('a');
-    checkoutButton.href = './checkout.html';
+    checkoutButton.href = './index-checkout.html';
     checkoutButton.classList.add('btn', 'primary-btn');
     checkoutButton.textContent = 'Thanh toán';
     cartItemContainer.appendChild(checkoutButton);
@@ -1301,11 +1275,11 @@ class UI {
         let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
         const index = cartItems.findIndex(item => item.id === itemId);
         if (index !== -1) {
-          cartItems[index].quantity += 1;
+          cartItems[index].Quantity += 1;
           localStorage.setItem('cartItems', JSON.stringify(cartItems));
           
           // Cập nhật số lượng trên DOM
-          qtyElement.textContent = cartItems[index].quantity;
+          qtyElement.textContent = cartItems[index].Quantity;
           
           // Cập nhật tổng tiền và số lượng
           this.updateCartTotal();
@@ -1325,12 +1299,12 @@ class UI {
         // Cập nhật số lượng trong localStorage
         let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
         const index = cartItems.findIndex(item => item.id === itemId);
-        if (index !== -1 && cartItems[index].quantity > 1) {
-          cartItems[index].quantity -= 1;
+        if (index !== -1 && cartItems[index].Quantity > 1) {
+          cartItems[index].Quantity -= 1;
           localStorage.setItem('cartItems', JSON.stringify(cartItems));
           
           // Cập nhật số lượng trên DOM
-          qtyElement.textContent = cartItems[index].quantity;
+          qtyElement.textContent = cartItems[index].Quantity;
           
           // Cập nhật tổng tiền và số lượng
           this.updateCartTotal();
@@ -1345,16 +1319,17 @@ class UI {
     if (!cartTotal) return;
     
     const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-    const totalAmount = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const totalAmount = cartItems.reduce((sum, item) => sum + (item.Price * item.Quantity), 0);
     cartTotal.textContent = this.formatCurrency(totalAmount);
   }
   
   updateCartCount() {
+     
     const cartCount = document.querySelector('.cart-count');
     if (!cartCount) return;
     
     const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-    const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    const totalQuantity = cartItems.reduce((sum, item) => sum + item.Quantity, 0);
     cartCount.textContent = totalQuantity;
     cartCount.style.display = totalQuantity > 0 ? 'flex' : 'none';
   }

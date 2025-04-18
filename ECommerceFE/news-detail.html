@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/notification.css" />
+    <link rel="stylesheet" href="css/news-detail.css" />
+    <title>Chi tiết tin tức - LH Coffee</title>
+  </head>
+
+  <body>
+    <!-- Header Container -->
+    <div id="header-container"></div>
+
+    <!-- News Detail Section Starts -->
+    <section class="news-detail" id="news-detail">
+      <div class="container" id="news-detail-container">
+        <!-- News detail will be dynamically loaded here -->
+        <div class="loading">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </section>
+    <!-- News Detail Section Ends -->
+
+    <!-- Related News Section Starts -->
+    <section class="related-news" id="related-news">
+      <h1 class="heading">Tin Tức <span>Liên Quan</span></h1>
+      <div class="box-container" id="related-news-container">
+        <!-- Related news will be dynamically loaded here -->
+      </div>
+    </section>
+    <!-- Related News Section Ends -->
+
+    <!-- Footer Container -->
+    <div id="footer-container"></div>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notification-container"></div>
+
+    <!-- Script Links -->
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/news-detail.js"></script>
+    <script>
+      // Khởi tạo UI khi trang đã tải xong
+      document.addEventListener("DOMContentLoaded", () => {
+        // Khởi tạo UI
+        if (typeof UI !== "undefined") {
+          UI.init();
+        }
+      });
+    </script>
+  </body>
+</html>

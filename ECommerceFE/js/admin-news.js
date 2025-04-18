@@ -81,7 +81,7 @@ class AdminNewsManager {
     }
 
     async loadNews() {
-        debugger
+        
         try {
             const response = await fetch(`${this.API_BASE.NEWS}`);
             const news = await response.json();
@@ -106,7 +106,7 @@ class AdminNewsManager {
     }
 
     displayNews(news) {
-        debugger
+        
         const tbody = $('#newsTable');
         tbody.empty();
         

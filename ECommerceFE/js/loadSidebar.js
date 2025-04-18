@@ -4,7 +4,7 @@
 
 (function() {
     console.log('loadSidebar.js: Compatibility script loaded');
-    debugger;
+    
     
     // Đảm bảo rằng sidebar luôn hiển thị với CSS
     const style = document.createElement('style');

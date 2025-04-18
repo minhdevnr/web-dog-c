@@ -1,16 +1,10 @@
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using ECommerceAPI.Data;
 using ECommerceAPI.Entities;
-using ECommerceAPI.Models.Responses;
-using ECommerceAPI.Models.Requests;
 using ECommerceAPI.Helpers;
+using ECommerceAPI.Models.Requests;
+using ECommerceAPI.Models.Responses;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceAPI.Controllers
 {
@@ -39,63 +33,64 @@ namespace ECommerceAPI.Controllers
         {
             // Thiết lập giá trị mặc định nếu không có
             filter ??= new NewsFilterRequest();
-            
+
             // Validate page size
             if (filter.PageSize <= 0) filter.PageSize = DEFAULT_PAGE_SIZE;
             if (filter.PageSize > MAX_PAGE_SIZE) filter.PageSize = MAX_PAGE_SIZE;
-            
+
             // Ensure valid page number
             if (filter.PageNumber <= 0) filter.PageNumber = 1;
-            
+
             // Start query
             var query = _context.News.Include(n => n.CategoryInfo).AsQueryable();
-                
+
             // Apply filters
             if (!string.IsNullOrEmpty(filter.Keyword))
             {
                 var keyword = filter.Keyword.ToLower();
-                query = query.Where(n => n.Title.ToLower().Contains(keyword) || 
+                query = query.Where(n => n.Title.ToLower().Contains(keyword) ||
                                         n.Content.ToLower().Contains(keyword));
             }
-            
+
             if (!string.IsNullOrEmpty(filter.Category))
             {
                 query = query.Where(n => n.Category == filter.Category);
             }
-            
+
             if (!string.IsNullOrEmpty(filter.Status))
             {
                 query = query.Where(n => n.Status == filter.Status);
             }
-            
+
             // Apply sorting
             query = ApplySorting(query, filter.SortBy, filter.Desc);
-            
+
             // Get total count for pagination
             var totalCount = await query.CountAsync();
-            
+
             // Apply pagination
             var news = await query
                 .Skip((filter.PageNumber - 1) * filter.PageSize)
                 .Take(filter.PageSize)
                 .ToListAsync();
-                
+
             // Process image URLs and map to response
-            var newsResponses = news.Select(item => {
+            var newsResponses = news.Select(item =>
+            {
                 // Update image URL
                 item.ImageUrl = GetFullImageUrl(item.ImageUrl);
-                
+
                 // Map to NewsResponse
                 return MapToNewsResponse(item);
             }).ToList();
-            
+
             // Create paged response
             return PaginationHelper.CreatePagedResponse(
-                newsResponses, 
-                filter.PageNumber, 
-                filter.PageSize, 
-                totalCount, 
-                Request, 
+                newsResponses,
+                filter.PageNumber,
+                filter.PageSize,
+                totalCount,
+                Request,
                 "news");
         }
 
@@ -133,56 +128,57 @@ namespace ECommerceAPI.Controllers
         {
             // Thiết lập giá trị mặc định nếu không có
             filter ??= new NewsFilterRequest();
-            
+
             // Validate page size
             if (filter.PageSize <= 0) filter.PageSize = DEFAULT_PAGE_SIZE;
             if (filter.PageSize > MAX_PAGE_SIZE) filter.PageSize = MAX_PAGE_SIZE;
-            
+
             // Ensure valid page number
             if (filter.PageNumber <= 0) filter.PageNumber = 1;
-            
+
             // Start query
             var query = _context.News
                 .Include(n => n.CategoryInfo)
                 .Where(n => n.Category == category)
                 .AsQueryable();
-                
+
             // Apply filters
             if (!string.IsNullOrEmpty(filter.Keyword))
             {
                 var keyword = filter.Keyword.ToLower();
-                query = query.Where(n => n.Title.ToLower().Contains(keyword) || 
+                query = query.Where(n => n.Title.ToLower().Contains(keyword) ||
                                         n.Content.ToLower().Contains(keyword));
             }
-            
+
             // Apply sorting
             query = ApplySorting(query, filter.SortBy, filter.Desc);
-            
+
             // Get total count for pagination
             var totalCount = await query.CountAsync();
-            
+
             // Apply pagination
             var news = await query
                 .Skip((filter.PageNumber - 1) * filter.PageSize)
                 .Take(filter.PageSize)
                 .ToListAsync();
-                
+
             // Process image URLs and map to response
-            var newsResponses = news.Select(item => {
+            var newsResponses = news.Select(item =>
+            {
                 // Update image URL
                 item.ImageUrl = GetFullImageUrl(item.ImageUrl);
-                
+
                 // Map to NewsResponse
                 return MapToNewsResponse(item);
             }).ToList();
-            
+
             // Create paged response
             return PaginationHelper.CreatePagedResponse(
-                newsResponses, 
-                filter.PageNumber, 
-                filter.PageSize, 
-                totalCount, 
-                Request, 
+                newsResponses,
+                filter.PageNumber,
+                filter.PageSize,
+                totalCount,
+                Request,
                 "news-by-category");
         }
 
@@ -366,7 +362,7 @@ namespace ECommerceAPI.Controllers
 
             return $"{Request.Scheme}://{Request.Host}{imageUrl}";
         }
-        
+
         // Apply sorting to query
         private IQueryable<News> ApplySorting(IQueryable<News> query, string sortBy, bool desc)
         {
@@ -374,12 +370,16 @@ namespace ECommerceAPI.Controllers
             {
                 case "title":
                     return desc ? query.OrderByDescending(n => n.Title) : query.OrderBy(n => n.Title);
+
                 case "createdat":
                     return desc ? query.OrderByDescending(n => n.CreatedAt) : query.OrderBy(n => n.CreatedAt);
+
                 case "updatedat":
                     return desc ? query.OrderByDescending(n => n.UpdatedAt) : query.OrderBy(n => n.UpdatedAt);
+
                 case "author":
                     return desc ? query.OrderByDescending(n => n.Author) : query.OrderBy(n => n.Author);
+
                 default:
                     return desc ? query.OrderByDescending(n => n.Id) : query.OrderBy(n => n.Id);
             }
@@ -408,4 +408,4 @@ namespace ECommerceAPI.Controllers
             };
         }
     }
-} 
+}

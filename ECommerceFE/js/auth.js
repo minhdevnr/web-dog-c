@@ -122,7 +122,7 @@ class Auth {
    * Đăng nhập người dùng
    */
   static async login() {
-    debugger
+    
     const email = document.getElementById('login-email').value || document.getElementById('login-email-phone').value;
     const password = document.getElementById('login-password').value;
 

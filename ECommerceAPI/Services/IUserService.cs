@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using ECommerceAPI.Models;
+using ECommerceAPI.Entities;
 
 namespace ECommerceAPI.Services
 {

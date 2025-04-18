@@ -1,8 +1,8 @@
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using ECommerceAPI.Models;
+using ECommerceAPI.Models.Requests;
+using ECommerceAPI.Models.Responses;
 using ECommerceAPI.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerceAPI.Controllers
 {
@@ -129,13 +129,4 @@ namespace ECommerceAPI.Controllers
             Response.Cookies.Append("refreshToken", token, cookieOptions);
         }
     }
-
-    public class AuthResponse
-    {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string Token { get; set; }
-        public string Role { get; set; }
-    }
-} 
+}

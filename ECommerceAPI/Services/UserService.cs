@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Security.Claims;
+using ECommerceAPI.Data;
+using ECommerceAPI.Entities;
+using ECommerceAPI.Models;
+using ECommerceAPI.Models.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using ECommerceAPI.Models;
-using ECommerceAPI.Data;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.Configuration;
-using System.Linq;
 
 namespace ECommerceAPI.Services
 {
@@ -61,7 +58,7 @@ namespace ECommerceAPI.Services
             if (await _context.Users.AnyAsync(x => x.Email == user.Email))
                 throw new Exception("Email already registered");
 
-            if (!string.IsNullOrEmpty(user.PhoneNumber) && 
+            if (!string.IsNullOrEmpty(user.PhoneNumber) &&
                 await _context.Users.AnyAsync(x => x.PhoneNumber == user.PhoneNumber))
                 throw new Exception("Phone number already registered");
 
@@ -96,7 +93,7 @@ namespace ECommerceAPI.Services
 
             // Generate password reset token
             var token = GeneratePasswordResetToken();
-            
+
             // Send password reset email
             await _emailService.SendPasswordResetEmailAsync(email, token);
 
@@ -264,7 +261,7 @@ namespace ECommerceAPI.Services
             if (await _context.Users.AnyAsync(x => x.Email == user.Email))
                 throw new Exception("Email đã được đăng ký");
 
-            if (!string.IsNullOrEmpty(user.PhoneNumber) && 
+            if (!string.IsNullOrEmpty(user.PhoneNumber) &&
                 await _context.Users.AnyAsync(x => x.PhoneNumber == user.PhoneNumber))
                 throw new Exception("Số điện thoại đã được đăng ký");
 
@@ -286,12 +283,12 @@ namespace ECommerceAPI.Services
                 throw new Exception("Không tìm thấy người dùng");
 
             // Kiểm tra email/phone đã tồn tại (nếu có thay đổi)
-            if (userUpdateData.Email != user.Email && 
+            if (userUpdateData.Email != user.Email &&
                 await _context.Users.AnyAsync(x => x.Email == userUpdateData.Email))
                 throw new Exception("Email đã được đăng ký");
 
-            if (!string.IsNullOrEmpty(userUpdateData.PhoneNumber) && 
-                userUpdateData.PhoneNumber != user.PhoneNumber && 
+            if (!string.IsNullOrEmpty(userUpdateData.PhoneNumber) &&
+                userUpdateData.PhoneNumber != user.PhoneNumber &&
                 await _context.Users.AnyAsync(x => x.PhoneNumber == userUpdateData.PhoneNumber))
                 throw new Exception("Số điện thoại đã được đăng ký");
 
@@ -418,4 +415,4 @@ namespace ECommerceAPI.Services
             await _context.SaveChangesAsync();
         }
     }
-} 
+}

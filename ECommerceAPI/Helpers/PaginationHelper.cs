@@ -1,9 +1,5 @@
 using ECommerceAPI.Models.Responses;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ECommerceAPI.Helpers
 {
@@ -56,14 +52,14 @@ namespace ECommerceAPI.Helpers
         {
             var host = request.Scheme + "://" + request.Host;
             var path = request.Path.Value;
-            
+
             // Tạo query parameters với pageNumber và pageSize
             var queryParams = new Dictionary<string, string>
             {
                 { "pageNumber", pageNumber.ToString() },
                 { "pageSize", pageSize.ToString() }
             };
-            
+
             // Thêm các query params khác từ request (ngoại trừ pageNumber và pageSize)
             foreach (var param in request.Query)
             {
@@ -72,10 +68,10 @@ namespace ECommerceAPI.Helpers
                     queryParams[param.Key] = param.Value;
                 }
             }
-            
+
             // Tạo URL đầy đủ
             var url = host + path;
             return QueryHelpers.AddQueryString(url, queryParams);
         }
     }
-} 
+}

@@ -41,20 +41,20 @@ class AdminProductManager {
     }
 
     async loadProducts() {
-        debugger;
+        
         try {
             const response = await fetch(this.API_BASE.PRODUCTS);
             const products = await response.json();
             this.displayProducts(products);
         } catch (error) {
-        debugger;
+        
             this.showToast('Lỗi khi tải danh sách sản phẩm', 'error');
         }
     }
 
     async loadCategories() {
         try {
-            debugger
+            
             const response = await fetch(this.API_BASE.CATEGORIES);
             const categories = await response.json();
             const categorySelects = $('#category, #categoryFilter');
@@ -189,7 +189,7 @@ class AdminProductManager {
     }
 
     openProductModal(product = null) {
-        debugger;
+        
         const modal = $('#productModal');
         const form = $('#productForm')[0];
         form.reset();

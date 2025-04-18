@@ -1,14 +1,8 @@
+using ECommerceAPI.Data;
+using ECommerceAPI.Entities;
+using ECommerceAPI.Models.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
-using System.Threading.Tasks;
-using ECommerceAPI.Data;
-using ECommerceAPI.Models;
-using ECommerceAPI.Entities;
-using System.Linq;
-using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace ECommerceAPI.Controllers
 {
@@ -33,9 +27,11 @@ namespace ECommerceAPI.Controllers
             var cartItems = await _context.CartItems
                 .Include(ci => ci.Product)
                 .Where(ci => ci.UserId == userId)
-                .Select(ci => new {
+                .Select(ci => new
+                {
                     ci.Id,
-                    Product = new {
+                    Product = new
+                    {
                         ci.Product.Id,
                         ci.Product.Name,
                         ci.Product.Price,
@@ -151,21 +147,4 @@ namespace ECommerceAPI.Controllers
             return Ok();
         }
     }
-
-    public class AddToCartRequest
-    {
-        [Required]
-        public int ProductId { get; set; }
-
-        [Required]
-        [Range(1, int.MaxValue)]
-        public int Quantity { get; set; }
-    }
-
-    public class UpdateQuantityRequest
-    {
-        [Required]
-        [Range(1, int.MaxValue)]
-        public int Quantity { get; set; }
-    }
-} 
+}

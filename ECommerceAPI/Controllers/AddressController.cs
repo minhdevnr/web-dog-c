@@ -1,13 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+using ECommerceAPI.Data;
+using ECommerceAPI.Entities;
+using ECommerceAPI.Models;
+using ECommerceAPI.Models.Requests;
+using ECommerceAPI.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ECommerceAPI.Models;
-using ECommerceAPI.Data;
+using System.Security.Claims;
 
 namespace ECommerceAPI.Controllers
 {
@@ -170,27 +169,4 @@ namespace ECommerceAPI.Controllers
             return NoContent();
         }
     }
-
-    public class AddressRequest
-    {
-        [System.ComponentModel.DataAnnotations.Required]
-        public string ReceiverName { get; set; }
-
-        [System.ComponentModel.DataAnnotations.Required]
-        public string Phone { get; set; }
-
-        [System.ComponentModel.DataAnnotations.Required]
-        public string AddressLine { get; set; }
-
-        [System.ComponentModel.DataAnnotations.Required]
-        public string Ward { get; set; }
-
-        [System.ComponentModel.DataAnnotations.Required]
-        public string District { get; set; }
-
-        [System.ComponentModel.DataAnnotations.Required]
-        public string City { get; set; }
-
-        public bool IsDefault { get; set; }
-    }
-} 
+}

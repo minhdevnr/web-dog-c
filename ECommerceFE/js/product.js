@@ -3,10 +3,10 @@
  */
 
 // Cấu hình API
-const API_URL = 'https://api.lhcoffee.com'; // URL API dịch vụ
+const API_URL = 'https://localhost:7175'; // URL API dịch vụ
 
 // Fallback nếu API không khả dụng 
-const USE_SAMPLE_DATA = true; // Đặt thành true để dùng dữ liệu mẫu, false để dùng API
+const USE_SAMPLE_DATA = false; // Đặt thành true để dùng dữ liệu mẫu, false để dùng API
 
 // Class quản lý sản phẩm
 class ProductManager {
@@ -119,7 +119,7 @@ class ProductManager {
    */
   static loadProductsIfNeeded() {
     // Kiểm tra xem có đang ở trang hiển thị sản phẩm hay quản lý sản phẩm hay không
-    const productsContainer = document.querySelector('.products .box-container');
+    const productsContainer = document.querySelector('#products-container');
     if (productsContainer) {
       this.renderProductList();
     }
@@ -135,6 +135,7 @@ class ProductManager {
    * @returns {Promise<Array>} Danh sách sản phẩm
    */
   static async getProducts() {
+    
     // Sử dụng dữ liệu mẫu nếu được cấu hình
     if (USE_SAMPLE_DATA) {
       console.log('Sử dụng dữ liệu sản phẩm mẫu');
@@ -143,7 +144,7 @@ class ProductManager {
 
     try {
       // Gọi API để lấy danh sách sản phẩm
-      const response = await fetch(`${API_URL}/products`);
+      const response = await fetch(`${API_URL}/api/product`);
       if (!response.ok) {
         throw new Error(`Không thể lấy danh sách sản phẩm (${response.status})`);
       }
@@ -164,6 +165,7 @@ class ProductManager {
    * @returns {Promise<Object|null>} Thông tin sản phẩm hoặc null nếu không tìm thấy
    */
   static async getProductById(productId) {
+      
     // Sử dụng dữ liệu mẫu nếu được cấu hình
     if (USE_SAMPLE_DATA) {
       const product = this.sampleProducts.find(p => p.id === productId);
@@ -172,7 +174,7 @@ class ProductManager {
 
     try {
       // Gọi API để lấy chi tiết sản phẩm
-      const response = await fetch(`${API_URL}/products/${productId}`);
+      const response = await fetch(`${API_URL}/api/product/${productId}`);
       if (!response.ok) {
         throw new Error(`Không thể lấy chi tiết sản phẩm (${response.status})`);
       }
@@ -194,7 +196,7 @@ class ProductManager {
   static async getProductsByCategory(category) {
     try {
       const products = await this.getProducts();
-      return products.filter(product => product.category === category);
+      return products.filter(product => product.Category === category);
     } catch (error) {
       console.error('Lỗi khi lọc sản phẩm theo danh mục:', error);
       return [];
@@ -288,14 +290,14 @@ class ProductManager {
       content.innerHTML = '<p class="no-results">Không tìm thấy sản phẩm phù hợp</p>';
     } else {
       const resultsHtml = products.map(product => `
-        <div class="search-result-item" data-id="${product.id}" data-category="${product.category}" data-price="${product.price}">
-          <img src="${product.image}" alt="${product.name}">
+        <div class="search-result-item" data-id="${product.Id}" data-category="${product.Category}" data-price="${product.Price}">
+          <img src="${product.ImageUrl}" alt="${product.Name}">
           <div class="search-result-info">
-            <h4>${product.name}</h4>
-            <p class="search-result-price">${this.formatCurrency(product.price)}</p>
-            <p class="search-result-category">${this.formatCategoryName(product.category)}</p>
+            <h4>${product.Name}</h4>
+            <p class="search-result-price">${this.formatCurrency(product.Price)}</p>
+            <p class="search-result-category">${this.formatCategoryName(product.Category)}</p>
           </div>
-          <button class="add-to-cart-btn" data-id="${product.id}">
+          <button class="add-to-cart-btn" data-id="${product.Id}">
             <i class="fas fa-shopping-cart"></i>
           </button>
         </div>
@@ -316,12 +318,18 @@ class ProductManager {
         
         if (product) {
           // Gọi hàm thêm vào giỏ hàng nếu có
-          if (window.CartManager && typeof window.CartManager.addToCart === 'function') {
+          if (window.Cart) {
+            
+            window.Cart.addItem(product);
+          } else if (typeof Cart !== 'undefined') {
+            Cart.addItem(product);
+          } else if (window.CartManager && typeof window.CartManager.addToCart === 'function') {
             window.CartManager.addToCart(product);
           } else if (typeof addToCart === 'function') {
             addToCart(product);
           } else {
-            console.error('Không tìm thấy hàm xử lý giỏ hàng');
+            console.error('Không tìm thấy chức năng giỏ hàng');
+            this.showNotification('Không thể thêm sản phẩm vào giỏ hàng', 'error');
           }
         }
       });
@@ -354,9 +362,9 @@ class ProductManager {
       if (selectedPriceOrder) {
         filteredProducts.sort((a, b) => {
           if (selectedPriceOrder === 'asc') {
-            return a.price - b.price;
+            return a.Price - b.Price;
           } else {
-            return b.price - a.price;
+            return b.Price - a.Price;
           }
         });
       }
@@ -368,14 +376,14 @@ class ProductManager {
         content.innerHTML = '<p class="no-results">Không tìm thấy sản phẩm phù hợp với bộ lọc</p>';
       } else {
         const resultsHtml = filteredProducts.map(product => `
-          <div class="search-result-item" data-id="${product.id}" data-category="${product.category}" data-price="${product.price}">
-            <img src="${product.image}" alt="${product.name}">
+          <div class="search-result-item" data-id="${product.Id}" data-category="${product.Category}" data-price="${product.Price}">
+            <img src="${product.ImageUrl}" alt="${product.Name}">
             <div class="search-result-info">
-              <h4>${product.name}</h4>
-              <p class="search-result-price">${this.formatCurrency(product.price)}</p>
-              <p class="search-result-category">${this.formatCategoryName(product.category)}</p>
+              <h4>${product.Name}</h4>
+                <p class="search-result-price">${this.formatCurrency(product.Price)}</p>
+              <p class="search-result-category">${this.formatCategoryName(product.Category)}</p>
             </div>
-            <button class="add-to-cart-btn" data-id="${product.id}">
+            <button class="add-to-cart-btn" data-id="${product.Id}">
               <i class="fas fa-shopping-cart"></i>
             </button>
           </div>
@@ -392,10 +400,17 @@ class ProductManager {
             const product = await this.getProductById(productId);
             
             if (product) {
-              if (window.CartManager && typeof window.CartManager.addToCart === 'function') {
+              if (window.Cart) {
+                window.Cart.addItem(product);
+              } else if (typeof Cart !== 'undefined') {
+                Cart.addItem(product);
+              } else if (window.CartManager && typeof window.CartManager.addToCart === 'function') {
                 window.CartManager.addToCart(product);
               } else if (typeof addToCart === 'function') {
                 addToCart(product);
+              } else {
+                console.error('Không tìm thấy chức năng giỏ hàng');
+                this.showNotification('Không thể thêm sản phẩm vào giỏ hàng', 'error');
               }
             }
           });
@@ -505,7 +520,7 @@ class ProductManager {
    * @param {string} category - Danh mục sản phẩm
    */
   static async filterProductsByCategory(category) {
-    const productsContainer = document.querySelector('.products .box-container');
+    const productsContainer = document.querySelector('#products-container');
     if (!productsContainer) return;
 
     // Hiển thị loading
@@ -527,17 +542,22 @@ class ProductManager {
    * Hiển thị danh sách sản phẩm
    */
   static async renderProductList() {
-    const productsContainer = document.querySelector('.products .box-container');
+    
+    const productsContainer = document.querySelector('#products-container');
     if (!productsContainer) return;
-    
-    // Hiển thị loading
+
+    // Hiển thị trạng thái đang tải
     this.showLoading(productsContainer);
-    
+
     try {
+      // Lấy danh sách sản phẩm
       const products = await this.getProducts();
+      
+      // Hiển thị danh sách sản phẩm
       this.renderProductsToContainer(products, productsContainer);
     } catch (error) {
-      this.showError(productsContainer, 'Không thể tải sản phẩm');
+      console.error('Lỗi khi hiển thị danh sách sản phẩm:', error);
+      this.showError(productsContainer, 'Không thể tải danh sách sản phẩm. Vui lòng thử lại sau.');
     }
   }
 
@@ -547,22 +567,100 @@ class ProductManager {
    * @param {Element} container - Container để render sản phẩm
    */
   static renderProductsToContainer(products, container) {
+    // Xóa tất cả nội dung cũ
     container.innerHTML = '';
+    
+    // Thêm lọc danh mục nếu chưa có
+    if (!container.previousElementSibling || !container.previousElementSibling.classList.contains('category-filter-container')) {
+      const categories = this.getUniqueCategories(products.Items);
+      if (categories.length > 0) {
+        const filterContainer = document.createElement('div');
+        filterContainer.className = 'category-filter-container';
+        filterContainer.innerHTML = `
+          <div class="category-filters">
+            <button class="filter-btn active" data-category="all">Tất cả</button>
+            ${categories.map(cat => `<button class="filter-btn" data-category="${cat}">${cat}</button>`).join('')}
+          </div>
+        `;
+        container.parentNode.insertBefore(filterContainer, container);
+        
+        // Thêm sự kiện cho các nút lọc
+        const filterBtns = filterContainer.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            // Bỏ active tất cả các nút
+            filterBtns.forEach(b => b.classList.remove('active'));
+            // Thêm active cho nút được click
+            btn.classList.add('active');
+            
+            const category = btn.getAttribute('data-category');
+            if (category === 'all') {
+              // Hiển thị tất cả sản phẩm
+              this.renderProductItems(products.Items, container);
+            } else {
+              // Lọc sản phẩm theo danh mục
+              const filteredProducts = products.Items.filter(p => p.Category === category);
+              this.renderProductItems(filteredProducts, container);
+            }
+          });
+        });
+      }
+    }
+    
+    // Hiển thị sản phẩm
+    this.renderProductItems(products.Items, container);
+  }
+  
+  /**
+   * Lấy danh sách các danh mục duy nhất từ danh sách sản phẩm
+   * @param {Array} products - Danh sách sản phẩm
+   * @returns {Array} Danh sách các danh mục duy nhất
+   */
+  static getUniqueCategories(products) {
+    const categories = products
+      .map(p => p.Category)
+      .filter(cat => cat); // Lọc bỏ các giá trị null hoặc undefined
+      
+    // Lọc các giá trị duy nhất
+    return [...new Set(categories)];
+  }
+  
+  /**
+   * Hiển thị danh sách sản phẩm
+   * @param {Array} products - Danh sách sản phẩm
+   * @param {Element} container - Container để hiển thị sản phẩm
+   */
+  static renderProductItems(products, container) {
+    // Xóa tất cả nội dung cũ
+    container.innerHTML = '';
+    
+    if (!products || products.length === 0) {
+      container.innerHTML = '<div class="no-products">Không có sản phẩm nào.</div>';
+      return;
+    }
     
     products.forEach(product => {
       const productBox = document.createElement('div');
       productBox.className = 'box';
+      
+      // Tạo mô tả ngắn gọn (giới hạn 80 ký tự)
+      const shortDescription = product.Description 
+        ? product.Description.length > 80 
+          ? product.Description.substring(0, 80) + '...' 
+          : product.Description
+        : '';
+      
       productBox.innerHTML = `
         <div class="icons">
-          <a href="#" class="fa fa-shopping-cart add-to-cart" data-id="${product.id}"></a>
+          <a href="#" class="fa fa-shopping-cart add-to-cart" data-id="${product.Id}"></a>
           <a href="#" class="fa fa-heart"></a>
-          <a href="#" class="fa fa-eye"></a>
+          <a href="#" class="fa fa-eye view-product" data-id="${product.Id}"></a>
         </div>
         <div class="image">
-          <img src="${product.image}" alt="${product.name}" />
+          <img src="${product.ImageUrl}" alt="${product.Name}" />
         </div>
         <div class="content">
-          <h3>${product.name}</h3>
+          <h3>${product.Name}</h3>
           <div class="stars">
             <i class="fa fa-star"></i>
             <i class="fa fa-star"></i>
@@ -570,24 +668,164 @@ class ProductManager {
             <i class="fa fa-star"></i>
             <i class="fa fa-star-half-alt"></i>
           </div>
-          <div class="price">${this.formatCurrency(product.price)}</div>
+          <div class="price">${this.formatCurrency(product.Price)}</div>
+          <p class="description">${shortDescription}</p>
+          <button class="btn add-to-cart-btn" data-id="${product.Id}">Thêm vào giỏ hàng</button>
         </div>
       `;
       
       container.appendChild(productBox);
     });
     
+    // Thêm sự kiện cho các nút
+    this.setupProductEventListeners(container);
+  }
+  
+  /**
+   * Thiết lập các sự kiện cho sản phẩm
+   * @param {Element} container - Container chứa các sản phẩm
+   */
+  static setupProductEventListeners(container) {
     // Thêm sự kiện cho nút thêm vào giỏ hàng
-    const addToCartButtons = container.querySelectorAll('.add-to-cart');
+    const addToCartButtons = container.querySelectorAll('.add-to-cart, .add-to-cart-btn');
     addToCartButtons.forEach(button => {
       button.addEventListener('click', async (e) => {
         e.preventDefault();
         const productId = button.getAttribute('data-id');
         const product = await this.getProductById(productId);
-        if (product && window.Cart) {
-          window.Cart.addToCart(product);
+        if (product) {
+          // Thêm vào giỏ hàng
+          this.showNotification(`Đã thêm "${product.Name}" vào giỏ hàng`, 'success');
+          // Nếu có module giỏ hàng, gọi hàm thêm vào giỏ
+          if (window.Cart) {
+            window.Cart.addItem(product);
+          } else if (typeof Cart !== 'undefined') {
+            Cart.addItem(product);
+          } else if (window.CartManager && typeof window.CartManager.addToCart === 'function') {
+            window.CartManager.addToCart(product);
+          } else if (typeof addToCart === 'function') {
+            addToCart(product);
+          } else {
+            console.error('Không tìm thấy chức năng giỏ hàng');
+            this.showNotification('Không thể thêm sản phẩm vào giỏ hàng', 'error');
+          }
         }
       });
+    });
+    
+    // Thêm sự kiện cho nút xem chi tiết sản phẩm
+    const viewProductButtons = container.querySelectorAll('.view-product');
+    viewProductButtons.forEach(button => {
+      button.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const productId = button.getAttribute('data-id');
+        const product = await this.getProductById(productId);
+        if (product) {
+          // Hiển thị modal chi tiết sản phẩm
+          this.showProductModal(product);
+        }
+      });
+    });
+  }
+
+  /**
+   * Hiển thị modal chi tiết sản phẩm
+   * @param {Object} product - Sản phẩm cần hiển thị
+   */
+  static showProductModal(product) {
+    // Tạo modal
+    const modal = document.createElement('div');
+    modal.classList.add('product-modal');
+    modal.innerHTML = `
+      <div class="product-modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="product-modal-body">
+          <div class="product-image">
+            <img src="${product.ImageUrl}" alt="${product.Name}">
+          </div>
+          <div class="product-info">
+            <h2>${product.Name}</h2>
+            <div class="stars">
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star-half-alt"></i>
+            </div>
+            <div class="price">${this.formatCurrency(product.Price)}</div>
+            <div class="category">${product.Category || ''}</div>
+            <p class="description">${product.Description || ''}</p>
+            <div class="quantity">
+              <span>Số lượng:</span>
+              <button class="quantity-btn minus">-</button>
+              <input type="number" class="quantity-input" value="1" min="1" max="99">
+              <button class="quantity-btn plus">+</button>
+            </div>
+            <button class="btn add-to-cart-btn" data-id="${product.Id}">Thêm vào giỏ hàng</button>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // Thêm modal vào body
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden'; // Ngăn cuộn trang khi hiển thị modal
+    
+    // Xử lý đóng modal
+    const closeModal = () => {
+      modal.remove();
+      document.body.style.overflow = '';
+    };
+    
+    // Đóng modal khi click vào nút đóng
+    modal.querySelector('.close-modal').addEventListener('click', closeModal);
+    
+    // Đóng modal khi click ra ngoài
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+    
+    // Xử lý tăng/giảm số lượng
+    const quantityInput = modal.querySelector('.quantity-input');
+    const minusBtn = modal.querySelector('.minus');
+    const plusBtn = modal.querySelector('.plus');
+    
+    minusBtn.addEventListener('click', () => {
+      let value = parseInt(quantityInput.value);
+      if (value > 1) {
+        quantityInput.value = value - 1;
+      }
+    });
+    
+    plusBtn.addEventListener('click', () => {
+      let value = parseInt(quantityInput.value);
+      quantityInput.value = value + 1;
+    });
+    
+    // Xử lý thêm vào giỏ hàng
+    modal.querySelector('.add-to-cart-btn').addEventListener('click', () => {
+      const quantity = parseInt(quantityInput.value);
+      
+      // Thêm vào giỏ hàng
+      this.showNotification(`Đã thêm ${quantity} "${product.Name}" vào giỏ hàng`, 'success');
+      
+      // Nếu có module giỏ hàng, gọi hàm thêm vào giỏ
+      if (window.Cart) {
+        window.Cart.addItem(product, quantity);
+      } else if (typeof Cart !== 'undefined') {
+        Cart.addItem(product, quantity);
+      } else if (window.CartManager && typeof window.CartManager.addToCart === 'function') {
+        window.CartManager.addToCart(product, quantity);
+      } else if (typeof addToCart === 'function') {
+        addToCart(product, quantity);
+      } else {
+        console.error('Không tìm thấy chức năng giỏ hàng');
+        this.showNotification('Không thể thêm sản phẩm vào giỏ hàng', 'error');
+      }
+      
+      closeModal();
     });
   }
 
@@ -672,7 +910,7 @@ class ProductManager {
     } catch (error) {
       console.error('Error loading products:', error);
       if (productTableBody) {
-debugger;
+
 
         productTableBody.innerHTML = `<tr><td colspan="6" class="text-center">Lỗi khi tải danh sách sản phẩm: ${error.message}</td></tr>`;
       }

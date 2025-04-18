@@ -279,7 +279,7 @@ window.API = {
   orders: OrderAPI,
   // Thêm các hàm tiện ích vào API object
   getProducts: async function() {
-    debugger;
+    
     try {
       const response = await fetchWithRetry(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PRODUCTS}`);
       return await response.json();

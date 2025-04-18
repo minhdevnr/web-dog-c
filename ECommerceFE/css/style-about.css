@@ -62,7 +62,7 @@ section {
   letter-spacing: 0.2rem;
 }
 .header {
-  background: var(--bg);
+  background: #010103;
   display: flex;
   text-align: center;
   justify-content: space-between;
@@ -217,7 +217,7 @@ section {
   text-transform: uppercase;
 }
 .footer {
-  background: var(--bg);
+  background: #010103;
   text-align: center;
   border-top: 1px solid var(--main-color);
 }

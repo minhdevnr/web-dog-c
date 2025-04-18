@@ -330,10 +330,10 @@ class AdminOrderManager {
         
         if (item) {
             // Đặt giá trị số lượng ngay lập tức
-            lastRow.find('.quantity-input').val(item.quantity);
+            lastRow.find('.quantity-input').val(item.Quantity);
             
             // Tải danh sách sản phẩm và chọn sản phẩm đã có
-            this.loadProductsForSelect(productSelect, item.productId);
+            this.loadProductsForSelect(productSelect, item.ProductId);
             
             // Cập nhật giá sau khi select sản phẩm
             setTimeout(() => {

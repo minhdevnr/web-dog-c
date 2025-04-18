@@ -1,3 +1,4 @@
+using ECommerceAPI.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -58,10 +59,5 @@ namespace ECommerceAPI.Models
         public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
     }
 
-    public enum UserRole
-    {
-        User,
-        Admin,
-        Vendor
-    }
+  
 } 

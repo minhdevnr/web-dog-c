@@ -1,4 +1,4 @@
-namespace ECommerceAPI.Models
+namespace ECommerceAPI.Models.Enums
 {
     public enum ActivityType
     {
@@ -11,4 +11,4 @@ namespace ECommerceAPI.Models
         TwoFactorDisabled,
         AccountDeactivated
     }
-} 
+}

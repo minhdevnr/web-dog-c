@@ -1,8 +1,9 @@
+using ECommerceAPI.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ECommerceAPI.Models
+namespace ECommerceAPI.Entities
 {
     public class Address
     {
@@ -44,33 +45,4 @@ namespace ECommerceAPI.Models
         [ForeignKey("UserId")]
         public virtual User User { get; set; }
     }
-
-    public class AddressRequest
-    {
-        [Required]
-        [StringLength(100)]
-        public string ReceiverName { get; set; }
-
-        [Required]
-        [StringLength(15)]
-        public string Phone { get; set; }
-
-        [Required]
-        [StringLength(200)]
-        public string AddressLine { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string Ward { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string District { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string City { get; set; }
-
-        public bool IsDefault { get; set; }
-    }
-} 
+}

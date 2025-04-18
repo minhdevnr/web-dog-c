@@ -1,7 +1,9 @@
+using ECommerceAPI.Models;
+using ECommerceAPI.Models.Enums;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ECommerceAPI.Models
+namespace ECommerceAPI.Entities
 {
     public class UserActivity
     {
@@ -24,4 +26,4 @@ namespace ECommerceAPI.Models
 
         public User User { get; set; }
     }
-} 
+}

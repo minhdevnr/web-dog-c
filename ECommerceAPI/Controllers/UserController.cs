@@ -1,11 +1,12 @@
+using ECommerceAPI.Entities;
+using ECommerceAPI.Helpers;
 using ECommerceAPI.Models;
+using ECommerceAPI.Models.Requests;
+using ECommerceAPI.Models.Responses;
 using ECommerceAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
-using ECommerceAPI.Models.Responses;
-using ECommerceAPI.Helpers;
 
 namespace ECommerceAPI.Controllers
 {
@@ -36,7 +37,7 @@ namespace ECommerceAPI.Controllers
                     DateOfBirth = request.DateOfBirth
                 };
 
-                var result = await _userService.RegisterAsync(user, request.Password,null);
+                var result = await _userService.RegisterAsync(user, request.Password, null);
                 return Ok(new { message = "Đăng ký thành công", userId = result });
             }
             catch (Exception ex)
@@ -115,7 +116,7 @@ namespace ECommerceAPI.Controllers
             if (!string.IsNullOrWhiteSpace(request.ProfilePicture))
                 user.ProfilePicture = request.ProfilePicture;
 
-            await _userService.UpdateUserAsync(user.Id,user);
+            await _userService.UpdateUserAsync(user.Id, user);
 
             return MapToUserResponse(user);
         }
@@ -177,7 +178,7 @@ namespace ECommerceAPI.Controllers
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
         {
-            var result = await _userService.RefreshTokenAsync(request.Token,null);
+            var result = await _userService.RefreshTokenAsync(request.Token, null);
             return Ok(result);
         }
 
@@ -186,7 +187,7 @@ namespace ECommerceAPI.Controllers
         public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenRequest request)
         {
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var result = await _userService.RevokeTokenAsync(request.Token,null);
+            var result = await _userService.RevokeTokenAsync(request.Token, null);
             return Ok(new { message = result ? "Token đã bị hủy" : "Token không tồn tại" });
         }
 
@@ -232,7 +233,6 @@ namespace ECommerceAPI.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = "admin")]
         public async Task<ActionResult<PagedResponse<UserResponse>>> GetUsers(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = DEFAULT_PAGE_SIZE,
@@ -245,14 +245,14 @@ namespace ECommerceAPI.Controllers
             // Validate page size
             if (pageSize <= 0) pageSize = DEFAULT_PAGE_SIZE;
             if (pageSize > MAX_PAGE_SIZE) pageSize = MAX_PAGE_SIZE;
-            
+
             // Ensure valid page number
             if (pageNumber <= 0) pageNumber = 1;
-            
+
             // Get all users
             var allUsers = await _userService.GetAllUsersAsync();
             var query = allUsers.AsQueryable();
-            
+
             // Apply filters
             if (!string.IsNullOrEmpty(keyword))
             {
@@ -262,32 +262,32 @@ namespace ECommerceAPI.Controllers
                     u.Email.ToLower().Contains(keyword) ||
                     (u.PhoneNumber != null && u.PhoneNumber.Contains(keyword)));
             }
-            
+
             if (!string.IsNullOrEmpty(role))
             {
                 query = query.Where(u => u.Role == role);
             }
-            
+
             if (isActive.HasValue)
             {
                 query = query.Where(u => u.IsActive == isActive.Value);
             }
-            
+
             // Apply sorting
             query = ApplySorting(query, sortBy, desc);
-            
+
             // Get total count for pagination
             var totalCount = query.Count();
-            
+
             // Apply pagination
             var users = query
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
-            
+
             // Map to response model
             var userResponses = users.Select(MapToUserResponse).ToList();
-            
+
             // Create paged response
             return PaginationHelper.CreatePagedResponse(
                 userResponses,
@@ -299,7 +299,6 @@ namespace ECommerceAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        //[Authorize(Roles = "admin")]
         public async Task<ActionResult<UserResponse>> GetUserById(int id)
         {
             var user = await _userService.GetUserByIdAsync(id);
@@ -311,7 +310,6 @@ namespace ECommerceAPI.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "admin")]
         public async Task<ActionResult<UserResponse>> CreateUser([FromBody] CreateUserRequest request)
         {
             var user = new User
@@ -336,7 +334,6 @@ namespace ECommerceAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        //[Authorize(Roles = "admin")]
         public async Task<ActionResult<UserResponse>> UpdateUser(int id, [FromBody] UpdateUserRequest request)
         {
             var user = await _userService.GetUserByIdAsync(id);
@@ -365,7 +362,6 @@ namespace ECommerceAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             var result = await _userService.DeleteUserAsync(id);
@@ -376,7 +372,7 @@ namespace ECommerceAPI.Controllers
         }
 
         #region Helper Methods
-        
+
         // Map User to UserResponse
         private UserResponse MapToUserResponse(User user)
         {
@@ -397,7 +393,7 @@ namespace ECommerceAPI.Controllers
                 IsActive = user.IsActive
             };
         }
-        
+
         // Apply sorting to user query
         private IQueryable<User> ApplySorting(IQueryable<User> query, string sortBy, bool desc)
         {
@@ -405,17 +401,21 @@ namespace ECommerceAPI.Controllers
             {
                 case "username":
                     return desc ? query.OrderByDescending(u => u.Username) : query.OrderBy(u => u.Username);
+
                 case "email":
                     return desc ? query.OrderByDescending(u => u.Email) : query.OrderBy(u => u.Email);
+
                 case "createdat":
                     return desc ? query.OrderByDescending(u => u.CreatedAt) : query.OrderBy(u => u.CreatedAt);
+
                 case "role":
                     return desc ? query.OrderByDescending(u => u.Role) : query.OrderBy(u => u.Role);
+
                 default:
                     return desc ? query.OrderByDescending(u => u.Id) : query.OrderBy(u => u.Id);
             }
         }
-        
+
         private string GetIpAddress()
         {
             if (Request.Headers.ContainsKey("X-Forwarded-For"))
@@ -423,115 +423,7 @@ namespace ECommerceAPI.Controllers
             else
                 return HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString();
         }
-        
-        #endregion
-    }
 
-    public class RegisterRequest
-    {
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Password { get; set; }
-        public string Address { get; set; }
-        public DateTime DateOfBirth { get; set; }
-    }
-
-    public class LoginRequest
-    {
-        public string EmailOrPhone { get; set; }
-        public string Password { get; set; }
-    }
-
-    public class ForgotPasswordRequest
-    {
-        public string Email { get; set; }
-    }
-
-    public class ResetPasswordRequest
-    {
-        public string Token { get; set; }
-        public string NewPassword { get; set; }
-    }
-
-    public class UserProfileResponse
-    {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public string? ProfilePicture { get; set; }
-        public string Address { get; set; }
-        public bool IsEmailVerified { get; set; }
-        public bool IsPhoneVerified { get; set; }
-        public bool IsTwoFactorEnabled { get; set; }
-        public DateTime DateOfBirth { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public string Role { get; set; }
-    }
-
-    public class UpdateProfileRequest
-    {
-        [Required]
-        [StringLength(100)]
-        public string Username { get; set; }
-
-        [Required]
-        public string Address { get; set; }
-
-        public string? ProfilePicture { get; set; }
-    }
-
-    public class ChangePasswordRequest
-    {
-        [Required]
-        public string CurrentPassword { get; set; }
-
-        [Required]
-        [StringLength(100, MinimumLength = 6)]
-        public string NewPassword { get; set; }
-    }
-
-    public class VerifyTwoFactorRequest
-    {
-        [Required]
-        public string Code { get; set; }
-    }
-
-    public class RefreshTokenRequest
-    {
-        public string Token { get; set; }
-    }
-
-    public class RevokeTokenRequest
-    {
-        public string Token { get; set; }
-    }
-
-    public class CreateUserRequest
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Address { get; set; }
-        public DateTime? DateOfBirth { get; set; }
-        public string Role { get; set; }
-    }
-
-    public class UpdateUserRequest
-    {
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Address { get; set; }
-        public DateTime? DateOfBirth { get; set; }
-        public string Role { get; set; }
-        public bool IsActive { get; set; }
-    }
-
-    public class VerifyEmailRequest
-    {
-        public string Email { get; set; }
-        public string Code { get; set; }
+        #endregion Helper Methods
     }
 }

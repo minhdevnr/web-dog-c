@@ -2,11 +2,10 @@ using ECommerceAPI.Data;
 using ECommerceAPI.Entities;
 using ECommerceAPI.Helpers;
 using ECommerceAPI.Models;
+using ECommerceAPI.Models.Requests;
 using ECommerceAPI.Models.Responses;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace ECommerceAPI.Controllers
@@ -126,7 +125,6 @@ namespace ECommerceAPI.Controllers
 
         // GET: api/order
         [HttpGet]
-        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<PagedResponse<OrderResponse>>> GetAllOrders(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = DEFAULT_PAGE_SIZE,
@@ -240,21 +238,21 @@ namespace ECommerceAPI.Controllers
         {
             // Kiểm tra xem người dùng có phải admin không
             bool isAdmin = User.IsInRole("Admin");
-            
+
             // Khởi tạo query ban đầu
             var query = _context.Orders
                 .Include(o => o.User)
                 .Include(o => o.OrderItems)
                 .ThenInclude(i => i.Product)
                 .Where(o => o.Id == id);
-            
+
             // Nếu không phải admin, chỉ cho phép xem đơn hàng của chính họ
             //if (!isAdmin)
             //{
             //    var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             //    query = query.Where(o => o.User.Id == userId);
             //}
-            
+
             var order = await query
                 .Select(o => new OrderResponse
                 {
@@ -417,7 +415,7 @@ namespace ECommerceAPI.Controllers
             {
                 // Xóa tất cả các OrderItems hiện có
                 _context.OrderItems.RemoveRange(order.OrderItems);
-                
+
                 // Tạo lại danh sách OrderItems mới
                 order.OrderItems = new List<ECommerceAPI.Entities.OrderItem>();
                 decimal totalAmount = 0;
@@ -508,44 +506,5 @@ namespace ECommerceAPI.Controllers
         }
 
         #endregion Helper Methods
-    }
-
-    public class CreateOrderRequest
-    {
-        [Required]
-        public int UserId { get; set; }
-
-        [Required]
-        public string ShippingAddress { get; set; }
-
-        [Required]
-        public string PhoneNumber { get; set; }
-
-        [Required]
-        public List<OrderItemRequest> Items { get; set; }
-    }
-
-    public class OrderItemRequest
-    {
-        [Required]
-        public int ProductId { get; set; }
-
-        [Required]
-        [Range(1, int.MaxValue)]
-        public int Quantity { get; set; }
-    }
-
-    public class UpdateOrderRequest
-    {
-        [Required]
-        public string ShippingAddress { get; set; }
-
-        [Required]
-        public string PhoneNumber { get; set; }
-
-        [Required]
-        public string Status { get; set; }
-        
-        public List<OrderItemRequest> Items { get; set; }
     }
 }

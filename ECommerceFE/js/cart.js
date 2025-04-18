@@ -15,10 +15,26 @@ class Cart {
     // Thiết lập sự kiện giỏ hàng
     this.setupCartEvents();
     
-    // Cập nhật UI giỏ hàng
-    this.updateCartUI();
-    
-    console.log('Đã khởi tạo giỏ hàng với', this.items.length, 'sản phẩm');
+    // Cập nhật UI giỏ hàng sau khi header đã được tải
+    if (document.querySelector('.cart-count') || document.getElementById('cart-count')) {
+      // Header đã được tải, cập nhật UI ngay lập tức
+      this.updateCartCount();          // Cập nhật số lượng
+      this.updateCartDropdown();       // Cập nhật dropdown
+      this.updateCartPage();           // Cập nhật trang giỏ hàng nếu đang mở
+      console.log('Đã khởi tạo giỏ hàng với', this.items.length, 'sản phẩm');
+    } else {
+      console.log('Chờ header được tải trước khi cập nhật giỏ hàng');
+      // Lắng nghe sự kiện headerLoaded từ UI.js
+      document.addEventListener('headerLoaded', () => {
+        console.log('Header đã tải xong, cập nhật UI giỏ hàng');
+        setTimeout(() => {
+          this.updateCartCount();          // Cập nhật số lượng
+          this.updateCartDropdown();       // Cập nhật dropdown
+          this.updateCartPage();           // Cập nhật trang giỏ hàng nếu đang mở
+          console.log('Đã khởi tạo giỏ hàng với', this.items.length, 'sản phẩm');
+        }, 100); // Thêm độ trễ nhỏ để đảm bảo DOM đã được cập nhật
+      });
+    }
   }
 
   /**
@@ -73,6 +89,7 @@ class Cart {
     const cartBtn = document.getElementById('cart-btn');
     if (cartBtn) {
       cartBtn.addEventListener('click', (e) => {
+        
         e.preventDefault();
         this.toggleCartMenu();
       });
@@ -185,7 +202,7 @@ class Cart {
       return;
     }
 
-    // Thêm vào giỏ hàng
+    // Thêm vào giỏ hàng với các thuộc tính chuẩn hóa
     this.addItem({
       id: productId,
       name: productName,
@@ -200,27 +217,43 @@ class Cart {
    * @param {Object} item - Sản phẩm cần thêm vào giỏ hàng
    */
   static addItem(item) {
-    if (!item || !item.id) {
+    if (!item) {
       UI.createNotification('Không thể thêm sản phẩm vào giỏ hàng.', 'error');
       return;
     }
 
+    // Chuẩn hóa dữ liệu sản phẩm (xử lý cả viết hoa và viết thường)
+    const normalizedItem = {
+      Id: item.Id || item.id || '',
+      Name: item.Name || item.name || 'Sản phẩm không xác định',
+      Price: item.Price || item.price || 0,
+      ImageUrl: item.ImageUrl || item.image || 'img/default-product.jpg',
+      Quantity: item.Quantity || item.quantity || 1
+    };
+
+    if (!normalizedItem.Id) {
+      UI.createNotification('Không thể thêm sản phẩm vào giỏ hàng. Thiếu ID sản phẩm.', 'error');
+      return;
+    }
+
     // Kiểm tra sản phẩm đã tồn tại trong giỏ hàng chưa
-    const existingItem = this.items.find(cartItem => cartItem.id === item.id);
+    const existingItem = this.items.find(cartItem => cartItem.Id === normalizedItem.Id);
 
     if (existingItem) {
       // Nếu sản phẩm đã tồn tại, tăng số lượng
-      existingItem.quantity += item.quantity;
+      existingItem.Quantity += normalizedItem.Quantity;
     } else {
       // Nếu sản phẩm chưa tồn tại, thêm vào giỏ hàng
-      this.items.push(item);
+      this.items.push(normalizedItem);
     }
 
     // Lưu giỏ hàng
     this.saveCart();
 
-    // Cập nhật UI
-    this.updateCartUI();
+    // Cập nhật UI giỏ hàng
+    this.updateCartDropdown(); // Cập nhật dropdown
+    this.updateCartCount();    // Cập nhật số lượng
+    this.updateCartPage();     // Cập nhật trang giỏ hàng nếu đang mở
 
     // Hiển thị thông báo
     UI.createNotification('Đã thêm sản phẩm vào giỏ hàng.', 'success');
@@ -235,17 +268,19 @@ class Cart {
     if (!itemId) return;
 
     // Tìm sản phẩm trong giỏ hàng
-    const itemIndex = this.items.findIndex(item => item.id === itemId);
+    const itemIndex = this.items.findIndex(item => item.Id === itemId);
 
     if (itemIndex !== -1) {
       // Cập nhật số lượng
-      this.items[itemIndex].quantity = quantity;
+      this.items[itemIndex].Quantity = quantity;
 
       // Lưu giỏ hàng
       this.saveCart();
 
       // Cập nhật UI
-      this.updateCartUI();
+      this.updateCartDropdown(); // Cập nhật dropdown
+      this.updateCartCount();    // Cập nhật số lượng
+      this.updateCartPage();     // Cập nhật trang giỏ hàng nếu đang mở
     }
   }
 
@@ -259,13 +294,15 @@ class Cart {
     // Xác nhận xóa
     UI.confirmDialog('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?', () => {
       // Lọc ra danh sách sản phẩm không chứa sản phẩm cần xóa
-      this.items = this.items.filter(item => item.id !== itemId);
+      this.items = this.items.filter(item => item.Id !== itemId);
 
       // Lưu giỏ hàng
       this.saveCart();
 
       // Cập nhật UI
-      this.updateCartUI();
+      this.updateCartDropdown(); // Cập nhật dropdown
+      this.updateCartCount();    // Cập nhật số lượng
+      this.updateCartPage();     // Cập nhật trang giỏ hàng nếu đang mở
 
       // Hiển thị thông báo
       UI.createNotification('Đã xóa sản phẩm khỏi giỏ hàng.', 'success');
@@ -285,7 +322,9 @@ class Cart {
       this.saveCart();
 
       // Cập nhật UI
-      this.updateCartUI();
+      this.updateCartDropdown(); // Cập nhật dropdown
+      this.updateCartCount();    // Cập nhật số lượng
+      this.updateCartPage();     // Cập nhật trang giỏ hàng nếu đang mở
 
       // Hiển thị thông báo
       UI.createNotification('Đã xóa tất cả sản phẩm khỏi giỏ hàng.', 'success');
@@ -297,7 +336,7 @@ class Cart {
    * @returns {number} - Tổng số sản phẩm trong giỏ hàng
    */
   static getItemCount() {
-    return this.items.reduce((total, item) => total + item.quantity, 0);
+    return this.items.reduce((total, item) => total + item.Quantity, 0);
   }
 
   /**
@@ -305,7 +344,7 @@ class Cart {
    * @returns {number} Tổng số lượng
    */
   static getTotalQuantity() {
-    return this.items.reduce((total, item) => total + item.quantity, 0);
+    return this.items.reduce((total, item) => total + item.Quantity, 0);
   }
 
   /**
@@ -313,7 +352,7 @@ class Cart {
    * @returns {number} - Tổng giá trị giỏ hàng
    */
   static getTotalPrice() {
-    return this.items.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return this.items.reduce((total, item) => total + (item.Price * item.Quantity), 0);
   }
 
   /**
@@ -327,33 +366,86 @@ class Cart {
   }
 
   /**
-   * Cập nhật UI giỏ hàng
+   * Định dạng tiền tệ
+   * @param {number} amount - Số tiền cần định dạng
+   * @returns {string} - Chuỗi đã định dạng
    */
-  static updateCartUI() {
-    console.log('Cập nhật UI giỏ hàng');
-    // Cập nhật biểu tượng giỏ hàng trong header
-    this.updateCartIcon();
-    
-    // Cập nhật dropdown giỏ hàng trong header
-    this.updateCartDropdown();
-
-    // Cập nhật trang giỏ hàng (nếu đang ở trang giỏ hàng)
-    this.updateCartPage();
+  static formatCurrency(amount) {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
   }
 
   /**
    * Cập nhật biểu tượng giỏ hàng trên header
    */
   static updateCartIcon() {
-    const cartCount = document.querySelector('.cart-count');
+    // Chỉ gọi phương thức updateCartCount để cập nhật số lượng
+    this.updateCartCount();
+  }
+
+  /**
+   * Cập nhật số lượng sản phẩm trong giỏ hàng ở tất cả các vị trí hiển thị
+   * Phương thức này sẽ được gọi từ các phương thức khác trong Cart class
+   * @param {number} retryCount - Số lần thử lại nếu phần tử chưa được tải
+   */
+  static updateCartCount(retryCount = 0) {
+    const totalQuantity = this.getTotalQuantity();
+    console.log('Cập nhật số lượng giỏ hàng:', totalQuantity);
+    
+    // Tìm phần tử hiển thị số lượng bằng nhiều cách khác nhau
+    const cartCountElements = [
+      document.querySelector('.cart-count'),
+      document.getElementById('cart-count')
+    ];
+    
+    // Phần tử hiển thị số lượng đầu tiên tìm thấy
+    const cartCount = cartCountElements.find(el => el !== null);
+    
     if (cartCount) {
-      const totalQuantity = this.getTotalQuantity();
+      // Cập nhật số lượng
       cartCount.textContent = totalQuantity.toString();
       
-      // Luôn hiển thị số lượng giỏ hàng (số 0 hoặc số lượng sản phẩm)
-      cartCount.style.display = 'flex';
-    } else {
-      console.error('Không tìm thấy phần tử cart-count trong HTML');
+      // Hiển thị/ẩn số lượng
+      if (totalQuantity > 0) {
+        cartCount.style.display = 'flex';
+      } else {
+        cartCount.style.display = 'none';
+      }
+    } else if (retryCount < 5) {
+      // Thử lại sau nếu phần tử chưa được tải, tối đa 5 lần
+      console.log(`Chưa tìm thấy phần tử hiển thị số lượng giỏ hàng. Thử lại lần ${retryCount + 1}/5`);
+      setTimeout(() => this.updateCartCount(retryCount + 1), 200);
+      return;
+    }
+    
+    // Cập nhật số lượng trong các hàm cần đồng bộ hóa
+    // 1. Gọi hàm updateCartCount trong header.html nếu có
+    if (typeof window.updateCartCount === 'function') {
+      try {
+        window.updateCartCount();
+      } catch (error) {
+        console.error('Lỗi khi gọi window.updateCartCount:', error);
+      }
+    }
+    
+    // 2. Gọi hàm updateCartCount trong UI nếu có
+    if (window.UI && typeof window.UI.updateCartCount === 'function') {
+      try {
+        window.UI.updateCartCount(totalQuantity);
+      } catch (error) {
+        console.error('Lỗi khi gọi UI.updateCartCount:', error);
+      }
+    }
+    
+    // 3. Cập nhật hàm updateCartCount trong app.js nếu có
+    if (window.updateCartCount && window.updateCartCount !== window.Cart.updateCartCount) {
+      try {
+        window.updateCartCount(0); // Gọi với retryCount = 0
+      } catch (error) {
+        console.error('Lỗi khi gọi window.updateCartCount từ app.js:', error);
+      }
     }
   }
 
@@ -361,11 +453,14 @@ class Cart {
    * Cập nhật dropdown giỏ hàng trong header
    */
   static updateCartDropdown() {
-    const cartItemContainer = document.querySelector('.cart-dropdown .cart-item-container');
+    const cartItemContainer = document.querySelector('#cart-container');
     const emptyCartMessage = document.querySelector('.empty-cart-message');
     const cartTotalAmount = document.getElementById('cartTotalAmount');
     
-    if (!cartItemContainer) return;
+    if (!cartItemContainer) {
+      console.error('Không tìm thấy phần tử #cart-container');
+      return;
+    }
     
     // Xóa các sản phẩm hiện tại trong dropdown (trừ thông báo giỏ hàng trống)
     const existingItems = cartItemContainer.querySelectorAll('.cart-dropdown-item');
@@ -381,20 +476,31 @@ class Cart {
         emptyCartMessage.style.display = 'none';
       }
       
+      // Tạo phần tử container cho cart items nếu chưa có
+      let cartItems = cartItemContainer.querySelector('#cart-items');
+      if (!cartItems) {
+        cartItems = document.createElement('div');
+        cartItems.id = 'cart-items';
+        cartItemContainer.appendChild(cartItems);
+      }
+      
+      // Xóa nội dung cũ
+      cartItems.innerHTML = '';
+      
       // Thêm các sản phẩm vào dropdown
       this.items.slice(0, 3).forEach(item => { // Chỉ hiển thị tối đa 3 sản phẩm
         const cartItem = document.createElement('div');
-        cartItem.className = 'cart-dropdown-item';
+        cartItem.className = 'cart-item';
         cartItem.innerHTML = `
-          <img src="${item.image}" alt="${item.name}" class="cart-item-image">
-          <div class="cart-item-details">
-            <h4 class="cart-item-name">${item.name}</h4>
-            <div class="cart-item-price">${this.formatCurrency(item.price)} x ${item.quantity}</div>
+          <img src="${item.ImageUrl}" alt="${item.Name}">
+          <div class="content">
+            <h3>${item.Name}</h3>
+            <div class="price">${this.formatCurrency(item.Price)} x ${item.Quantity}</div>
           </div>
-          <button class="cart-item-remove" data-id="${item.id}">&times;</button>
+          <span class="fas fa-times remove-item" data-id="${item.Id}"></span>
         `;
         
-        cartItemContainer.appendChild(cartItem);
+        cartItems.appendChild(cartItem);
       });
       
       // Thêm thông báo nếu có nhiều hơn 3 sản phẩm
@@ -402,7 +508,7 @@ class Cart {
         const moreItems = document.createElement('div');
         moreItems.className = 'more-items-message';
         moreItems.textContent = `+ ${this.items.length - 3} sản phẩm khác`;
-        cartItemContainer.appendChild(moreItems);
+        cartItems.appendChild(moreItems);
       }
     }
     
@@ -412,7 +518,7 @@ class Cart {
     }
     
     // Thiết lập sự kiện xóa sản phẩm
-    const removeButtons = document.querySelectorAll('.cart-dropdown-item .cart-item-remove');
+    const removeButtons = document.querySelectorAll('.cart-item .remove-item');
     removeButtons.forEach(button => {
       button.addEventListener('click', (e) => {
         e.preventDefault();
@@ -476,27 +582,27 @@ class Cart {
     } else {
       // Tạo HTML cho các sản phẩm trong giỏ hàng
       this.items.forEach(item => {
-        const itemTotal = item.price * item.quantity;
+        const itemTotal = item.Price * item.Quantity;
         
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td class="cart-image">
-            <img src="${item.image}" alt="${item.name}">
+            <img src="${item.ImageUrl}" alt="${item.Name}">
           </td>
           <td class="cart-name">
-            <h4>${item.name}</h4>
+            <h4>${item.Name}</h4>
           </td>
-          <td class="cart-price">${this.formatCurrency(item.price)}</td>
+          <td class="cart-price">${this.formatCurrency(item.Price)}</td>
           <td class="cart-quantity">
             <div class="quantity-control">
-              <button class="quantity-btn decrease" data-id="${item.id}">-</button>
-              <input type="number" class="cart-quantity-input" data-id="${item.id}" value="${item.quantity}" min="1">
-              <button class="quantity-btn increase" data-id="${item.id}">+</button>
+              <button class="quantity-btn decrease" data-id="${item.Id}">-</button>
+              <input type="number" class="cart-quantity-input" data-id="${item.Id}" value="${item.Quantity}" min="1">
+              <button class="quantity-btn increase" data-id="${item.Id}">+</button>
             </div>
           </td>
           <td class="cart-total">${this.formatCurrency(itemTotal)}</td>
           <td class="cart-actions">
-            <button class="remove-item-btn" data-id="${item.id}">&times;</button>
+            <button class="remove-item-btn" data-id="${item.Id}">&times;</button>
           </td>
         `;
         
@@ -572,18 +678,6 @@ class Cart {
   }
 
   /**
-   * Định dạng tiền tệ
-   * @param {number} amount - Số tiền cần định dạng
-   * @returns {string} - Chuỗi đã định dạng
-   */
-  static formatCurrency(amount) {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    }).format(amount);
-  }
-
-  /**
    * Chuyển đến trang thanh toán
    */
   static proceedToCheckout() {
@@ -596,7 +690,7 @@ class Cart {
     // Kiểm tra đăng nhập trước khi thanh toán
     if (!Auth || !Auth.isLoggedIn()) {
       // Lưu URL để redirect sau khi đăng nhập
-      localStorage.setItem('redirectAfterLogin', 'checkout.html');
+      localStorage.setItem('redirectAfterLogin', 'index-checkout.html');
       
       // Hiển thị thông báo và chuyển đến trang đăng nhập
       UI.createNotification('Vui lòng đăng nhập để tiếp tục thanh toán.', 'info');
@@ -607,7 +701,7 @@ class Cart {
     }
 
     // Chuyển đến trang thanh toán
-    window.location.href = 'checkout.html';
+    window.location.href = 'index-checkout.html';
   }
 }
 

@@ -1,14 +1,9 @@
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ECommerceAPI.Data;
 using ECommerceAPI.Entities;
-using ECommerceAPI.Models.Responses;
 using ECommerceAPI.Helpers;
+using ECommerceAPI.Models.Responses;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceAPI.Controllers
 {
@@ -28,7 +23,7 @@ namespace ECommerceAPI.Controllers
         // GET: api/category
         [HttpGet]
         public async Task<ActionResult<PagedResponse<Category>>> GetCategories(
-            [FromQuery] int pageNumber = 1, 
+            [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = DEFAULT_PAGE_SIZE,
             [FromQuery] string keyword = null,
             [FromQuery] bool includeProducts = false,
@@ -38,46 +33,46 @@ namespace ECommerceAPI.Controllers
             // Validate page size
             if (pageSize <= 0) pageSize = DEFAULT_PAGE_SIZE;
             if (pageSize > MAX_PAGE_SIZE) pageSize = MAX_PAGE_SIZE;
-            
+
             // Ensure valid page number
             if (pageNumber <= 0) pageNumber = 1;
-            
+
             // Start query
             var query = _context.Categories.AsQueryable();
-            
+
             // Include products if requested
             if (includeProducts)
             {
                 query = query.Include(c => c.Products);
             }
-                
+
             // Apply filters
             if (!string.IsNullOrEmpty(keyword))
             {
                 keyword = keyword.ToLower();
-                query = query.Where(c => c.Name.ToLower().Contains(keyword) || 
+                query = query.Where(c => c.Name.ToLower().Contains(keyword) ||
                                        (c.Description != null && c.Description.ToLower().Contains(keyword)));
             }
-            
+
             // Apply sorting
             query = ApplySorting(query, sortBy, desc);
-            
+
             // Get total count for pagination
             var totalCount = await query.CountAsync();
-            
+
             // Apply pagination
             var categories = await query
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
-                
+
             // Create paged response
             return PaginationHelper.CreatePagedResponse(
-                categories, 
-                pageNumber, 
-                pageSize, 
-                totalCount, 
-                Request, 
+                categories,
+                pageNumber,
+                pageSize,
+                totalCount,
+                Request,
                 "categories");
         }
 
@@ -107,10 +102,10 @@ namespace ECommerceAPI.Controllers
                 {
                     return BadRequest("Tên danh mục không được để trống");
                 }
-                
+
                 category.CreatedAt = DateTime.Now;
                 category.Products = new HashSet<Product>(); // Khởi tạo collection Products
-                
+
                 _context.Categories.Add(category);
                 await _context.SaveChangesAsync();
 
@@ -140,7 +135,7 @@ namespace ECommerceAPI.Controllers
             var existingCategory = await _context.Categories
                 .Include(c => c.Products)
                 .FirstOrDefaultAsync(c => c.Id == id);
-                
+
             if (existingCategory == null)
             {
                 return NotFound("Không tìm thấy danh mục");
@@ -214,13 +209,16 @@ namespace ECommerceAPI.Controllers
             {
                 case "name":
                     return desc ? query.OrderByDescending(c => c.Name) : query.OrderBy(c => c.Name);
+
                 case "createdat":
                     return desc ? query.OrderByDescending(c => c.CreatedAt) : query.OrderBy(c => c.CreatedAt);
+
                 case "productcount":
                     return desc ? query.OrderByDescending(c => c.Products.Count) : query.OrderBy(c => c.Products.Count);
+
                 default:
                     return desc ? query.OrderByDescending(c => c.Id) : query.OrderBy(c => c.Id);
             }
         }
     }
-} 
+}

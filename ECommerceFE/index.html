@@ -23,66 +23,8 @@
   </head>
 
   <body>
-    <!-- Header Section Starts -->
-    <header class="header">
-      <a href="#" class="logo">
-        <img src="img/logo.png" alt="LH Coffee" />
-      </a>
-
-      <nav class="navbar">
-        <a href="#home">Trang Chủ</a>
-        <a href="#about">Giới Thiệu</a>
-        <a href="#products">Sản Phẩm</a>
-        <a href="#review">Đánh Giá</a>
-        <a href="#contact">Liên Hệ</a>
-      </nav>
-
-      <div class="icons">
-        <div id="search-btn" class="fas fa-search"></div>
-        <div id="cart-btn" class="fas fa-shopping-cart">
-          <span class="cart-count" id="cart-count">0</span>
-        </div>
-        <div id="login-btn" class="fas fa-user"></div>
-        <div id="bars-btn" class="fas fa-bars"></div>
-      </div>
-
-      <div class="search-form">
-        <form id="search-form" onsubmit="return false;">
-          <input
-            type="search"
-            id="search-box"
-            placeholder="Tìm kiếm sản phẩm..."
-            aria-label="Tìm kiếm sản phẩm"
-          />
-          <label for="search-box" class="fas fa-search"></label>
-        </form>
-      </div>
-
-      <div class="cart-item-container" id="cart-container">
-        <div class="cart-heading">Giỏ Hàng</div>
-        <div id="cart-items">
-          <!-- Cart items will be dynamically added here -->
-          <div class="cart-empty">Giỏ hàng trống</div>
-        </div>
-        <div class="cart-footer">
-          <div class="cart-total">
-            Tổng: <span class="cart-total-price">0đ</span>
-          </div>
-          <a href="cart.html" class="btn">Xem Giỏ Hàng</a>
-          <a href="checkout.html" class="btn">Thanh Toán</a>
-        </div>
-      </div>
-
-      <div class="user-profile-dropdown">
-        <!-- User profile will be dynamically updated based on login status -->
-        <h3>Tài Khoản</h3>
-        <div id="user-profile-content">
-          <a href="login.html"><i class="fas fa-sign-in-alt"></i>Đăng Nhập</a>
-          <a href="register.html"><i class="fas fa-user-plus"></i>Đăng Ký</a>
-        </div>
-      </div>
-    </header>
-    <!-- Header Section Ends -->
+    <!-- Header Container -->
+    <div id="header-container"></div>
 
     <!-- Home Section Starts -->
     <section class="home" id="home">
@@ -100,7 +42,7 @@
 
     <!-- About Section Starts -->
     <section class="about" id="about">
-      <h1 class="heading"><span>Về</span> Chúng Tôi</h1>
+      <h2 class="section-title"><span>Về</span> Chúng Tôi</h2>
       <div class="row">
         <div class="image">
           <img src="./img/coffee-2225564_960_720.jpg" alt="cà phê" />
@@ -132,7 +74,7 @@
 
     <!-- Products Section Starts -->
     <section class="products" id="products">
-      <h1 class="heading">Sản Phẩm <span>Của Chúng Tôi</span></h1>
+      <h2 class="section-title">Sản Phẩm <span>Của Chúng Tôi</span></h2>
       <div class="box-container" id="products-container">
         <!-- Products will be dynamically loaded here -->
         <div class="loading">
@@ -142,9 +84,21 @@
     </section>
     <!-- Products Section Ends -->
 
+    <!-- News Section Starts -->
+    <section class="news" id="news">
+      <h2 class="section-title">Tin Tức <span>& Blog</span></h2>
+      <div class="box-container" id="news-container">
+        <!-- News will be dynamically loaded here -->
+        <div class="loading">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </section>
+    <!-- News Section Ends -->
+
     <!-- Reviews Section Starts -->
     <section class="review" id="review">
-      <h1 class="heading">Khách Hàng <span>Đánh Giá</span></h1>
+      <h2 class="section-title">Khách Hàng <span>Đánh Giá</span></h2>
       <div class="box-container">
         <div class="box">
           <p>
@@ -201,7 +155,7 @@
 
     <!-- Contact Section Starts -->
     <section class="contact" id="contact">
-      <h1 class="heading"><span>Liên Hệ</span> Chúng Tôi</h1>
+      <h2 class="section-title"><span>Liên Hệ</span> Chúng Tôi</h2>
       <div class="row">
         <iframe
           class="map"
@@ -234,30 +188,8 @@
     </section>
     <!-- Contact Section Ends -->
 
-    <!-- Footer Section Starts -->
-    <section class="footer">
-      <div class="share">
-        <a href="#" class="fab fa-facebook-f"></a>
-        <a href="#" class="fab fa-twitter"></a>
-        <a href="#" class="fab fa-instagram"></a>
-        <a href="#" class="fab fa-linkedin"></a>
-        <a href="#" class="fab fa-pinterest"></a>
-      </div>
-
-      <div class="links">
-        <a href="#home">Trang Chủ</a>
-        <a href="#about">Giới Thiệu</a>
-        <a href="#products">Sản Phẩm</a>
-        <a href="#review">Đánh Giá</a>
-        <a href="#contact">Liên Hệ</a>
-        <a href="blog.html">Blog</a>
-      </div>
-
-      <div class="credit">
-        Được Tạo Bởi <span>LH Coffee</span> | Bản Quyền © 2023
-      </div>
-    </section>
-    <!-- Footer Section Ends -->
+    <!-- Footer Container -->
+    <div id="footer-container"></div>
 
     <!-- Notification Container -->
     <div class="notification-container" id="notification-container"></div>
@@ -265,9 +197,21 @@
     <!-- Script Links -->
     <script src="js/app.js"></script>
     <script src="js/product.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/ui.js"></script>
     <script>
       // Khởi tạo quản lý sản phẩm khi trang đã tải xong
       document.addEventListener("DOMContentLoaded", () => {
+        // Khởi tạo UI
+        if (typeof UI !== "undefined") {
+          UI.init();
+        }
+
+        // Khởi tạo Cart
+        if (typeof Cart !== "undefined") {
+          Cart.init();
+        }
+
         // Khởi tạo ProductManager
         if (typeof ProductManager !== "undefined") {
           ProductManager.init();
