@@ -56,13 +56,13 @@ class AdminCategoryManager {
     validateCategoryData(data) {
         const errors = [];
         
-        if (!data.name || data.name.trim().length === 0) {
+        if (!data.Name || data.Name.trim().length === 0) {
             errors.push('Tên danh mục không được để trống');
-        } else if (data.name.length > 100) {
+        } else if (data.Name.length > 100) {
             errors.push('Tên danh mục không được vượt quá 100 ký tự');
         }
 
-        if (data.description && data.description.length > 500) {
+        if (data.Description && data.Description.length > 500) {
             errors.push('Mô tả không được vượt quá 500 ký tự');
         }
 
@@ -205,6 +205,7 @@ class AdminCategoryManager {
     }
 
     async saveCategory() {
+        debugger;
         const form = $('#categoryForm')[0];
         if (!form.checkValidity()) {
             form.reportValidity();
@@ -212,8 +213,9 @@ class AdminCategoryManager {
         }
 
         const categoryData = {
-            name: $('#categoryName').val().trim(),
-            description: $('#categoryDescription').val().trim()
+            Id: $('#categoryId').val(),
+            Name: $('#categoryName').val().trim(),
+            Description: $('#categoryDescription').val().trim()
         };
 
         const validationErrors = this.validateCategoryData(categoryData);

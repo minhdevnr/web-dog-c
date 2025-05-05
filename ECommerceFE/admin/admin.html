@@ -29,7 +29,45 @@
         opacity: 1 !important;
       }
 
-      /* Các quy tắc hiện đã được chuyển vào admin-sidebar.css */
+      .stats-card {
+        background: #fff;
+        border-radius: 7px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 25px;
+        padding: 20px;
+      }
+
+      .stats-card h3 {
+        margin-bottom: 15px;
+        color: #5c5c5c;
+        font-size: 18px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 15px;
+      }
+
+      .stat-item {
+        padding: 15px;
+        border-radius: 5px;
+        text-align: center;
+        background-color: #f8f9fa;
+        border-left: 4px solid var(--main-color);
+      }
+
+      .stat-value {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      .stat-label {
+        font-size: 14px;
+        color: #666;
+      }
     </style>
   </head>
 
@@ -49,122 +87,110 @@
         </div>
       </header>
       <main>
-        <h2 class="dash-title">Overview</h2>
+        <h2 class="dash-title">Tổng quan</h2>
         <div class="dash-cards">
           <div class="card-single">
             <div class="card-body">
-              <span class="fa fa-briefcase"></span>
+              <span class="fa fa-chart-line"></span>
               <div>
-                <h5>Account Balance</h5>
-                <h4>20.000.000 VND</h4>
+                <h5>Tổng doanh thu</h5>
+                <h4>0 VND</h4>
               </div>
             </div>
             <div class="card-footer">
-              <a href="">View all</a>
+              <a href="admin-order.html">Xem chi tiết</a>
             </div>
           </div>
           <div class="card-single">
             <div class="card-body">
               <span class="fa fa-check-square"></span>
               <div>
-                <h5>Success</h5>
-                <h4>20.000.000 VND</h4>
+                <h5>Doanh thu thành công</h5>
+                <h4>0 VND</h4>
               </div>
             </div>
             <div class="card-footer">
-              <a href="">View all</a>
+              <a href="admin-order.html">Xem chi tiết</a>
             </div>
           </div>
           <div class="card-single">
             <div class="card-body">
               <span class="fa fa-sync"></span>
               <div>
-                <h5>Pending</h5>
-                <h4>20.000.000 VND</h4>
+                <h5>Doanh thu đang chờ</h5>
+                <h4>0 VND</h4>
               </div>
             </div>
             <div class="card-footer">
-              <a href="">View all</a>
+              <a href="admin-order.html">Xem chi tiết</a>
             </div>
           </div>
         </div>
         <section class="recent">
           <div class="activity-grid">
             <div class="activity-card">
-              <h3>Recent activity</h3>
+              <h3>Hoạt động gần đây</h3>
               <table>
                 <thead>
                   <tr>
-                    <th>Project</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Team</th>
-                    <th>Status</th>
+                    <th>Đơn hàng</th>
+                    <th>Ngày bắt đầu</th>
+                    <th>Ngày kết thúc</th>
+                    <th>Người dùng</th>
+                    <th>Trạng thái</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Coffee Startup</td>
-                    <td>16 December, 2025</td>
-                    <td>19 December, 2025</td>
-                    <td class="td-team">
-                      <div class="img-1"></div>
-                      <div class="img-2"></div>
-                      <div class="img-3"></div>
-                    </td>
-                    <td><span class="badge success">Success</span></td>
-                  </tr>
-                  <tr>
-                    <td>Coffee Startup</td>
-                    <td>16 December, 2025</td>
-                    <td>19 December, 2025</td>
-                    <td class="td-team">
-                      <div class="img-1"></div>
-                      <div class="img-2"></div>
-                      <div class="img-3"></div>
-                    </td>
-                    <td><span class="badge success">Success</span></td>
-                  </tr>
-                  <tr>
-                    <td>Coffee</td>
-                    <td>16 December, 2025</td>
-                    <td>19 December, 2025</td>
-                    <td class="td-team">
-                      <div class="img-1"></div>
-                      <div class="img-2"></div>
-                      <div class="img-3"></div>
-                    </td>
-                    <td><span class="badge success">Success</span></td>
-                  </tr>
-                  <tr>
-                    <td>Coffee Startup Large</td>
-                    <td>16 December, 2025</td>
-                    <td>19 December, 2025</td>
-                    <td class="td-team">
-                      <div class="img-1"></div>
-                      <div class="img-2"></div>
-                      <div class="img-3"></div>
-                    </td>
-                    <td><span class="badge warning">Failed</span></td>
-                  </tr>
-                  <tr>
-                    <td>Coffee Startup Mini</td>
-                    <td>16 December, 2025</td>
-                    <td>19 December, 2025</td>
-                    <td class="td-team">
-                      <div class="img-1"></div>
-                      <div class="img-2"></div>
-                      <div class="img-3"></div>
-                    </td>
-                    <td><span class="badge success">Success</span></td>
+                    <td>Đang tải dữ liệu...</td>
+                    <td></td>
+                    <td></td>
+                    <td class="td-team"></td>
+                    <td></td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
         </section>
+
+        <!-- Thêm phần thống kê chi tiết -->
+        <section class="statistics">
+          <div class="stats-card">
+            <h3>Thống kê chi tiết</h3>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <div class="stat-value" id="totalOrders">0</div>
+                <div class="stat-label">Tổng số đơn hàng</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="completedOrders">0</div>
+                <div class="stat-label">Đơn hàng hoàn thành</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="processingOrders">0</div>
+                <div class="stat-label">Đơn hàng đang xử lý</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="cancelledOrders">0</div>
+                <div class="stat-label">Đơn hàng đã hủy</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="totalUsers">0</div>
+                <div class="stat-label">Tổng số người dùng</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="totalProducts">0</div>
+                <div class="stat-label">Tổng số sản phẩm</div>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
     </div>
+
+    <!-- Toast container cho thông báo -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3"></div>
 
     <!-- JavaScript Dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
@@ -177,6 +203,7 @@
     <script src="/ECommerceFE/js/ui.js"></script>
     <script src="/ECommerceFE/js/auth.js"></script>
     <script src="/ECommerceFE/js/admin.js"></script>
+    <script src="/ECommerceFE/js/admin-dashboard.js"></script>
 
     <!-- Manual sidebar loader -->
     <script>

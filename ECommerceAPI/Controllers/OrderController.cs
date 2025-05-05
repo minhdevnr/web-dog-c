@@ -7,6 +7,7 @@ using ECommerceAPI.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using Microsoft.Extensions.Logging;
 
 namespace ECommerceAPI.Controllers
 {
@@ -18,10 +19,12 @@ namespace ECommerceAPI.Controllers
         private readonly ApplicationDbContext _context;
         private const int DEFAULT_PAGE_SIZE = 10;
         private const int MAX_PAGE_SIZE = 50;
+        private readonly ILogger<OrderController> _logger;
 
-        public OrderController(ApplicationDbContext context)
+        public OrderController(ApplicationDbContext context, ILogger<OrderController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         //[HttpGet("my-orders")]
@@ -326,63 +329,103 @@ namespace ECommerceAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/order
+        // POST: api/order  
         [HttpPost]
-        public async Task<ActionResult<ECommerceAPI.Entities.Order>> CreateOrder([FromBody] CreateOrderRequest request)
+        public async Task<IActionResult> CreateOrder([FromBody] OrderRequest request)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                _logger.LogInformation($"Nhận yêu cầu tạo đơn hàng từ {request.FullName}");
 
-            var user = await _context.Users.FindAsync(request.UserId);
-            if (user == null)
-            {
-                return BadRequest("User not found");
-            }
-
-            var order = new ECommerceAPI.Entities.Order
-            {
-                User = user,
-                ShippingAddress = request.ShippingAddress,
-                PhoneNumber = request.PhoneNumber,
-                Status = "Pending",
-                CreatedAt = DateTime.UtcNow,
-                OrderItems = new List<ECommerceAPI.Entities.OrderItem>()
-            };
-
-            decimal totalAmount = 0;
-
-            // Add order items from the request data
-            if (request.Items != null && request.Items.Any())
-            {
-                foreach (var item in request.Items)
+                if (!ModelState.IsValid)
                 {
-                    var product = await _context.Products.FindAsync(item.ProductId);
-                    if (product == null)
+                    _logger.LogWarning("Yêu cầu không hợp lệ: ModelState invalid");
+                    return BadRequest(new
                     {
-                        return BadRequest($"Product with ID {item.ProductId} not found");
-                    }
+                        Success = false,
+                        Message = "Thông tin đơn hàng không hợp lệ"
+                    });
+                }
 
-                    var orderItem = new ECommerceAPI.Entities.OrderItem
+                // Tạo đơn hàng mới  
+                var order = new Order
+                {
+                    ShippingAddress = request.ShippingAddress,
+                    PhoneNumber = request.PhoneNumber,
+                    TotalAmount = request.TotalAmount,
+                    Status = "Pending", // Trạng thái mặc định khi tạo  
+                    PaymentMethod = request.PaymentMethod,
+                    CreatedAt = DateTime.Now,
+                    OrderItems = request.Items.Select(item =>
                     {
-                        Product = product,
-                        Order = order,
-                        Quantity = item.Quantity,
-                        UnitPrice = product.Price,
-                        TotalPrice = product.Price * item.Quantity
+                        var product = _context.Products.Find(item.ProductId);
+                        if (product == null)
+                        {
+                            throw new Exception($"Product with ID {item.ProductId} not found.");
+                        }
+                        return new OrderItem
+                        {
+                            Product = product,
+                            Quantity = item.Quantity,
+                            UnitPrice = product.Price,
+                            TotalPrice = product.Price * item.Quantity
+                        };
+                    }).ToList()
+                };
+
+                // Thêm thông tin người dùng nếu đã đăng nhập  
+                // Trong trường hợp chưa đăng nhập, tạo đơn hàng với thông tin khách vãng lai  
+                var userId = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst("userId")?.Value ?? "0") : 0;
+
+                if (userId > 0)
+                {
+                    var user = await _context.Users.FindAsync(userId);
+                    if (user == null)
+                    {
+                        return BadRequest("User not found.");
+                    }
+                    order.User = user;
+                }
+                else
+                {
+                    // Tạo người dùng tạm thời hoặc xử lý đơn hàng khách vãng lai  
+                    var guestUser = new User
+                    {
+                        FullName = request.FullName,
+                        Email = request.Email,
+                        PhoneNumber = request.PhoneNumber,
+                        Address = request.ShippingAddress,
+                        IsGuest = true
                     };
 
-                    totalAmount += orderItem.TotalPrice;
-                    order.OrderItems.Add(orderItem);
+                    _context.Users.Add(guestUser);
+                    await _context.SaveChangesAsync();
+
+                    order.User = guestUser;
                 }
+
+                _context.Orders.Add(order);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation($"Đã tạo đơn hàng mới với ID: {order.Id}");
+
+                // Trả về thông tin đơn hàng  
+                return Ok(new
+                {
+                    Success = true,
+                    Message = "Đặt hàng thành công",
+                    OrderId = order.Id
+                });
             }
-
-            order.TotalAmount = totalAmount;
-
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, order);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Lỗi khi tạo đơn hàng: {ex.Message}");
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi khi xử lý đơn hàng"
+                });
+            }
         }
 
         // PUT: api/order/{id}
@@ -506,5 +549,10 @@ namespace ECommerceAPI.Controllers
         }
 
         #endregion Helper Methods
+    }
+
+    public class OrderStatusUpdateRequest
+    {
+        public string Status { get; set; }
     }
 }

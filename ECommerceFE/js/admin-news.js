@@ -195,6 +195,7 @@ class AdminNewsManager {
     }
 
     openNewsModal(news = null) {
+        debugger;
         const modal = $('#newsModal');
         const form = $('#newsForm')[0];
         form.reset();
@@ -431,7 +432,7 @@ class AdminNewsManager {
                 id: news.Id || news.id,
                 title: news.Title || news.title,
                 content: news.Content || news.content,
-                categoryId: news.CategoryId || news.categoryId,
+                categoryId: news.Category.Id || news.categoryId,
                 status: news.Status || news.status,
                 image: news.ImageUrl || news.imageUrl || news.image
             };

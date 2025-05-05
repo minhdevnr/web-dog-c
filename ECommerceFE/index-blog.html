@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Blog - LH Coffee</title>
+    <title>Tin Tức & Blog - LH Coffee</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
@@ -12,61 +12,78 @@
       referrerpolicy="no-referrer"
     />
     <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/index-blog.css" />
+    <link rel="stylesheet" href="css/notification.css" />
   </head>
 
   <body>
-    <!-- Header container -->
+    <!-- Header Container -->
     <div id="header-container"></div>
 
-    <section class="blog_cf">
-      <div class="blog_cf_content">
-        <h3 class="heading">Lorem, ipsum.<span>us</span></h3>
-        <div class="blog_cf_author">
-          <span>Mr Son</span> <span>/</span> <span>25-12-2024</span>
-          <span>/</span> <span>Hồ Chí Minh</span>
-        </div>
-        <h5>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid eos
-          reprehenderit omnis temporibus accusantium ab sint quis architecto
-          accusamus harum, eum illum libero itaque, nihil odio soluta enim
-          corporis atque.
-        </h5>
-        <div class="blog_cf_img">
-          <img src="./img/coffee-2225564_960_720.jpg" />
-        </div>
+    <!-- News Banner Section -->
+    <section class="news-banner">
+      <div class="content">
+        <h2 class="section-title">Tin Tức <span>& Blog</span></h2>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis autem
-          optio aliquid sit eius atque nemo natus beatae odit nam! Commodi quas
-          nam nisi voluptatum laudantium cum eaque minus impedit ipsa ex?
-          Eligendi fugit est similique nam, ab ex? Esse, rem doloribus amet
-          ullam consequuntur nostrum possimus nemo magni non tenetur dignissimos
-          illum modi? Numquam doloribus repellat, fugit itaque consequatur
-          fugiat sequi id possimus officia. Iusto ex unde nisi laudantium, ad
-          aut, dicta totam temporibus error rem itaque voluptas officia,
-        </p>
-        <div class="blog_cf_img">
-          <img src="./img/coffee-2225564_960_720.jpg" />
-        </div>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis autem
-          optio aliquid sit eius atque nemo natus beatae odit nam! Commodi quas
-          nam nisi voluptatum laudantium cum eaque minus impedit ipsa ex?
-          Eligendi fugit est similique nam, ab ex? Esse, rem doloribus amet
-          ullam consequuntur nostrum possimus nemo magni non tenetur dignissimos
-          illum modi? Numquam doloribus repellat, fugit itaque consequatur
-          fugiat sequi id possimus officia. Iusto ex unde nisi laudantium, ad
-          aut, dicta totam temporibus error rem itaque voluptas officia,
+          Cập nhật thông tin mới nhất về cà phê, khuyến mãi đặc biệt và kiến
+          thức bổ ích
         </p>
       </div>
     </section>
 
-    <!-- Footer container -->
+    <!-- News List Section -->
+    <section class="news-list">
+      <div class="category-filter">
+        <h3>Danh mục</h3>
+        <select id="category-filter">
+          <option value="">Tất cả danh mục</option>
+          <!-- Danh mục sẽ được tải động -->
+        </select>
+      </div>
+
+      <div id="news-container">
+        <!-- News will be dynamically loaded here -->
+        <div class="loading">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Subscribe Section -->
+    <section class="subscribe">
+      <div class="content">
+        <h2>Nhận thông tin mới nhất</h2>
+        <p>Đăng ký nhận tin tức mới nhất về sản phẩm và khuyến mãi đặc biệt</p>
+        <form>
+          <input type="email" placeholder="Email của bạn" required />
+          <button type="submit" class="btn">Đăng ký</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Footer Container -->
     <div id="footer-container"></div>
 
-    <!-- JavaScript Modules -->
+    <!-- Notification Container -->
+    <div class="notification-container" id="notification-container"></div>
+
+    <!-- Script Links -->
     <script src="js/config.js"></script>
     <script src="js/api.js"></script>
+    <script src="js/news-list.js"></script>
     <script src="js/ui.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Khởi tạo UI
+        if (typeof UI !== "undefined") {
+          UI.init();
+        }
+
+        // Khởi tạo NewsList
+        if (typeof NewsList !== "undefined") {
+          NewsList.init();
+        }
+      });
+    </script>
   </body>
 </html>

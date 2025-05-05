@@ -285,6 +285,7 @@ class AdminOrderManager {
     }
 
     loadOrderItems(items) {
+        debugger;
         // Xóa tất cả các mục sản phẩm hiện tại
         $('#orderItems').empty();
         
@@ -330,10 +331,10 @@ class AdminOrderManager {
         
         if (item) {
             // Đặt giá trị số lượng ngay lập tức
-            lastRow.find('.quantity-input').val(item.Quantity);
+            lastRow.find('.quantity-input').val(item.quantity);
             
             // Tải danh sách sản phẩm và chọn sản phẩm đã có
-            this.loadProductsForSelect(productSelect, item.ProductId);
+            this.loadProductsForSelect(productSelect, item.productId);
             
             // Cập nhật giá sau khi select sản phẩm
             setTimeout(() => {

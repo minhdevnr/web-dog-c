@@ -19,7 +19,7 @@ namespace ECommerceAPI.Models.Requests
         public string Description { get; set; }
 
         // Tệp hình ảnh
-        public IFormFile Image { get; set; }
+        public IFormFile? Image { get; set; }
 
         [Required(ErrorMessage = "Xuất xứ sản phẩm là bắt buộc")]
         public string Origin { get; set; }

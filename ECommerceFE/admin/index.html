@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - LH Coffee</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/layouts/admin-layout.css" />
+    <link rel="stylesheet" href="../css/pages/admin/dashboard.css" />
+  </head>
+  <body>
+    <div class="admin-layout">
+      <!-- Admin Sidebar -->
+      <div class="admin-sidebar">
+        <div class="sidebar-header">
+          <div class="sidebar-logo">
+            <img src="../img/1.jpg" alt="LH Coffee Logo" />
+          </div>
+          <div class="sidebar-title">LH Coffee Admin</div>
+        </div>
+
+        <div class="sidebar-menu">
+          <div class="menu-category">Tổng Quan</div>
+          <a href="index.html" class="menu-item active">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+          </a>
+
+          <div class="menu-category">Quản Lý</div>
+          <a href="products.html" class="menu-item">
+            <i class="fas fa-coffee"></i>
+            <span>Sản Phẩm</span>
+          </a>
+          <a href="orders.html" class="menu-item">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Đơn Hàng</span>
+          </a>
+          <a href="categories.html" class="menu-item">
+            <i class="fas fa-tags"></i>
+            <span>Danh Mục</span>
+          </a>
+          <a href="customers.html" class="menu-item">
+            <i class="fas fa-users"></i>
+            <span>Khách Hàng</span>
+          </a>
+
+          <div class="menu-category">Nội Dung</div>
+          <a href="blog.html" class="menu-item">
+            <i class="fas fa-newspaper"></i>
+            <span>Tin Tức</span>
+          </a>
+          <a href="reviews.html" class="menu-item">
+            <i class="fas fa-star"></i>
+            <span>Đánh Giá</span>
+          </a>
+
+          <div class="menu-category">Cài Đặt</div>
+          <a href="settings.html" class="menu-item">
+            <i class="fas fa-cog"></i>
+            <span>Cài Đặt Hệ Thống</span>
+          </a>
+          <a href="users.html" class="menu-item">
+            <i class="fas fa-user-shield"></i>
+            <span>Người Dùng Admin</span>
+          </a>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="sidebar-user">
+            <div class="user-avatar">
+              <img src="../img/user.jpg" alt="Admin User" />
+            </div>
+            <div class="user-info">
+              <h4>Admin User</h4>
+              <p>admin@lhcoffee.com</p>
+            </div>
+          </div>
+          <div class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Main Content -->
+      <div class="admin-main">
+        <!-- Admin Header -->
+        <div class="admin-header">
+          <div class="header-toggle">
+            <i class="fas fa-bars"></i>
+          </div>
+
+          <div class="header-search">
+            <input type="text" placeholder="Tìm kiếm..." />
+            <button><i class="fas fa-search"></i></button>
+          </div>
+
+          <div class="header-actions">
+            <div class="header-action">
+              <i class="fas fa-bell"></i>
+              <span class="action-badge">3</span>
+            </div>
+            <div class="header-action">
+              <i class="fas fa-envelope"></i>
+              <span class="action-badge">5</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin Content -->
+        <div class="admin-content">
+          <div class="page-header">
+            <h1 class="page-title">Dashboard</h1>
+            <div class="page-actions">
+              <button class="btn">
+                <i class="fas fa-download"></i> Xuất Báo Cáo
+              </button>
+            </div>
+          </div>
+
+          <!-- Dashboard Stats -->
+          <div class="dashboard-stats">
+            <div class="stat-card">
+              <div class="stat-icon stat-orders">
+                <i class="fas fa-shopping-bag"></i>
+              </div>
+              <div class="stat-content">
+                <h3>Đơn Hàng</h3>
+                <div class="value">152</div>
+                <div class="trend up">
+                  <i class="fas fa-arrow-up"></i> 12.5% so với tháng trước
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon stat-revenue">
+                <i class="fas fa-money-bill-wave"></i>
+              </div>
+              <div class="stat-content">
+                <h3>Doanh Thu</h3>
+                <div class="value">35.2M đ</div>
+                <div class="trend up">
+                  <i class="fas fa-arrow-up"></i> 8.3% so với tháng trước
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon stat-customers">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="stat-content">
+                <h3>Khách Hàng</h3>
+                <div class="value">85</div>
+                <div class="trend up">
+                  <i class="fas fa-arrow-up"></i> 5.7% so với tháng trước
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon stat-products">
+                <i class="fas fa-coffee"></i>
+              </div>
+              <div class="stat-content">
+                <h3>Sản Phẩm</h3>
+                <div class="value">25</div>
+                <div class="trend down">
+                  <i class="fas fa-arrow-down"></i> 2.1% so với tháng trước
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dashboard Charts -->
+          <div class="dashboard-charts">
+            <div class="chart-container">
+              <div class="chart-header">
+                <h3>Doanh Thu Theo Tháng</h3>
+                <div class="chart-period">
+                  <select id="revenue-period">
+                    <option value="year">Năm 2023</option>
+                    <option value="quarter">Quý 3, 2023</option>
+                    <option value="month">Tháng 9, 2023</option>
+                  </select>
+                </div>
+              </div>
+              <div class="chart-content" id="revenue-chart">
+                <!-- Chart will be rendered here by JS library -->
+              </div>
+            </div>
+
+            <div class="chart-container">
+              <div class="chart-header">
+                <h3>Sản Phẩm Bán Chạy</h3>
+                <div class="chart-period">
+                  <select id="products-period">
+                    <option value="month">Tháng Này</option>
+                    <option value="quarter">Quý Này</option>
+                    <option value="year">Năm Nay</option>
+                  </select>
+                </div>
+              </div>
+              <div class="chart-content" id="products-chart">
+                <!-- Chart will be rendered here by JS library -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Orders -->
+          <div class="recent-orders">
+            <div class="recent-orders-header">
+              <h3>Đơn Hàng Gần Đây</h3>
+              <a href="orders.html" class="view-all">Xem tất cả</a>
+            </div>
+            <table class="orders-table">
+              <thead>
+                <tr>
+                  <th>Mã Đơn Hàng</th>
+                  <th>Khách Hàng</th>
+                  <th>Ngày</th>
+                  <th>Tổng Tiền</th>
+                  <th>Trạng Thái</th>
+                  <th>Thao Tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>#ORD-2023-4851</td>
+                  <td class="customer">
+                    <div class="customer-avatar">
+                      <img src="../img/user.jpg" alt="Customer" />
+                    </div>
+                    <div class="customer-info">
+                      <h4>Nguyễn Văn A</h4>
+                      <p>nguyenvana@gmail.com</p>
+                    </div>
+                  </td>
+                  <td>15/09/2023</td>
+                  <td>285.000 đ</td>
+                  <td>
+                    <span class="order-status status-completed"
+                      >Hoàn thành</span
+                    >
+                  </td>
+                  <td>
+                    <div class="action-btn">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>#ORD-2023-4850</td>
+                  <td class="customer">
+                    <div class="customer-avatar">
+                      <img src="../img/user.jpg" alt="Customer" />
+                    </div>
+                    <div class="customer-info">
+                      <h4>Trần Thị B</h4>
+                      <p>tranthib@gmail.com</p>
+                    </div>
+                  </td>
+                  <td>14/09/2023</td>
+                  <td>350.000 đ</td>
+                  <td>
+                    <span class="order-status status-processing"
+                      >Đang xử lý</span
+                    >
+                  </td>
+                  <td>
+                    <div class="action-btn">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>#ORD-2023-4849</td>
+                  <td class="customer">
+                    <div class="customer-avatar">
+                      <img src="../img/user.jpg" alt="Customer" />
+                    </div>
+                    <div class="customer-info">
+                      <h4>Lê Văn C</h4>
+                      <p>levanc@gmail.com</p>
+                    </div>
+                  </td>
+                  <td>13/09/2023</td>
+                  <td>175.000 đ</td>
+                  <td>
+                    <span class="order-status status-cancelled">Đã hủy</span>
+                  </td>
+                  <td>
+                    <div class="action-btn">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>#ORD-2023-4848</td>
+                  <td class="customer">
+                    <div class="customer-avatar">
+                      <img src="../img/user.jpg" alt="Customer" />
+                    </div>
+                    <div class="customer-info">
+                      <h4>Phạm Thị D</h4>
+                      <p>phamthid@gmail.com</p>
+                    </div>
+                  </td>
+                  <td>12/09/2023</td>
+                  <td>420.000 đ</td>
+                  <td>
+                    <span class="order-status status-completed"
+                      >Hoàn thành</span
+                    >
+                  </td>
+                  <td>
+                    <div class="action-btn">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>#ORD-2023-4847</td>
+                  <td class="customer">
+                    <div class="customer-avatar">
+                      <img src="../img/user.jpg" alt="Customer" />
+                    </div>
+                    <div class="customer-info">
+                      <h4>Hoàng Văn E</h4>
+                      <p>hoangvane@gmail.com</p>
+                    </div>
+                  </td>
+                  <td>10/09/2023</td>
+                  <td>295.000 đ</td>
+                  <td>
+                    <span class="order-status status-pending"
+                      >Chờ thanh toán</span
+                    >
+                  </td>
+                  <td>
+                    <div class="action-btn">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Script Links -->
+    <script src="../js/admin/admin.js"></script>
+    <script src="../js/admin/dashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </body>
+</html>

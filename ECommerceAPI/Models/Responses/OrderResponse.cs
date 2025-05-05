@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace ECommerceAPI.Models.Responses
 {
     public class OrderResponse
@@ -10,8 +13,9 @@ namespace ECommerceAPI.Models.Responses
         public decimal Total { get; set; }
         public string Note { get; set; }
         public DateTime CreatedAt { get; set; }
+        public string PaymentMethod { get; set; }
         public AddressResponse Address { get; set; }
-        public List<OrderItemResponse> Items { get; set; }
+        public List<OrderItemResponse> Items { get; set; } = new List<OrderItemResponse>();
         public UserBasicResponse User { get; set; }
     }
 

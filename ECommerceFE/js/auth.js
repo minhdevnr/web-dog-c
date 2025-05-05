@@ -150,6 +150,12 @@ class Auth {
       
       // Lưu token và thông tin người dùng vào localStorage
       localStorage.setItem('token', data.Token);
+      
+      // Lưu RefreshToken nếu có
+      if (data.RefreshToken) {
+        localStorage.setItem('refreshToken', data.RefreshToken);
+      }
+      
       localStorage.setItem('user', JSON.stringify({
         id: data.Id,
         username: data.Username,
@@ -273,19 +279,20 @@ class Auth {
    * Đăng xuất người dùng
    */
   static logout() {
-    // Xóa token và thông tin người dùng
+    // Xóa token trong localStorage
     localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
     
-    // Hiển thị thông báo
-    this.showSuccess('Đăng xuất thành công!');
+    // Hiển thị thông báo đăng xuất thành công
+    this.showSuccess('Đã đăng xuất');
     
     // Cập nhật UI
     this.updateUI();
     
-    // Chuyển hướng về trang chủ
+    // Chuyển hướng về trang đăng nhập
     setTimeout(() => {
-      window.location.href = 'index.html';
+      window.location.href = '/ECommerceFE/login.html';
     }, 1000);
   }
 
@@ -592,7 +599,82 @@ class Auth {
    * @returns {boolean} Trạng thái đăng nhập
    */
   static isLoggedIn() {
-    return !!localStorage.getItem('token');
+    const token = localStorage.getItem('token');
+    if (!token) return false;
+    
+    // Kiểm tra token có hợp lệ không
+    if (this.isTokenExpired(token)) {
+      // Nếu token hết hạn, thử refresh token
+      this.refreshToken()
+        .catch(() => {
+          // Nếu refresh token thất bại, đăng xuất
+          this.logout();
+        });
+      return false;
+    }
+    
+    return true;
+  }
+
+  /**
+   * Kiểm tra token đã hết hạn chưa
+   * @param {string} token - JWT token
+   * @returns {boolean} true nếu token đã hết hạn
+   */
+  static isTokenExpired(token) {
+    try {
+      // Decode JWT token
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      
+      const payload = JSON.parse(jsonPayload);
+      const expirationTime = payload.exp * 1000; // Chuyển từ giây sang mili giây
+      
+      // Trả về true nếu thời gian hiệu lực của token đã qua
+      return Date.now() >= expirationTime;
+    } catch (error) {
+      console.error('Lỗi khi kiểm tra token:', error);
+      return true; // Nếu có lỗi, coi như token hết hạn
+    }
+  }
+
+  /**
+   * Gửi yêu cầu refresh token
+   * @returns {Promise} Promise kết quả refresh token
+   */
+  static async refreshToken() {
+    try {
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (!refreshToken) {
+        throw new Error('Không có refresh token');
+      }
+      
+      const response = await fetch(`${API_URL}/auth/refresh-token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ refreshToken })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Refresh token thất bại');
+      }
+      
+      const data = await response.json();
+      
+      // Lưu token mới
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('refreshToken', data.refreshToken);
+      
+      return data;
+    } catch (error) {
+      console.error('Lỗi refresh token:', error);
+      throw error;
+    }
   }
 
   /**

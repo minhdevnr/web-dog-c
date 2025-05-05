@@ -108,14 +108,22 @@ const API_CONFIG = {
         RESET_PASSWORD: '/api/auth/reset-password',
         PROFILE: '/api/user/profile',
         CATEGORIES: '/api/category',
+        PAYMENTS: '/api/payment',
+        DASHBOARD: '/api/dashboard',
         PING: '/api/ping'
     },
     TIMEOUT: 30000, // 30 giây timeout cho các request
-    RETRY_ATTEMPTS: 3 // Số lần thử lại nếu request thất bại
+    RETRY_ATTEMPTS: 3, // Số lần thử lại nếu request thất bại
+    NEWS_PAGINATION: {
+        pageSize: 6,        // Số tin tức trên một trang
+        maxPagesToShow: 5   // Số trang tối đa hiển thị trong điều hướng phân trang
+    }
 };
 
+// Đảm bảo API_CONFIG luôn có sẵn ngay cả khi file chưa được tải hoàn toàn
+window.API_CONFIG = window.API_CONFIG || API_CONFIG;
+
 // Đặt vào window object để các file khác có thể sử dụng không cần import
-window.API_CONFIG = API_CONFIG;
 window.formatCurrency = formatCurrency;
 window.PAGINATION_CONFIG = PAGINATION_CONFIG;
 window.IMAGE_CONFIG = IMAGE_CONFIG;

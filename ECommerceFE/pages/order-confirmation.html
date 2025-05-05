@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Xác nhận đơn hàng - Web Dog C</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/checkout.css" />
+    <link rel="stylesheet" href="../css/order-confirmation.css" />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <div class="logo">
+            <a href="../index.html">
+              <img src="../images/logo.png" alt="Web Dog C Logo" />
+            </a>
+          </div>
+          <nav>
+            <ul>
+              <li><a href="../index.html">Trang chủ</a></li>
+              <li><a href="../products.html">Sản phẩm</a></li>
+              <li><a href="../about-us.html">Giới thiệu</a></li>
+              <li><a href="../contact.html">Liên hệ</a></li>
+            </ul>
+          </nav>
+          <div class="header-actions">
+            <a href="../index-cart.html" class="cart-icon">
+              <img src="../images/cart.svg" alt="Giỏ hàng" />
+              <span class="cart-count" id="cart-count">0</span>
+            </a>
+            <a href="../login.html" class="user-icon" id="user-icon">
+              <img src="../images/user.svg" alt="Tài khoản" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+        <div class="order-confirmation">
+          <div class="confirmation-header" id="confirmation-header">
+            <h1>Đặt hàng thành công!</h1>
+            <p>Cảm ơn bạn đã đặt hàng tại Web Dog C</p>
+          </div>
+
+          <div class="order-details">
+            <h2>Thông tin đơn hàng</h2>
+            <div class="order-info">
+              <div class="info-row">
+                <div class="info-label">Mã đơn hàng:</div>
+                <div class="info-value" id="order-id"></div>
+              </div>
+              <div class="info-row">
+                <div class="info-label">Trạng thái:</div>
+                <div class="info-value" id="order-status"></div>
+              </div>
+              <div class="info-row">
+                <div class="info-label">Phương thức thanh toán:</div>
+                <div class="info-value" id="payment-method"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="order-summary">
+            <h2>Tóm tắt đơn hàng</h2>
+            <div id="order-items" class="order-items">
+              <!-- Đây là nơi hiển thị các sản phẩm đã đặt -->
+            </div>
+
+            <div class="order-totals">
+              <div class="total-row">
+                <div class="total-label">Tổng tiền hàng:</div>
+                <div class="total-value" id="subtotal"></div>
+              </div>
+              <div class="total-row">
+                <div class="total-label">Phí vận chuyển:</div>
+                <div class="total-value">0₫</div>
+              </div>
+              <div class="total-row grand-total">
+                <div class="total-label">Tổng thanh toán:</div>
+                <div class="total-value" id="total-amount"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="next-actions">
+            <a href="../index.html" class="btn btn-primary">Tiếp tục mua sắm</a>
+            <a href="../pages/order-tracking.html" class="btn btn-outline"
+              >Theo dõi đơn hàng</a
+            >
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-column">
+            <h3>Web Dog C</h3>
+            <p>Cung cấp các sản phẩm chất lượng cao cho thú cưng của bạn</p>
+          </div>
+          <div class="footer-column">
+            <h3>Liên kết</h3>
+            <ul>
+              <li><a href="../index.html">Trang chủ</a></li>
+              <li><a href="../products.html">Sản phẩm</a></li>
+              <li><a href="../about-us.html">Giới thiệu</a></li>
+              <li><a href="../contact.html">Liên hệ</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h3>Liên hệ</h3>
+            <p>Email: info@webdogc.com</p>
+            <p>Điện thoại: 0123 456 789</p>
+            <p>Địa chỉ: 123 Đường ABC, Quận XYZ, TP.HCM</p>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2023 Web Dog C. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/cart.js"></script>
+    <script src="../js/order-confirmation.js"></script>
+  </body>
+</html>

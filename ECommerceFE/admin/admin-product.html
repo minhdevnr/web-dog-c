@@ -123,6 +123,7 @@
           <div class="modal-body">
             <form id="productForm">
               <input type="hidden" id="productId" />
+              <input type="hidden" id="currentImageUrl" />
               <div class="row mb-3">
                 <div class="col-md-6">
                   <label class="form-label">Tên sản phẩm</label>
@@ -188,13 +189,16 @@
               </div>
               <div class="row mb-3">
                 <div class="col-md-6">
-                  <label class="form-label">Hình ảnh</label>
+                  <label class="form-label" id="imageLabel">Hình ảnh</label>
                   <input
                     type="file"
                     class="form-control"
                     id="image"
                     accept="image/*"
                   />
+                  <div class="form-text" id="imageHelp">
+                    Vui lòng chọn ảnh cho sản phẩm.
+                  </div>
                   <div id="imagePreview" class="mt-2"></div>
                 </div>
                 <div class="col-md-6">

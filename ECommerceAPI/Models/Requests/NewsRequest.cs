@@ -30,7 +30,7 @@ namespace ECommerceAPI.Models.Requests
         /// <summary>
         /// File hình ảnh cho tin tức
         /// </summary>
-        public IFormFile Image { get; set; }
+        public IFormFile? Image { get; set; }
 
         /// <summary>
         /// Danh mục tin tức

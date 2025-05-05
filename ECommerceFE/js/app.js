@@ -15,15 +15,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Hàm khởi tạo
     function init() {
         setupEventListeners();
-        loadProducts();
-        loadCartFromStorage();
-        updateCartCount();
         
-        // Kiểm tra và tải tin tức nếu có
+        // Kiểm tra và tải tin tức trước
         const newsContainer = document.querySelector('#news-container');
         if (newsContainer) {
             loadNews();
         }
+        
+        // Sau đó tải sản phẩm và giỏ hàng
+        loadProducts();
+        loadCartFromStorage();
+        updateCartCount();
     }
 
     // Thiết lập trình lắng nghe sự kiện
@@ -352,25 +354,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // Quản lý giỏ hàng
     // ----------------
     
-    // Biến lưu trữ giỏ hàng
-    let cart = [];
+    let cartItems = [];
 
     // Thêm sản phẩm vào giỏ hàng
     function addToCart(product, quantity = 1) {
         // Kiểm tra sản phẩm đã có trong giỏ hàng chưa
-        const existingItem = cart.find(item => item.id === product.id);
+        const existingItem = cartItems.find(item => item.id === product.id);
         
         if (existingItem) {
             // Nếu đã có, tăng số lượng
-            existingItem.Quantity += quantity;
+            existingItem.quantity += quantity;
         } else {
             // Nếu chưa có, thêm mới
-            cart.push({
-                Id: product.Id,
-                Name: product.Name,
-                Price: product.Price,
-                ImageUrl: product.ImageUrl,
-                Quantity: quantity
+            cartItems.push({
+                id: product.Id,
+                name: product.Name,
+                price: product.Price,
+                image: product.ImageUrl,
+                quantity: quantity
             });
         }
 
@@ -384,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Xóa sản phẩm khỏi giỏ hàng
     function removeFromCart(productId) {
         // Lọc ra những sản phẩm khác với sản phẩm cần xóa
-        cart = cart.filter(item => item.Id !== productId);
+        cartItems = cartItems.filter(item => item.id !== productId);
         
         // Cập nhật giỏ hàng
         updateCartUI();
@@ -395,10 +396,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Cập nhật số lượng sản phẩm trong giỏ hàng
     function updateCartItemQuantity(productId, quantity) {
-        const item = cart.find(item => item.Id === productId);
+        const item = cartItems.find(item => item.id === productId);
         
         if (item) {
-            item.Quantity = quantity;
+            item.quantity = quantity;
             
             // Nếu số lượng = 0, xóa sản phẩm khỏi giỏ hàng
             if (quantity <= 0) {
@@ -415,66 +416,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Cập nhật UI giỏ hàng
     function updateCartUI() {
-        console.log('Cập nhật UI giỏ hàng trong app.js');
-        
-        // Sử dụng phương thức updateCartCount của Cart nếu có
-        if (window.Cart && typeof window.Cart.updateCartCount === 'function') {
-            window.Cart.updateCartCount();
-        } else {
-            // Fallback nếu Cart chưa được tải
-            updateCartCount(0);
+        // Cập nhật giỏ hàng trong header (sử dụng header-cart-items)
+        const headerCartItems = document.getElementById('header-cart-items');
+        // Cập nhật giỏ hàng trong trang cart (sử dụng cart-items)
+        const pageCartItems = document.getElementById('cart-items');
+
+        // Cập nhật dropdown giỏ hàng trong header
+        if (headerCartItems) {
+            updateCartDropdown(headerCartItems);
         }
-        
-        // Cập nhật dropdown giỏ hàng
-        updateCartDropdown();
+
+        // Cập nhật trang giỏ hàng nếu đang mở
+        if (pageCartItems && window.location.href.includes('cart.html')) {
+            updateCartPage(pageCartItems);
+        }
+
+        // Cập nhật số lượng
+        updateCartCount();
     }
 
-    // Cập nhật số lượng sản phẩm hiển thị trên biểu tượng giỏ hàng
+    // Cập nhật số lượng sản phẩm trong giỏ hàng
     function updateCartCount(retryCount = 0) {
-        // Tránh lặp vô hạn với Cart.updateCartCount
-        if (window._isUpdatingCartCount) {
-            console.log('Đã đang cập nhật Cart, bỏ qua');
-            return;
-        }
+        const cartCountElements = document.querySelectorAll('.cart-count, #cart-count');
+        const totalItems = cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
         
-        // Đánh dấu đang cập nhật
-        window._isUpdatingCartCount = true;
-        
-        try {
-            // Sử dụng phương thức của Cart nếu có
-            if (window.Cart && typeof window.Cart.updateCartCount === 'function' && 
-                window.Cart.updateCartCount !== window.updateCartCount) {
-                window.Cart.updateCartCount(retryCount);
-                window._isUpdatingCartCount = false;
-                return;
-            }
-            
-            // Fallback: thực hiện cập nhật theo cách cũ
-            const cartCount = document.getElementById('cart-count');
-            
-            if (cartCount) {
-                const totalItems = cart.reduce((total, item) => total + item.Quantity, 0);
-                cartCount.textContent = totalItems;
+        if (cartCountElements.length > 0) {
+            cartCountElements.forEach(element => {
+                element.textContent = totalItems;
                 
-                // Hiển thị/ẩn số lượng
-                if (totalItems > 0) {
-                    cartCount.style.display = 'flex';
-                } else {
-                    cartCount.style.display = 'none';
-                }
-            } else if (retryCount < 5) {
-                // Thử lại sau nếu phần tử chưa được tải, tối đa 5 lần
-                setTimeout(() => updateCartCount(retryCount + 1), 200);
-            }
-        } finally {
-            // Đảm bảo bỏ cờ đánh dấu
-            window._isUpdatingCartCount = false;
+                // Hiển thị/ẩn số lượng dựa trên số lượng sản phẩm
+                element.style.display = totalItems > 0 ? 'flex' : 'none';
+            });
+        } else if (retryCount < 5) {
+            // Thử lại nếu không tìm thấy phần tử, tối đa 5 lần
+            setTimeout(() => updateCartCount(retryCount + 1), 300);
         }
     }
 
     // Lưu giỏ hàng vào localStorage
     function saveCartToStorage() {
-        localStorage.setItem('lhCoffeeCart', JSON.stringify(cart));
+        localStorage.setItem('lhCoffeeCart', JSON.stringify(cartItems));
     }
 
     // Tải giỏ hàng từ localStorage
@@ -482,7 +463,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const savedCart = localStorage.getItem('lhCoffeeCart');
         
         if (savedCart) {
-            cart = JSON.parse(savedCart);
+            cartItems = JSON.parse(savedCart);
             updateCartUI();
         }
     }
@@ -551,43 +532,99 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Tải tin tức
     function loadNews() {
-        
         const newsContainer = document.querySelector('#news-container');
         if (!newsContainer) return;
     
-        // Xóa nội dung hiện tại
-        newsContainer.innerHTML = '';
-    
-        // Thêm tin tức vào container
-        news.forEach(item => {
-            const newsElement = createNewsElement(item);
-            newsContainer.appendChild(newsElement);
+        // Hiển thị loading
+        newsContainer.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+        
+        // Kiểm tra API_CONFIG đã được định nghĩa chưa
+        if (typeof API_CONFIG === 'undefined' || !API_CONFIG.BASE_URL || !API_CONFIG.ENDPOINTS || !API_CONFIG.ENDPOINTS.NEWS) {
+            console.error('API_CONFIG không được định nghĩa hoặc thiếu cấu hình cần thiết');
+            // Sử dụng dữ liệu mẫu nếu API_CONFIG không tồn tại
+            newsContainer.innerHTML = '';
+            news.forEach(item => {
+                const newsElement = createNewsElement(item);
+                newsContainer.appendChild(newsElement);
+            });
+            return;
+        }
+        
+        // Xây dựng URL API và tham số
+        const apiUrl = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.NEWS}`;
+        const params = new URLSearchParams({
+            pageNumber: 1,
+            pageSize: 3,
+            sortBy: 'CreatedAt',
+            desc: true
         });
+        
+        // Gọi API để lấy danh sách tin tức
+        fetch(`${apiUrl}?${params.toString()}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Không thể kết nối đến máy chủ');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Xóa loading
+                newsContainer.innerHTML = '';
+                
+                if (data.items && data.items.length > 0) {
+                    // Thêm tin tức vào container
+                    data.items.forEach(item => {
+                        const newsElement = createNewsElement(item);
+                        newsContainer.appendChild(newsElement);
+                    });
+                } else {
+                    // Hiển thị thông báo không có tin tức
+                    newsContainer.innerHTML = '<div class="no-news">Không có tin tức mới</div>';
+                }
+            })
+            .catch(error => {
+                console.error('Lỗi khi tải tin tức:', error);
+                
+                // Sử dụng dữ liệu mẫu nếu không thể kết nối đến API
+                newsContainer.innerHTML = '';
+                news.forEach(item => {
+                    const newsElement = createNewsElement(item);
+                    newsContainer.appendChild(newsElement);
+                });
+            });
     }
     
     // Tạo phần tử tin tức
     function createNewsElement(item) {
         const newsBox = document.createElement('div');
         newsBox.classList.add('news-box');
-        newsBox.setAttribute('data-news-id', item.id);
+        newsBox.setAttribute('data-news-id', item.id || item.Id);
         
         // Định dạng ngày tháng
-        const date = new Date(item.date);
+        const dateString = item.createdAt || item.date;
+        const date = new Date(dateString);
         const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
     
+        // Lấy các thuộc tính phù hợp dựa vào nguồn dữ liệu (API hoặc local)
+        const title = item.title || item.Title || '';
+        const imageUrl = item.imageUrl || item.image || item.ImageUrl || '';
+        const author = item.author || item.Author || 'Admin';
+        const content = item.content || item.Content || '';
+        const id = item.id || item.Id || 0;
+        
         // HTML cho tin tức
         newsBox.innerHTML = `
             <div class="news-image">
-                <img src="${item.ImageUrl}" alt="${item.Title}">
+                <img src="${imageUrl}" alt="${title}">
             </div>
             <div class="news-content">
-                <h3>${item.Title}</h3>
+                <h3>${title}</h3>
                 <div class="news-info">
                     <span class="news-date"><i class="fas fa-calendar"></i> ${formattedDate}</span>
-                    <span class="news-author"><i class="fas fa-user"></i> ${item.Author}</span>
+                    <span class="news-author"><i class="fas fa-user"></i> ${author}</span>
                 </div>
-                <p class="news-summary">${item.Content.substring(0, 150)}...</p>
-                <a href="news-detail.html?id=${item.Id}" class="btn">Đọc tiếp</a>
+                <p class="news-summary">${content.substring(0, 150)}...</p>
+                <a href="news-detail.html?id=${id}" class="btn">Đọc tiếp</a>
             </div>
         `;
     
@@ -604,44 +641,62 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Cập nhật dropdown giỏ hàng
-    function updateCartDropdown() {
-        console.log('Cập nhật dropdown giỏ hàng trong app.js');
+    function updateCartDropdown(headerCartItems) {
+        if (!headerCartItems) {
+            headerCartItems = document.getElementById('header-cart-items');
+            if (!headerCartItems) return;
+        }
         
-        // Sử dụng phương thức updateCartDropdown của Cart nếu có
-        if (window.Cart && typeof window.Cart.updateCartDropdown === 'function') {
-            window.Cart.updateCartDropdown();
+        headerCartItems.innerHTML = '';
+        
+        if (cartItems.length === 0) {
+            // Hiển thị thông báo giỏ hàng trống
+            headerCartItems.innerHTML = `
+                <div class="cart-empty">
+                    <i class="fas fa-shopping-cart"></i>
+                    <p>Giỏ hàng trống</p>
+                </div>
+            `;
             return;
         }
         
-        // Fallback nếu Cart chưa được tải
-        const cartDropdown = document.querySelector('.cart-dropdown');
-        if (!cartDropdown) return;
+        // Hiển thị tối đa 3 sản phẩm trong dropdown
+        const itemsToShow = cartItems.slice(0, 3);
         
-        const cartItemsEl = cartDropdown.querySelector('.cart-items');
-        if (!cartItemsEl) return;
+        itemsToShow.forEach(item => {
+            const cartItem = document.createElement('div');
+            cartItem.className = 'cart-item';
+            cartItem.innerHTML = `
+                <span class="fa fa-times" data-id="${item.id}"></span>
+                <img src="${item.image}" alt="${item.name}">
+                <div class="content">
+                    <h3>${item.name}</h3>
+                    <div class="price">${formatCurrency(item.price)} x ${item.quantity || 1}</div>
+                </div>
+            `;
+            
+            headerCartItems.appendChild(cartItem);
+            
+            // Thêm sự kiện xóa sản phẩm
+            const removeBtn = cartItem.querySelector('.fa-times');
+            if (removeBtn) {
+                removeBtn.addEventListener('click', e => {
+                    e.stopPropagation();
+                    const productId = e.target.getAttribute('data-id');
+                    if (productId) {
+                        removeFromCart(productId);
+                        showNotification('Đã xóa sản phẩm khỏi giỏ hàng', 'success');
+                    }
+                });
+            }
+        });
         
-        // Xóa các mục hiện tại
-        cartItemsEl.innerHTML = '';
-        
-        // Thêm các mục từ giỏ hàng
-        if (cart.length === 0) {
-            cartItemsEl.innerHTML = '<div class="empty-cart">Giỏ hàng trống</div>';
-        } else {
-            cart.forEach(item => {
-                const cartItem = document.createElement('div');
-                cartItem.classList.add('cart-item');
-                
-                cartItem.innerHTML = `
-                    <img src="${item.ImageUrl || 'img/default-product.jpg'}" alt="${item.Name}">
-                    <div class="content">
-                        <h3>${item.Name}</h3>
-                        <div class="price">${formatCurrency(item.Price)} x ${item.Quantity}</div>
-                    </div>
-                    <span class="remove-item" data-id="${item.Id}">&times;</span>
-                `;
-                
-                cartItemsEl.appendChild(cartItem);
-            });
+        // Thêm thông báo nếu có nhiều hơn 3 sản phẩm
+        if (cartItems.length > 3) {
+            const moreItems = document.createElement('div');
+            moreItems.className = 'more-items';
+            moreItems.textContent = `+ ${cartItems.length - 3} sản phẩm khác`;
+            headerCartItems.appendChild(moreItems);
         }
     }
 

@@ -77,6 +77,7 @@ class ProductManager {
     categoryFilters.forEach(filter => {
       filter.addEventListener('click', (e) => {
         e.preventDefault();
+        debugger;
         const category = filter.getAttribute('data-category');
         this.filterProductsByCategory(category);
       });
@@ -229,6 +230,7 @@ class ProductManager {
    * @param {string} keyword - Từ khóa tìm kiếm
    */
   static displaySearchResults(products, keyword) {
+    debugger;
     // Tạo overlay chứa kết quả tìm kiếm
     let searchResultsContainer = document.getElementById('search-results-container');
     if (!searchResultsContainer) {
@@ -520,6 +522,7 @@ class ProductManager {
    * @param {string} category - Danh mục sản phẩm
    */
   static async filterProductsByCategory(category) {
+    debugger;
     const productsContainer = document.querySelector('#products-container');
     if (!productsContainer) return;
 
@@ -567,6 +570,7 @@ class ProductManager {
    * @param {Element} container - Container để render sản phẩm
    */
   static renderProductsToContainer(products, container) {
+    debugger;
     // Xóa tất cả nội dung cũ
     container.innerHTML = '';
     
@@ -598,15 +602,16 @@ class ProductManager {
               // Hiển thị tất cả sản phẩm
               this.renderProductItems(products.Items, container);
             } else {
+              debugger;
               // Lọc sản phẩm theo danh mục
-              const filteredProducts = products.Items.filter(p => p.Category === category);
+              const filteredProducts = products.Items.filter(p => p.Category.Name === category);
               this.renderProductItems(filteredProducts, container);
             }
           });
         });
       }
     }
-    
+    debugger;
     // Hiển thị sản phẩm
     this.renderProductItems(products.Items, container);
   }
@@ -617,8 +622,9 @@ class ProductManager {
    * @returns {Array} Danh sách các danh mục duy nhất
    */
   static getUniqueCategories(products) {
+    debugger;
     const categories = products
-      .map(p => p.Category)
+      .map(p => p.Category.Name)
       .filter(cat => cat); // Lọc bỏ các giá trị null hoặc undefined
       
     // Lọc các giá trị duy nhất
@@ -631,6 +637,7 @@ class ProductManager {
    * @param {Element} container - Container để hiển thị sản phẩm
    */
   static renderProductItems(products, container) {
+    debugger;
     // Xóa tất cả nội dung cũ
     container.innerHTML = '';
     

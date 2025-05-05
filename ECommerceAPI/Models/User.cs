@@ -57,6 +57,8 @@ namespace ECommerceAPI.Models
 
         // Navigation property for refresh tokens
         public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+        public string FullName { get; internal set; }
+        public bool IsGuest { get; internal set; }
     }
 
   

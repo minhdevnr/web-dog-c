@@ -189,11 +189,14 @@ class AdminProductManager {
     }
 
     openProductModal(product = null) {
-        
+        debugger;
         const modal = $('#productModal');
         const form = $('#productForm')[0];
         form.reset();
         $('#imagePreview').empty();
+        
+        // Reset trường ẩn cho URL ảnh cũ
+        $('#currentImageUrl').val('');
 
         // Thiết lập giá trị mặc định cho ngày hết hạn (6 tháng kể từ hiện tại)
         const defaultExpiryDate = new Date();
@@ -203,6 +206,10 @@ class AdminProductManager {
         // Thiết lập giá trị mặc định cho xuất xứ
         $('#origin').val('Việt Nam');
 
+        // Hiển thị hoặc ẩn preview ảnh
+        const imagePreviewContainer = $('#imagePreviewContainer');
+        const imageInput = $('#image');
+        
         if (product) {
             console.log('Editing product:', product);
             // Debug thông tin hình ảnh
@@ -227,13 +234,35 @@ class AdminProductManager {
                 $('#expiryDate').val(expiryDate.toISOString().split('T')[0]);
             }
             
-            // Xử lý hình ảnh - sử dụng trực tiếp URL từ API
+            // Xử lý hình ảnh - hiển thị ảnh hiện tại
             if (product.ImageUrl) {
-                $('#imagePreview').html(`<img src="${product.ImageUrl}" class="img-thumbnail" style="max-height: 200px;" onerror="this.src='../images/default-product.jpg'">`);
+                // Lưu URL ảnh hiện tại vào trường ẩn
+                $('#currentImageUrl').val(product.ImageUrl);
+                
+                $('#imagePreview').html(`
+                    <div class="mb-2">
+                        <img src="${product.ImageUrl}" class="img-thumbnail" style="max-height: 200px;" onerror="this.src='../images/default-product.jpg'">
+                        <p class="text-muted mt-1">Ảnh hiện tại. Tải lên ảnh mới nếu muốn thay đổi.</p>
+                    </div>
+                `);
+                
+                // Đặt thuộc tính required cho input file là false khi chỉnh sửa
+                imageInput.prop('required', false);
             }
+            
+            // Hiển thị thông báo về việc thay đổi ảnh
+            $('#imageHelp').text('Để giữ ảnh hiện tại, không cần chọn ảnh mới.');
+            $('#imageLabel').text('Thay đổi ảnh (nếu muốn)');
         } else {
             $('#productModalTitle').text('Thêm Sản phẩm');
             $('#productId').val('');
+            
+            // Đặt thuộc tính required cho input file là true khi thêm mới
+            imageInput.prop('required', true);
+            
+            // Cập nhật text cho label và help text
+            $('#imageHelp').text('Vui lòng chọn ảnh cho sản phẩm.');
+            $('#imageLabel').text('Ảnh sản phẩm');
         }
 
         modal.modal('show');
@@ -270,22 +299,27 @@ class AdminProductManager {
         const expiryDate = expiryDateValue ? new Date(expiryDateValue) : new Date();
         formData.append('ExpiryDate', expiryDate.toISOString());
 
-        // Xử lý file hình ảnh
+        const productId = $('#productId').val();
+        
+        // Xử lý file hình ảnh - sử dụng input#image trực tiếp
         const imageFile = $('#image')[0].files[0];
+        const currentImageUrl = $('#currentImageUrl').val();
+        
         if (imageFile) {
-            // Sử dụng tên trường Image phù hợp với model request
+            // Nếu có file mới, tải lên file mới
             formData.append('Image', imageFile);
-        } else if ($('#productId').val()) {
-            // Nếu là cập nhật sản phẩm và không có ảnh mới, giữ nguyên ảnh cũ
-            // Không cần làm gì, API sẽ giữ ảnh cũ
-        } else {
+            console.log('Adding new image file to request:', imageFile.name);
+        } else if (!productId) {
             // Nếu là sản phẩm mới và không có ảnh
             this.showToast('Vui lòng chọn ảnh cho sản phẩm', 'error');
             return;
+        } else if (currentImageUrl) {
+            // Nếu là cập nhật sản phẩm và có ảnh cũ, gửi URL ảnh cũ
+            formData.append('ImageUrl', currentImageUrl);
+            console.log('Using existing image URL:', currentImageUrl);
         }
 
         try {
-            const productId = $('#productId').val();
             const url = productId ? `${this.API_BASE.PRODUCTS}/${productId}` : this.API_BASE.PRODUCTS;
             const method = productId ? 'PUT' : 'POST';
 

@@ -512,17 +512,44 @@ class UI {
   }
   
   /**
-   * Cập nhật số lượng sản phẩm trong giỏ hàng
+   * Cập nhật số lượng giỏ hàng
    */
   static updateCartCount() {
+    // Lấy tất cả các phần tử hiển thị số lượng
+    const cartCountElements = document.querySelectorAll('.cart-count, #cart-count');
     
-    debugger
-
-    const cartCount = document.querySelector('.cart-count');
-    if (cartCount) {
-      const cartItems = document.querySelectorAll('.cart-item');
-      cartCount.textContent = cartItems.length;
+    if (cartCountElements.length === 0) {
+      console.warn('Không tìm thấy phần tử hiển thị số lượng giỏ hàng');
+      return;
     }
+    
+    // Lấy dữ liệu giỏ hàng từ localStorage
+    let cartItems = [];
+    try {
+      const cartData = localStorage.getItem('cart');
+      if (cartData) {
+        cartItems = JSON.parse(cartData);
+      }
+    } catch (e) {
+      console.error('Lỗi khi lấy dữ liệu giỏ hàng:', e);
+    }
+    
+    // Tính tổng số lượng
+    const totalQuantity = Array.isArray(cartItems) 
+      ? cartItems.reduce((total, item) => total + (item.quantity || item.Quantity || 1), 0)
+      : 0;
+    
+    // Cập nhật tất cả các phần tử hiển thị số lượng
+    cartCountElements.forEach(element => {
+      element.textContent = totalQuantity;
+      
+      // Hiển thị/ẩn tùy thuộc vào số lượng
+      if (totalQuantity > 0) {
+        element.style.display = 'flex';
+      } else {
+        element.style.display = 'none';
+      }
+    });
   }
 
   /**
@@ -1321,17 +1348,6 @@ class UI {
     const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
     const totalAmount = cartItems.reduce((sum, item) => sum + (item.Price * item.Quantity), 0);
     cartTotal.textContent = this.formatCurrency(totalAmount);
-  }
-  
-  updateCartCount() {
-     
-    const cartCount = document.querySelector('.cart-count');
-    if (!cartCount) return;
-    
-    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-    const totalQuantity = cartItems.reduce((sum, item) => sum + item.Quantity, 0);
-    cartCount.textContent = totalQuantity;
-    cartCount.style.display = totalQuantity > 0 ? 'flex' : 'none';
   }
   
   formatCurrency(amount) {

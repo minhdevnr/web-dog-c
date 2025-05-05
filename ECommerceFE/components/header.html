@@ -178,12 +178,13 @@
         padding: 1.5rem;
         overflow-y: auto;
         display: none;
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.2);
         z-index: 1001;
-        border-radius: 0.5rem;
+        border-radius: 0.8rem;
         scrollbar-width: thin;
         scrollbar-color: var(--main-color) #f5f5f5;
         scroll-behavior: smooth;
+        transition: all 0.3s ease;
       }
 
       /* Định dạng thanh cuộn cho Chrome, Safari */
@@ -203,21 +204,42 @@
 
       .cart-item-container.active {
         display: block !important;
+        animation: fadeIn 0.3s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       /* Thông báo giỏ hàng trống */
       .cart-empty {
         padding: 2rem 0;
         text-align: center;
-        color: #888;
+        color: #777;
         font-size: 1.6rem;
+        border-radius: 0.8rem;
+        background: #f9f9f9;
+        margin: 1rem 0;
       }
 
       .cart-empty i {
         font-size: 4rem;
-        color: #ddd;
+        color: #ccc;
         margin-bottom: 1rem;
         display: block;
+      }
+
+      .cart-empty p {
+        margin-top: 1rem;
+        font-size: 1.4rem;
+        color: #888;
       }
 
       /* Phần header giỏ hàng */
@@ -229,6 +251,7 @@
         padding-bottom: 1rem;
         border-bottom: 0.1rem solid #eee;
         text-align: center;
+        position: relative;
       }
 
       /* Phần footer giỏ hàng */
@@ -253,61 +276,88 @@
 
       .cart-item-container .cart-item {
         position: relative;
-        margin: 2rem 0;
+        margin: 1.5rem 0;
         display: flex;
         align-items: center;
         gap: 1.5rem;
+        background-color: #f9f9f9;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        transition: all 0.3s ease;
+      }
+
+      .cart-item-container .cart-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
       }
 
       .cart-item-container .cart-item .fa-times {
         position: absolute;
         top: 1rem;
         right: 1rem;
-        font-size: 2rem;
+        font-size: 1.6rem;
         cursor: pointer;
-        color: var(--black);
+        color: #999;
+        transition: all 0.2s ease;
       }
 
       .cart-item-container .cart-item .fa-times:hover {
-        color: var(--main-color);
+        color: #e74c3c;
+        transform: scale(1.1);
       }
 
       .cart-item-container .cart-item img {
         height: 7rem;
         width: 7rem;
         object-fit: cover;
+        border-radius: 0.5rem;
+        border: 1px solid #eee;
+      }
+
+      .cart-item-container .cart-item .content {
+        flex: 1;
       }
 
       .cart-item-container .cart-item .content h3 {
-        font-size: 2rem;
+        font-size: 1.6rem;
         color: var(--black);
         padding-bottom: 0.5rem;
+        font-weight: bold;
+        margin-right: 2rem;
       }
 
       .cart-item-container .cart-item .content .price {
         font-size: 1.5rem;
         color: var(--main-color);
+        font-weight: bold;
       }
 
       .cart-item-container .btn {
         width: 100%;
         text-align: center;
-        margin-bottom: 2rem;
-      }
-
-      .btn {
-        display: inline-block;
-        padding: 0.9rem 3rem;
-        font-size: 1.7rem;
-        color: #fff;
+        padding: 1.2rem;
+        font-size: 1.6rem;
+        font-weight: bold;
         background: var(--main-color);
-        cursor: pointer;
+        color: #fff;
         border-radius: 0.5rem;
-        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+        transition: all 0.3s ease;
+        display: inline-block;
+        cursor: pointer;
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
       }
 
-      .btn:hover {
-        letter-spacing: 0.2rem;
+      .cart-item-container .btn:hover {
+        background: #a67b5b;
+        letter-spacing: 0.1rem;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+      }
+
+      .cart-item-container .btn:active {
+        transform: translateY(1px);
+        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
       }
 
       /* User profile dropdown styles */
@@ -541,6 +591,22 @@
           max-height: 50vh;
         }
       }
+
+      /* Style cho thông báo nhiều sản phẩm khác */
+      .more-items-message {
+        text-align: center;
+        padding: 0.8rem;
+        margin: 1rem 0;
+        background: #f5f5f5;
+        border-radius: 0.5rem;
+        font-size: 1.4rem;
+        color: #777;
+        border-left: 3px solid var(--main-color);
+      }
+
+      .more-items-message p {
+        margin: 0;
+      }
     </style>
   </head>
   <body>
@@ -587,16 +653,19 @@
 
       <div class="cart-item-container" id="cart-container">
         <div class="cart-heading">Giỏ Hàng</div>
-        <div id="cart-items">
-          <!-- Cart items will be dynamically added here -->
-          <div class="cart-empty empty-cart-message">Giỏ hàng trống</div>
+        <div id="header-cart-items">
+          <div class="cart-empty empty-cart-message">
+            <i class="fas fa-shopping-cart"></i>
+            <p>Giỏ hàng của bạn đang trống</p>
+          </div>
         </div>
         <div class="cart-footer">
           <div class="cart-total">
             Tổng: <span class="cart-total-price" id="cartTotalAmount">0đ</span>
           </div>
-          <a href="index-cart.html" class="btn">Xem Giỏ Hàng</a>
-          <a href="index-checkout.html" class="btn">Thanh Toán</a>
+          <a href="index-cart.html" class="btn">
+            <i class="fas fa-shopping-bag"></i> Xem Giỏ Hàng
+          </a>
         </div>
       </div>
 
@@ -913,7 +982,7 @@
         function loadCart() {
           try {
             const cart = JSON.parse(localStorage.getItem("cart")) || [];
-            const cartItems = document.getElementById("cart-items");
+            const cartItems = document.getElementById("header-cart-items");
 
             if (!cartItems) return;
 

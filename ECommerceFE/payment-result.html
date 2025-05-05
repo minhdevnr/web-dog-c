@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+      integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <title>Kết quả thanh toán - LH Coffee</title>
+    <style>
+      #payment-result {
+        max-width: 800px;
+        margin: 3rem auto;
+        padding: 2rem;
+        text-align: center;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      }
+
+      #payment-result.success {
+        background-color: #f0fff0;
+        border: 1px solid #4caf50;
+      }
+
+      #payment-result.failed {
+        background-color: #fff0f0;
+        border: 1px solid #f44336;
+      }
+
+      #result-message {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+      }
+
+      #result-details {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        color: #555;
+      }
+
+      .btn-primary {
+        background-color: var(--primary);
+        color: #fff;
+        padding: 0.8rem 2rem;
+        border-radius: 5px;
+        display: inline-block;
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        background-color: #d3ad7f;
+        transform: translateY(-3px);
+      }
+
+      .mt-3 {
+        margin-top: 1.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Header container -->
+    <div id="header-container"></div>
+
+    <!-- Payment result section -->
+    <section class="payment-result-section">
+      <h1 class="heading"><span>Kết quả thanh toán</span></h1>
+
+      <div id="payment-result">
+        <div id="loading">
+          <i class="fas fa-spinner fa-spin fa-3x"></i>
+          <p>Đang xử lý kết quả thanh toán...</p>
+        </div>
+        <h2 id="result-message"></h2>
+        <p id="result-details"></p>
+      </div>
+    </section>
+
+    <!-- Footer container -->
+    <div id="footer-container"></div>
+
+    <!-- JavaScript Modules -->
+    <script src="js/config.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/payment-result.js"></script>
+  </body>
+</html>

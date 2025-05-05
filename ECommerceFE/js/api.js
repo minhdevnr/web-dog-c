@@ -269,6 +269,21 @@ class OrderAPI {
   }
 }
 
+// API Payments - VNPay
+class PaymentAPI {
+  static async createVnPayPayment(orderId, amount, orderDesc) {
+    return API.post(`${API_CONFIG.ENDPOINTS.PAYMENTS}/vnpay/create-payment`, {
+      orderId,
+      amount,
+      orderDesc
+    });
+  }
+  
+  static async verifyVnPayPayment(vnpParams) {
+    return API.post(`${API_CONFIG.ENDPOINTS.PAYMENTS}/vnpay/payment-return`, vnpParams);
+  }
+}
+
 // Export các API
 window.API = {
   core: API,
@@ -277,6 +292,7 @@ window.API = {
   auth: AuthAPI,
   users: UserAPI,
   orders: OrderAPI,
+  payments: PaymentAPI,
   // Thêm các hàm tiện ích vào API object
   getProducts: async function() {
     
@@ -358,3 +374,236 @@ window.API = {
 };
 
 // Xóa các export function riêng lẻ đã được chuyển vào API object ở trên 
+
+/**
+ * Class API cung cấp các phương thức gọi API
+ */
+class Api {
+  /**
+   * Gửi request API với xử lý token
+   * @param {string} url - URL của API endpoint
+   * @param {Object} options - Các tùy chọn của fetch API
+   * @returns {Promise} - Promise kết quả từ API
+   */
+  static async fetch(url, options = {}) {
+    // Thêm token xác thực nếu có
+    const token = localStorage.getItem('token');
+    if (token) {
+      options.headers = options.headers || {};
+      options.headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    try {
+      // Thực hiện request
+      let response = await fetch(url, options);
+
+      // Xử lý token hết hạn
+      if (response.status === 401) {
+        const authHeader = response.headers.get('WWW-Authenticate');
+        
+        // Kiểm tra xem có phải token hết hạn không
+        if (authHeader && authHeader.includes('invalid_token') && authHeader.includes('expired')) {
+          console.log('Token hết hạn, thử refresh token...');
+          
+          // Thử refresh token
+          const newToken = await this.refreshToken();
+          
+          if (newToken) {
+            // Cập nhật Authorization header với token mới
+            options.headers['Authorization'] = `Bearer ${newToken}`;
+            
+            // Thử lại request với token mới
+            response = await fetch(url, options);
+          } else {
+            // Nếu không refresh được token, đăng xuất
+            if (typeof Auth !== 'undefined') {
+              Auth.logout();
+            } else {
+              // Nếu không có Auth object, xóa token
+              localStorage.removeItem('token');
+              localStorage.removeItem('refreshToken');
+              window.location.href = '/ECommerceFE/login.html';
+            }
+            
+            throw new Error('Phiên đăng nhập hết hạn, vui lòng đăng nhập lại');
+          }
+        }
+      }
+
+      return response;
+    } catch (error) {
+      console.error('API request error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Refresh token
+   * @returns {string|null} - Token mới hoặc null nếu refresh thất bại
+   */
+  static async refreshToken() {
+    try {
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (!refreshToken) {
+        return null;
+      }
+
+      const response = await fetch(`${API_CONFIG.BASE_URL}/api/auth/refresh-token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ refreshToken })
+      });
+
+      if (!response.ok) {
+        throw new Error('Refresh token thất bại');
+      }
+
+      const data = await response.json();
+      
+      // Lưu token mới
+      localStorage.setItem('token', data.token);
+      if (data.refreshToken) {
+        localStorage.setItem('refreshToken', data.refreshToken);
+      }
+
+      return data.token;
+    } catch (error) {
+      console.error('Refresh token error:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Lấy dữ liệu từ API (GET)
+   * @param {string} endpoint - API endpoint
+   * @param {Object} params - Query parameters
+   * @returns {Promise} - Promise kết quả từ API
+   */
+  static async get(endpoint, params = {}) {
+    // Xây dựng URL với query parameters
+    const url = this.buildUrl(endpoint, params);
+    
+    // Gọi API với xử lý token
+    const response = await this.fetch(url);
+    
+    // Xử lý kết quả
+    return this.handleResponse(response);
+  }
+
+  /**
+   * Gửi dữ liệu lên API (POST)
+   * @param {string} endpoint - API endpoint
+   * @param {Object} data - Dữ liệu gửi lên
+   * @returns {Promise} - Promise kết quả từ API
+   */
+  static async post(endpoint, data = {}) {
+    const url = this.buildUrl(endpoint);
+    
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    };
+    
+    const response = await this.fetch(url, options);
+    return this.handleResponse(response);
+  }
+
+  /**
+   * Cập nhật dữ liệu lên API (PUT)
+   * @param {string} endpoint - API endpoint
+   * @param {Object} data - Dữ liệu cập nhật
+   * @returns {Promise} - Promise kết quả từ API
+   */
+  static async put(endpoint, data = {}) {
+    const url = this.buildUrl(endpoint);
+    
+    const options = {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    };
+    
+    const response = await this.fetch(url, options);
+    return this.handleResponse(response);
+  }
+
+  /**
+   * Xóa dữ liệu từ API (DELETE)
+   * @param {string} endpoint - API endpoint
+   * @returns {Promise} - Promise kết quả từ API
+   */
+  static async delete(endpoint) {
+    const url = this.buildUrl(endpoint);
+    
+    const options = {
+      method: 'DELETE'
+    };
+    
+    const response = await this.fetch(url, options);
+    return this.handleResponse(response);
+  }
+
+  /**
+   * Xây dựng URL với params
+   * @param {string} endpoint - API endpoint
+   * @param {Object} params - Query parameters
+   * @returns {string} - URL hoàn chỉnh
+   */
+  static buildUrl(endpoint, params = {}) {
+    // Đảm bảo endpoint bắt đầu bằng "/"
+    if (!endpoint.startsWith('/')) {
+      endpoint = '/' + endpoint;
+    }
+    
+    // Xây dựng base URL
+    let url = `${API_CONFIG.BASE_URL}${endpoint}`;
+    
+    // Thêm query parameters nếu có
+    if (Object.keys(params).length > 0) {
+      const queryString = Object.keys(params)
+        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+        .join('&');
+      
+      url += `?${queryString}`;
+    }
+    
+    return url;
+  }
+
+  /**
+   * Xử lý response từ API
+   * @param {Response} response - Response object từ fetch API
+   * @returns {Promise} - Promise kết quả đã xử lý
+   */
+  static async handleResponse(response) {
+    // Nếu response không ok, throw error
+    if (!response.ok) {
+      // Thử đọc thông báo lỗi từ response
+      try {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `API error: ${response.status}`);
+      } catch (jsonError) {
+        // Nếu không đọc được JSON, throw error với status
+        throw new Error(`API error: ${response.status}`);
+      }
+    }
+    
+    // Đọc response JSON
+    try {
+      return await response.json();
+    } catch (error) {
+      console.warn('Response không phải JSON:', error);
+      return {};
+    }
+  }
+}
+
+// Thêm API vào window object để các file khác có thể sử dụng
+window.Api = Api; 
