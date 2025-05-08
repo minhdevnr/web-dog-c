@@ -10,6 +10,7 @@
     />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/notification.css" />
+    <link rel="stylesheet" href="css/validation.css" />
     <style>
       body {
         background-image: url("img/background.jpg");
@@ -17,6 +18,8 @@
         background-position: center;
         background-repeat: no-repeat;
         background-attachment: fixed;
+        font-family: "Roboto", sans-serif;
+        font-size: 1.6rem;
       }
 
       .auth-container {
@@ -34,9 +37,10 @@
       }
 
       .auth-header h2 {
-        font-size: 2rem;
+        font-size: 2.5rem;
         color: var(--main-color);
         margin-bottom: 10px;
+        font-weight: 600;
       }
 
       .auth-form .form-group {
@@ -46,21 +50,25 @@
       .auth-form label {
         display: block;
         margin-bottom: 8px;
-        font-weight: 600;
+        font-weight: 500;
         color: var(--black);
+        font-size: 1.4rem;
+        text-transform: none;
       }
 
       .auth-form input {
         width: 100%;
-        padding: 10px 15px;
+        padding: 12px 15px;
         border: 1px solid #ddd;
         border-radius: 4px;
-        font-size: 1rem;
+        font-size: 1.4rem;
+        font-family: "Roboto", sans-serif;
       }
 
       .auth-form input:focus {
         border-color: var(--main-color);
         outline: none;
+        box-shadow: 0 0 0 3px rgba(190, 156, 121, 0.2);
       }
 
       .auth-btn {
@@ -69,26 +77,33 @@
         border: none;
         padding: 12px;
         width: 100%;
-        font-size: 1rem;
+        font-size: 1.6rem;
         border-radius: 4px;
         cursor: pointer;
-        transition: background-color 0.3s;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
       }
 
       .auth-btn:hover {
         background-color: var(--black);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       }
 
       .auth-links {
         text-align: center;
         margin-top: 20px;
+        font-size: 1.4rem;
       }
 
       .auth-links a {
         color: var(--main-color);
         text-decoration: none;
         margin: 0 10px;
-        font-size: 0.9rem;
+        font-size: 1.4rem;
+        text-transform: none;
       }
 
       .auth-links a:hover {
@@ -105,6 +120,25 @@
         height: 80px;
         border-radius: 50%;
         object-fit: cover;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border: 2px solid var(--main-color);
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .auth-container {
+          margin: 80px auto;
+          padding: 20px;
+          max-width: 90%;
+        }
+
+        .auth-header h2 {
+          font-size: 2.2rem;
+        }
+
+        .auth-btn {
+          font-size: 1.4rem;
+        }
       }
     </style>
   </head>
@@ -134,6 +168,7 @@
     </div>
 
     <!-- JavaScript Modules -->
+    <script src="js/config.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>

@@ -1,0 +1,215 @@
+/**
+ * validation.css - Style cho hiển thị thông báo lỗi validate form
+ */
+
+.form-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+/* Hiệu ứng cho error message */
+.form-group.has-error .field-error {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Style cho input có lỗi */
+input.error {
+  border-color: #ff3333 !important;
+  box-shadow: 0 0 0 1px rgba(255, 51, 51, 0.25);
+  padding-right: 30px; /* Thêm padding cho icon */
+  transition: all 0.3s ease;
+}
+
+/* Style cho thông báo lỗi */
+.field-error {
+  color: #ff3333;
+  font-size: 1.2rem;
+  margin-top: 5px;
+  display: block;
+  text-align: left;
+  animation: fadeIn 0.3s ease;
+  font-family: 'Roboto', sans-serif;
+  text-transform: none;
+}
+
+/* Hiệu ứng xuất hiện */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hiệu ứng rung lắc khi có lỗi */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+  20%, 40%, 60%, 80% { transform: translateX(2px); }
+}
+
+.form-group.has-error input {
+  animation: shake 0.5s ease;
+}
+
+/* Style cho input focus khi có lỗi */
+input.error:focus {
+  border-color: #ff3333 !important;
+  box-shadow: 0 0 0 3px rgba(255, 51, 51, 0.25) !important;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+/* Style cho các trường đã được validate thành công */
+input.valid {
+  border-color: #28a745 !important;
+  padding-right: 30px; /* Thêm padding cho icon */
+  transition: all 0.3s ease;
+}
+
+input.valid:focus {
+  border-color: #28a745 !important;
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.25) !important;
+  outline: none;
+}
+
+/* Style khi đang nhập */
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hiển thị icon cho trạng thái */
+.form-group.has-error::after,
+.form-group.has-success::after {
+  position: absolute;
+  right: 10px;
+  top: calc(50% - 10px); /* Điều chỉnh vị trí */
+  transform: translateY(-50%);
+  font-size: 1.4rem;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.form-group.has-error::after {
+  content: "×";
+  color: #ff3333;
+  font-weight: bold;
+  animation: fadeIn 0.3s ease;
+}
+
+.form-group.has-success::after {
+  content: "✓";
+  color: #28a745;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Hiệu ứng khi mới xuất hiện icon success */
+@keyframes scaleIn {
+  0% { transform: translateY(-50%) scale(0); }
+  100% { transform: translateY(-50%) scale(1); }
+}
+
+.form-group.has-success::after {
+  animation: fadeIn 0.3s ease;
+}
+
+/* Sửa vấn đề icon với form-row */
+.form-row .form-group.has-error::after,
+.form-row .form-group.has-success::after {
+  top: 29px; /* Điều chỉnh cho form-row */
+}
+
+/* Sửa vấn đề với label */
+.form-group label + input + .field-error {
+  margin-top: 3px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+}
+
+/* Input bình thường */
+.auth-form input {
+  transition: all 0.3s ease;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.4rem;
+}
+
+/* Hiển thị thông báo lỗi chung cho form */
+.error-summary {
+  background-color: rgba(255, 51, 51, 0.1);
+  border: 1px solid #ff3333;
+  border-radius: 4px;
+  color: #ff3333;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.4rem;
+  text-transform: none;
+  position: relative;
+  animation: fadeIn 0.3s ease;
+}
+
+.error-summary span {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+/* Button đăng ký/đăng nhập */
+.auth-btn {
+  transition: all 0.3s ease !important;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.auth-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.auth-btn:active {
+  transform: translateY(0);
+}
+
+/* Thêm style cho loading spinner trên button */
+.loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .field-error {
+    font-size: 1.2rem;
+  }
+
+  .form-group.has-error::after,
+  .form-group.has-success::after {
+    font-size: 1.4rem;
+  }
+  
+  .auth-btn {
+    font-size: 1.4rem;
+  }
+} 

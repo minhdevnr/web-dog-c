@@ -284,7 +284,7 @@ namespace ECommerceAPI.Controllers
                         {
                             Id = i.Product.Id,
                             Name = i.Product.Name,
-                            Image = i.Product.ImageUrl ?? string.Empty,
+                            ImageUrl = i.Product.ImageUrl,
                             Price = i.UnitPrice
                         },
                         Quantity = i.Quantity,
@@ -302,7 +302,12 @@ namespace ECommerceAPI.Controllers
 
             if (order == null)
                 return NotFound();
-
+            //xử lý cho image sản phẩm
+            foreach (var item in order.Items)
+            {
+                item.Product.Image = GetFullImageUrl(item.Product.ImageUrl);
+                
+            }
             return order;
         }
 
@@ -328,7 +333,21 @@ namespace ECommerceAPI.Controllers
 
             return NoContent();
         }
+        // Helper function to generate full image URL
+        private string GetFullImageUrl(string imageUrl)
+        {
+            if (string.IsNullOrEmpty(imageUrl))
+                return null;
 
+            if (imageUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                return imageUrl;
+
+            // Đảm bảo rằng imageUrl bắt đầu bằng /
+            if (!imageUrl.StartsWith("/"))
+                imageUrl = "/" + imageUrl;
+
+            return $"{Request.Scheme}://{Request.Host}{imageUrl}";
+        }
         // POST: api/order  
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromBody] OrderRequest request)
@@ -375,7 +394,7 @@ namespace ECommerceAPI.Controllers
 
                 // Thêm thông tin người dùng nếu đã đăng nhập  
                 // Trong trường hợp chưa đăng nhập, tạo đơn hàng với thông tin khách vãng lai  
-                var userId = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst("userId")?.Value ?? "0") : 0;
+                var userId = User.Identity.IsAuthenticated ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") : 0; ;
 
                 if (userId > 0)
                 {

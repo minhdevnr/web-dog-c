@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Xác nhận đơn hàng - LH Coffee</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/checkout.css" />
+    <link rel="stylesheet" href="css/order-confirmation.css" />
+    <link rel="stylesheet" href="css/notification.css" />
+    <link rel="stylesheet" href="css/user-profile.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <!-- Header Section Starts - Include from components -->
+    <div id="header-placeholder"></div>
+
+    <main>
+      <div class="container">
+        <div class="order-confirmation">
+          <div class="confirmation-header" id="confirmation-header">
+            <h1>Đặt hàng thành công!</h1>
+            <p>Cảm ơn bạn đã đặt hàng tại LH Coffee</p>
+          </div>
+
+          <div class="order-details">
+            <h2>Thông tin đơn hàng</h2>
+            <div class="order-info">
+              <div class="info-row">
+                <div class="info-label">Mã đơn hàng:</div>
+                <div class="info-value" id="order-id"></div>
+              </div>
+              <div class="info-row">
+                <div class="info-label">Trạng thái:</div>
+                <div class="info-value" id="order-status"></div>
+              </div>
+              <div class="info-row">
+                <div class="info-label">Phương thức thanh toán:</div>
+                <div class="info-value" id="payment-method"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="order-summary">
+            <h2>Tóm tắt đơn hàng</h2>
+            <div id="order-items" class="order-items">
+              <!-- Đây là nơi hiển thị các sản phẩm đã đặt -->
+            </div>
+
+            <div class="order-totals">
+              <div class="total-row">
+                <div class="total-label">Tổng tiền hàng:</div>
+                <div class="total-value" id="subtotal"></div>
+              </div>
+              <div class="total-row">
+                <div class="total-label">Phí vận chuyển:</div>
+                <div class="total-value" id="shipping-fee">0₫</div>
+              </div>
+              <div class="total-row grand-total">
+                <div class="total-label">Tổng thanh toán:</div>
+                <div class="total-value" id="total-amount"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="next-actions">
+            <a href="index.html" class="btn btn-primary">Tiếp tục mua sắm</a>
+            <a href="order-tracking.html" class="btn btn-outline"
+              >Theo dõi đơn hàng</a
+            >
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer Section Starts - Include from components -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notification-container"></div>
+
+    <script src="js/config.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/product.js"></script>
+    <script src="js/order-confirmation.js"></script>
+    <script>
+      // Load header and footer components
+      document.addEventListener("DOMContentLoaded", function () {
+        // Khởi tạo UI
+        if (typeof UI !== "undefined") {
+          UI.init();
+        }
+
+        // Khởi tạo Cart
+        if (typeof Cart !== "undefined") {
+          Cart.init();
+        }
+
+        // Load header
+        fetch("components/header.html")
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("header-placeholder").innerHTML = data;
+
+            // Execute header scripts if needed
+            const headerScripts = document
+              .getElementById("header-placeholder")
+              .querySelectorAll("script");
+            headerScripts.forEach((script) => {
+              const newScript = document.createElement("script");
+              newScript.text = script.text;
+              document.body.appendChild(newScript);
+            });
+          });
+
+        // Load footer
+        fetch("components/footer.html")
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("footer-placeholder").innerHTML = data;
+          });
+      });
+    </script>
+  </body>
+</html>

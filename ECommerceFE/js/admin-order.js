@@ -285,7 +285,7 @@ class AdminOrderManager {
     }
 
     loadOrderItems(items) {
-        debugger;
+        
         // Xóa tất cả các mục sản phẩm hiện tại
         $('#orderItems').empty();
         

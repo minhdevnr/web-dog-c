@@ -312,8 +312,6 @@ class Cart {
     this.updateCartCount();    // Cập nhật số lượng
     this.updateCartPage();     // Cập nhật trang giỏ hàng nếu đang mở
 
-    // Hiển thị thông báo
-    UI.createNotification('Đã thêm sản phẩm vào giỏ hàng.', 'success');
   }
 
   /**
@@ -412,11 +410,10 @@ class Cart {
    * Xóa tất cả sản phẩm khỏi giỏ hàng
    */
   static clearCart() {
+    debugger;
     // Xác nhận xóa tất cả
     if (typeof UI !== 'undefined' && typeof UI.confirmDialog === 'function') {
-      UI.confirmDialog('Bạn có chắc chắn muốn xóa tất cả sản phẩm khỏi giỏ hàng?', () => {
         this.doClearCart();
-      });
     } else {
       // Nếu không có UI.confirmDialog, xóa trực tiếp
       this.doClearCart();

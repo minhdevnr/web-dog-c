@@ -60,14 +60,14 @@ class AdminProductManager {
             const categorySelects = $('#category, #categoryFilter');
             categorySelects.empty();
             
-            $('#categoryFilter').append('<option value="">Tất cả danh mục</option>');
-            $('#category').append('<option value="">Chọn danh mục</option>');
+            $('#categoryFilter').append('<option value="">Tất cả loại sản phẩm</option>');
+            $('#category').append('<option value="">Chọn loại sản phẩm</option>');
             
             categories.Items.forEach(category => {
                 categorySelects.append(`<option value="${category.Id}">${category.Name}</option>`);
             });
         } catch (error) {
-            this.showToast('Lỗi khi tải danh mục sản phẩm', 'error');
+            this.showToast('Lỗi khi tải danh sách loại sản phẩm', 'error');
         }
     }
 
@@ -189,7 +189,7 @@ class AdminProductManager {
     }
 
     openProductModal(product = null) {
-        debugger;
+        
         const modal = $('#productModal');
         const form = $('#productForm')[0];
         form.reset();
@@ -278,7 +278,7 @@ class AdminProductManager {
         // Kiểm tra giá trị danh mục
         const categoryId = $('#category').val();
         if (!categoryId) {
-            this.showToast('Vui lòng chọn danh mục sản phẩm', 'error');
+            this.showToast('Vui lòng chọn loại sản phẩm', 'error');
             return;
         }
 

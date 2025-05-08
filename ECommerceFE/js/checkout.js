@@ -1,8 +1,4 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // if (!Cart || !Cart.hasItems()) {
-    //     window.location.href = "index-cart.html";
-    //     return;
-    // }
 
     // Lấy thông tin phương thức thanh toán đã chọn
     const paymentMethod = localStorage.getItem("selectedPaymentMethod") || "COD";
@@ -48,6 +44,14 @@ document.addEventListener("DOMContentLoaded", function() {
     loadUserInfoIfLoggedIn();
     
     updateCartSummary();
+
+    // Kiểm tra xem có phải là callback từ VNPay không
+    if (window.location.pathname.includes("checkout.html") && window.location.search.includes('vnp_ResponseCode')) {
+        debugger;
+        handleVNPayCallback();
+    }
+
+    checkVnPayReturn();
 });
 
 // Hàm kiểm tra và tải thông tin người dùng nếu đã đăng nhập
@@ -123,7 +127,7 @@ function calculateShippingFee() {
 
 // Hàm cập nhật tổng tiền bao gồm phí vận chuyển
 function updateTotalWithShipping(shippingFee) {
-    debugger;
+    
     const cartItems = JSON.parse(localStorage.getItem('cart'));
     const totalElement = document.getElementById("total-amount");
     const checkoutTotalElement = document.getElementById("checkout-total-cost");
@@ -204,7 +208,7 @@ function updateCartSummary() {
     if(totalElement){
     totalElement.textContent = formatCurrency(totalAmount);
     }
-    debugger;
+    
     // Cập nhật số lượng mục trong checkout summary
     const checkoutItemCountElement = document.getElementById("checkout-item-count");
     if (checkoutItemCountElement) {
@@ -322,20 +326,21 @@ async function handlePlaceOrder(event) {
         
         // Chuẩn bị dữ liệu đơn hàng
         const orderData = {
-            fullName: fullName,
-            phone: phone,
-            email: email,
-            address: address,
-            notes: notes,
-            items: cartItems.map(item => ({
-                productId: item.Id,
-                quantity: item.Quantity,
-                price: parseInt(item.Price)
+            FullName: fullName,
+            PhoneNumber: phone,
+            Email: email,
+            Address: address,
+            ShippingAddress: address,
+            Notes: notes,
+            Items: cartItems.map(item => ({
+                ProductId: item.Id,
+                Quantity: item.Quantity,
+                Price: parseInt(item.Price)
             })),
-            subtotal: subtotal,
-            shippingFee: shippingFee,
-            totalAmount: totalAmount,
-            paymentMethod: paymentMethod
+            Subtotal: subtotal,
+            ShippingFee: shippingFee,
+            TotalAmount: totalAmount,
+            PaymentMethod: paymentMethod
         };
         
         console.log("Đang gửi dữ liệu đơn hàng:", orderData);
@@ -344,38 +349,42 @@ async function handlePlaceOrder(event) {
         
         // Xử lý theo phương thức thanh toán
         if (paymentMethod === "VNPay") {
-            // Xử lý thanh toán VNPay
-            const endpoint = `${API_CONFIG.ENDPOINTS.PAYMENTS}/vnpay/create-payment`;
-            
-            // Thêm thông tin cần thiết cho VNPay
-            orderData.Amount = totalAmount;
-            orderData.OrderId = `DH${Date.now()}`;
-            orderData.OrderDesc = `Thanh toán đơn hàng ${orderData.OrderId}`;
-            orderData.BankCode = document.getElementById("bank-code")?.value || "NCB";
-            orderData.Language = document.getElementById("language")?.value || "vn";
-            orderData.OrderType = "billpayment";
-            
-            // Gọi API tạo thanh toán VNPay sử dụng Api class
             try {
-                const paymentResult = await Api.post(endpoint, orderData);
+                // Tạo đơn hàng trước
+                const orderResult = await Api.post(API_CONFIG.ENDPOINTS.ORDERS, orderData);
+                const orderId = orderResult.OrderId;
                 
-                if (paymentResult && paymentResult.PaymentUrl) {
-                    // Lưu thông tin đơn hàng tạm thời
-                    localStorage.setItem("pendingOrder", JSON.stringify({
-                        orderId: paymentResult.orderId,
-                        paymentMethod: "VNPay"
-                    }));
-                    
+                // Chuẩn bị dữ liệu thanh toán VNPay
+                const vnpayData = {
+                    OrderId: orderId,
+                    Amount: totalAmount,
+                    OrderInfo: `Thanh toán đơn hàng ${orderId}`,
+                    OrderDesc: `Thanh toán đơn hàng ${orderId}`,
+                    BankCode: document.getElementById("bank-code")?.value || "NCB",
+                    Language: document.getElementById("language")?.value || "vn"
+                };
+                
+                console.log("Gửi yêu cầu thanh toán VNPay với dữ liệu:", vnpayData);
+                
+                // Gọi API tạo thanh toán VNPay
+                const paymentResponse = await Api.post(`${API_CONFIG.ENDPOINTS.PAYMENTS}/vnpay/create-payment`, vnpayData);
+                
+                // Kiểm tra kết quả và chuyển hướng
+                if (paymentResponse.Success) {
+                    // Lưu OrderId để kiểm tra khi quay lại
+                    localStorage.setItem("vnp_OrderId", orderId);
                     // Chuyển hướng đến trang thanh toán VNPay
-                    window.location.href = paymentResult.PaymentUrl;
-                    return;
+                    window.location.href = paymentResponse.PaymentUrl;
                 } else {
-                    throw new Error("Không nhận được URL thanh toán từ VNPay");
+                    throw new Error(paymentResponse.Message || "Không thể tạo yêu cầu thanh toán VNPay");
                 }
             } catch (error) {
-                console.error("Lỗi khi tạo thanh toán VNPay:", error);
-                throw new Error("Không thể tạo thanh toán VNPay: " + error.message);
+                console.error("Lỗi xử lý thanh toán VNPay:", error);
+                displayErrorMessage("Xảy ra lỗi khi xử lý thanh toán VNPay. Vui lòng thử lại sau.");
+                checkoutBtn.disabled = false;
+                loadingIndicator.style.display = "none";
             }
+            return;
         } else {
             // Xử lý thanh toán COD sử dụng Api class
             try {
@@ -388,7 +397,7 @@ async function handlePlaceOrder(event) {
                 showToast("Đặt hàng thành công! Chúng tôi sẽ liên hệ với bạn sớm.", "success");
                 
                 // Chuyển hướng đến trang xác nhận đơn hàng
-                window.location.href = `order-confirmation.html?orderId=${orderResult.orderId}`;
+                window.location.href = `order-confirmation.html?orderId=${orderResult.OrderId}`;
             } catch (error) {
                 console.error("Lỗi khi tạo đơn hàng COD:", error);
                 throw new Error("Không thể tạo đơn hàng: " + error.message);
@@ -410,40 +419,85 @@ async function handleVNPayCallback() {
         const vnpResponseCode = urlParams.get('vnp_ResponseCode');
         const orderId = urlParams.get('vnp_TxnRef');
         
+        console.log("Nhận callback từ VNPay:", {
+            ResponseCode: vnpResponseCode,
+            OrderId: orderId
+        });
+        
         if (vnpResponseCode === '00') {
-            // Thanh toán thành công
-            const pendingOrder = JSON.parse(localStorage.getItem("pendingOrder"));
+            // Thanh toán thành công - Gửi thông tin kết quả thanh toán về server
+            // Xóa dữ liệu giỏ hàng
+            Cart.clearCart();
             
-            if (pendingOrder && pendingOrder.orderId === orderId) {
-                // Cập nhật trạng thái đơn hàng
-                const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ORDERS}/${orderId}/confirm-payment`, {
-                    method: "POST"
-                });
-                
-                if (response.ok) {
-                    // Xóa thông tin đơn hàng tạm thời
-                    localStorage.removeItem("pendingOrder");
-                    
-                    // Hiển thị thông báo thành công
-                    showToast("Thanh toán thành công! Đơn hàng của bạn đã được xác nhận.", "success");
-                    
-                    // Chuyển hướng đến trang xác nhận đơn hàng
-                    window.location.href = `order-confirmation.html?orderId=${orderId}`;
-                } else {
-                    throw new Error("Không thể cập nhật trạng thái đơn hàng");
-                }
-            } else {
-                throw new Error("Không tìm thấy thông tin đơn hàng");
-            }
+            // Xóa thông tin đơn hàng đang xử lý
+            localStorage.removeItem("pendingOrderId");
+            localStorage.removeItem("pendingOrderAmount");
+            localStorage.removeItem("cart");
+
+            // Chuyển đến trang xác nhận đơn hàng
+            window.location.href = "order-confirmation.html?orderId=" + orderId;
         } else {
-            // Thanh toán thất bại
-            showToast("Thanh toán thất bại. Vui lòng thử lại.", "error");
-            window.location.href = "checkout.html";
+            // Thanh toán không thành công
+            console.error("Thanh toán VNPay không thành công. Mã lỗi:", vnpResponseCode);
+            
+            // Hiển thị thông báo lỗi tương ứng với mã lỗi
+            let errorMessage = "Thanh toán không thành công.";
+            switch(vnpResponseCode) {
+                case '07': 
+                    errorMessage = "Trừ tiền thành công nhưng giao dịch bị nghi ngờ (liên quan tới lừa đảo, giao dịch bất thường)."; 
+                    break;
+                case '09': 
+                    errorMessage = "Thẻ/Tài khoản chưa đăng ký dịch vụ InternetBanking."; 
+                    break;
+                case '10': 
+                    errorMessage = "Xác thực thông tin thẻ/tài khoản không đúng quá 3 lần."; 
+                    break;
+                case '11': 
+                    errorMessage = "Đã hết hạn chờ thanh toán."; 
+                    break;
+                case '12': 
+                    errorMessage = "Thẻ/Tài khoản bị khóa."; 
+                    break;
+                case '13': 
+                    errorMessage = "Nhập sai mật khẩu xác thực giao dịch (OTP)."; 
+                    break;
+                case '24': 
+                    errorMessage = "Giao dịch đã bị hủy."; 
+                    break;
+                case '51': 
+                    errorMessage = "Tài khoản không đủ số dư để thực hiện giao dịch."; 
+                    break;
+                case '65': 
+                    errorMessage = "Tài khoản đã vượt quá hạn mức giao dịch trong ngày."; 
+                    break;
+                case '75': 
+                    errorMessage = "Ngân hàng thanh toán đang bảo trì."; 
+                    break;
+                case '79': 
+                    errorMessage = "Nhập sai mật khẩu thanh toán quá số lần quy định."; 
+                    break;
+                default: 
+                    errorMessage = "Đã có lỗi xảy ra trong quá trình thanh toán.";
+            }
+            showPaymentError(errorMessage);
         }
     } catch (error) {
-        console.error("Lỗi khi xử lý callback VNPay:", error);
-        showToast("Đã xảy ra lỗi khi xử lý thanh toán", "error");
-        window.location.href = "checkout.html";
+        console.error("Lỗi xử lý callback VNPay:", error);
+        showPaymentError("Đã xảy ra lỗi khi xử lý kết quả thanh toán. Vui lòng thử lại sau.");
+    }
+}
+
+function showPaymentError(message) {
+    // Hiển thị thông báo lỗi cho người dùng
+    const errorContainer = document.getElementById("payment-error");
+    if (errorContainer) {
+        errorContainer.textContent = message;
+        errorContainer.style.display = "block";
+        
+        // Cuộn lên đầu trang để người dùng thấy thông báo lỗi
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+        alert(message);
     }
 }
 
@@ -473,4 +527,15 @@ function showToast(message, type = "info") {
             document.body.removeChild(toast);
         }, 300);
     }, 3000);
+}
+
+// Hàm kiểm tra kết quả thanh toán VNPay khi quay lại từ trang thanh toán
+function checkVnPayReturn() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const vnpResponseCode = urlParams.get('vnp_ResponseCode');
+    
+    if (vnpResponseCode) {
+        // Có kết quả trả về từ VNPay
+        handleVNPayCallback();
+    }
 }

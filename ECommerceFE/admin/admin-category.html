@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quản Lý Danh Mục - LH Coffee</title>
+    <title>Quản Lý Loại Sản Phẩm - LH Coffee</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -46,9 +46,9 @@
       </header>
       <main>
         <div class="page-header">
-          <h1>Quản lý Danh mục</h1>
+          <h1>Quản lý Loại Sản Phẩm</h1>
           <button class="btn btn-primary" id="addCategoryBtn">
-            <i class="fas fa-plus me-2"></i>Thêm Danh mục
+            <i class="fas fa-plus me-2"></i>Thêm Loại Sản Phẩm
           </button>
         </div>
 
@@ -64,7 +64,7 @@
                   type="text"
                   class="form-control"
                   id="searchCategory"
-                  placeholder="Tìm kiếm danh mục..."
+                  placeholder="Tìm kiếm loại sản phẩm..."
                 />
               </div>
             </div>
@@ -78,7 +78,7 @@
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Tên danh mục</th>
+                  <th>Tên loại sản phẩm</th>
                   <th>Mô tả</th>
                   <th>Thao tác</th>
                 </tr>
@@ -103,7 +103,9 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="categoryModalTitle">Thêm Danh mục</h5>
+            <h5 class="modal-title" id="categoryModalTitle">
+              Thêm Loại Sản Phẩm
+            </h5>
             <button
               type="button"
               class="btn-close"
@@ -114,7 +116,7 @@
             <form id="categoryForm">
               <input type="hidden" id="categoryId" />
               <div class="mb-3">
-                <label class="form-label">Tên danh mục</label>
+                <label class="form-label">Tên loại sản phẩm</label>
                 <input
                   type="text"
                   class="form-control"
@@ -153,7 +155,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Chi tiết Danh mục</h5>
+            <h5 class="modal-title">Chi tiết loại sản phẩm</h5>
             <button
               type="button"
               class="btn-close"
@@ -162,7 +164,7 @@
           </div>
           <div class="modal-body">
             <div class="mb-3">
-              <label class="form-label fw-bold">Tên danh mục:</label>
+              <label class="form-label fw-bold">Tên loại sản phẩm:</label>
               <p id="detailName"></p>
             </div>
             <div class="mb-3">
@@ -194,7 +196,9 @@
               data-bs-dismiss="modal"
             ></button>
           </div>
-          <div class="modal-body">Bạn có chắc chắn muốn xóa danh mục này?</div>
+          <div class="modal-body">
+            Bạn có chắc chắn muốn xóa loại sản phẩm này?
+          </div>
           <div class="modal-footer">
             <button
               type="button"

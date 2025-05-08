@@ -51,6 +51,7 @@ namespace ECommerceAPI.Controllers
 
             var user = new User
             {
+                FullName = request.Username,
                 Username = request.Username,
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,

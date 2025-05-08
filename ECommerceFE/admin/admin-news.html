@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quản lý Tin tức - LH Coffee</title>
+    <title>Quản lý Bài viết - LH Coffee</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -53,9 +53,9 @@
 
       <main>
         <div class="page-header">
-          <h1>Quản lý Tin tức</h1>
+          <h1>Quản lý Bài viết</h1>
           <button class="btn btn-primary" id="addNewsBtn">
-            <i class="fas fa-plus me-2"></i>Thêm Tin tức
+            <i class="fas fa-plus me-2"></i>Thêm Bài viết
           </button>
         </div>
 
@@ -71,13 +71,13 @@
                   type="text"
                   class="form-control"
                   id="searchNews"
-                  placeholder="Tìm kiếm tin tức..."
+                  placeholder="Tìm kiếm bài viết..."
                 />
               </div>
             </div>
             <div class="col-md-3">
               <select class="form-select" id="categoryFilter">
-                <option value="">Tất cả danh mục</option>
+                <option value="">Tất cả loại sản phẩm</option>
               </select>
             </div>
             <div class="col-md-3">
@@ -99,7 +99,7 @@
                   <th>ID</th>
                   <th>Hình ảnh</th>
                   <th>Tiêu đề</th>
-                  <th>Danh mục</th>
+                  <th>Loại sản phẩm</th>
                   <th>Trạng thái</th>
                   <th>Ngày tạo</th>
                   <th>Thao tác</th>
@@ -134,9 +134,9 @@
                 <input type="text" class="form-control" id="title" required />
               </div>
               <div class="mb-3">
-                <label class="form-label">Danh mục</label>
+                <label class="form-label">Loại sản phẩm</label>
                 <select class="form-select" id="category" required>
-                  <option value="">Chọn danh mục</option>
+                  <option value="">Chọn loại sản phẩm</option>
                 </select>
               </div>
               <div class="mb-3">

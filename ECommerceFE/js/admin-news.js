@@ -96,12 +96,12 @@ class AdminNewsManager {
             const response = await fetch(`${this.API_BASE.CATEGORIES}`);
             const categories = await response.json();
             const categorySelects = $('#category, #categoryFilter');
-            categorySelects.empty().append('<option value="">Chọn danh mục</option>');
+            categorySelects.empty().append('<option value="">Chọn loại sản phẩm</option>');
             categories.Items.forEach(category => {
                 categorySelects.append(`<option value="${category.Id}">${category.Name}</option>`);
             });
         } catch (error) {
-            this.showToast('Lỗi khi tải danh sách danh mục', 'error');
+            this.showToast('Lỗi khi tải danh sách loại sản phẩm', 'error');
         }
     }
 
@@ -195,7 +195,7 @@ class AdminNewsManager {
     }
 
     openNewsModal(news = null) {
-        debugger;
+        
         const modal = $('#newsModal');
         const form = $('#newsForm')[0];
         form.reset();
@@ -273,7 +273,7 @@ class AdminNewsManager {
         }
         
         if (!categoryId) {
-            errors.push('Vui lòng chọn danh mục');
+            errors.push('Vui lòng chọn loại sản phẩm');
             $('#category').addClass('is-invalid');
         } else {
             $('#category').removeClass('is-invalid');

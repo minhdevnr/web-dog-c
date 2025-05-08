@@ -77,7 +77,7 @@ class ProductManager {
     categoryFilters.forEach(filter => {
       filter.addEventListener('click', (e) => {
         e.preventDefault();
-        debugger;
+        
         const category = filter.getAttribute('data-category');
         this.filterProductsByCategory(category);
       });
@@ -230,7 +230,7 @@ class ProductManager {
    * @param {string} keyword - Từ khóa tìm kiếm
    */
   static displaySearchResults(products, keyword) {
-    debugger;
+    
     // Tạo overlay chứa kết quả tìm kiếm
     let searchResultsContainer = document.getElementById('search-results-container');
     if (!searchResultsContainer) {
@@ -522,7 +522,7 @@ class ProductManager {
    * @param {string} category - Danh mục sản phẩm
    */
   static async filterProductsByCategory(category) {
-    debugger;
+    
     const productsContainer = document.querySelector('#products-container');
     if (!productsContainer) return;
 
@@ -570,7 +570,7 @@ class ProductManager {
    * @param {Element} container - Container để render sản phẩm
    */
   static renderProductsToContainer(products, container) {
-    debugger;
+    
     // Xóa tất cả nội dung cũ
     container.innerHTML = '';
     
@@ -602,7 +602,7 @@ class ProductManager {
               // Hiển thị tất cả sản phẩm
               this.renderProductItems(products.Items, container);
             } else {
-              debugger;
+              
               // Lọc sản phẩm theo danh mục
               const filteredProducts = products.Items.filter(p => p.Category.Name === category);
               this.renderProductItems(filteredProducts, container);
@@ -611,7 +611,7 @@ class ProductManager {
         });
       }
     }
-    debugger;
+    
     // Hiển thị sản phẩm
     this.renderProductItems(products.Items, container);
   }
@@ -622,7 +622,7 @@ class ProductManager {
    * @returns {Array} Danh sách các danh mục duy nhất
    */
   static getUniqueCategories(products) {
-    debugger;
+    
     const categories = products
       .map(p => p.Category.Name)
       .filter(cat => cat); // Lọc bỏ các giá trị null hoặc undefined
@@ -637,7 +637,7 @@ class ProductManager {
    * @param {Element} container - Container để hiển thị sản phẩm
    */
   static renderProductItems(products, container) {
-    debugger;
+    
     // Xóa tất cả nội dung cũ
     container.innerHTML = '';
     
@@ -743,32 +743,180 @@ class ProductManager {
     // Tạo modal
     const modal = document.createElement('div');
     modal.classList.add('product-modal');
+    modal.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    `;
+    
     modal.innerHTML = `
-      <div class="product-modal-content">
-        <span class="close-modal">&times;</span>
-        <div class="product-modal-body">
-          <div class="product-image">
-            <img src="${product.ImageUrl}" alt="${product.Name}">
+      <div class="product-modal-content" style="
+        background-color: #fff;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 1000px;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      ">
+        <span class="close-modal" style="
+          position: absolute;
+          top: 15px;
+          right: 20px;
+          font-size: 28px;
+          font-weight: bold;
+          cursor: pointer;
+          color: #333;
+          z-index: 10;
+        ">&times;</span>
+        
+        <div class="product-modal-body" style="
+          display: flex;
+          flex-direction: row;
+          padding: 30px;
+          gap: 30px;
+          @media (max-width: 768px) {
+            flex-direction: column;
+          }
+        ">
+          <div class="product-image" style="
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #f9f9f9;
+          ">
+            <img src="${product.ImageUrl}" alt="${product.Name}" style="
+              max-width: 100%;
+              max-height: 500px;
+              object-fit: contain;
+            ">
           </div>
-          <div class="product-info">
-            <h2>${product.Name}</h2>
-            <div class="stars">
+          
+          <div class="product-info" style="
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+          ">
+            <h2 style="
+              font-size: 26px;
+              margin-bottom: 5px;
+              color: #333;
+            ">${product.Name}</h2>
+            
+            <div class="stars" style="margin-bottom: 10px; color: #ffa500;">
               <i class="fa fa-star"></i>
               <i class="fa fa-star"></i>
               <i class="fa fa-star"></i>
               <i class="fa fa-star"></i>
               <i class="fa fa-star-half-alt"></i>
+              <span style="color: #777; margin-left: 10px; font-size: 14px;">(4.5/5)</span>
             </div>
-            <div class="price">${this.formatCurrency(product.Price)}</div>
-            <div class="category">${product.Category || ''}</div>
-            <p class="description">${product.Description || ''}</p>
-            <div class="quantity">
-              <span>Số lượng:</span>
-              <button class="quantity-btn minus">-</button>
-              <input type="number" class="quantity-input" value="1" min="1" max="99">
-              <button class="quantity-btn plus">+</button>
+            
+            <div class="price" style="
+              font-size: 24px;
+              font-weight: bold;
+              color: #e74c3c;
+              margin: 10px 0;
+            ">${this.formatCurrency(product.Price)}</div>
+            
+            <div class="category" style="
+              display: inline-block;
+              background-color: #f1f1f1;
+              padding: 5px 10px;
+              border-radius: 4px;
+              font-size: 14px;
+              color: #555;
+              margin-bottom: 15px;
+            ">${product.Category.Name || ''}</div>
+            
+            <div style="height: 1px; background-color: #eee; margin: 10px 0;"></div>
+            
+            <p class="description" style="
+              line-height: 1.6;
+              color: #555;
+              margin-bottom: 20px;
+              font-size: 16px;
+            ">${product.Description || ''}</p>
+            
+            <div style="height: 1px; background-color: #eee; margin: 10px 0;"></div>
+            
+            <div class="quantity" style="
+              display: flex;
+              align-items: center;
+              margin: 15px 0;
+            ">
+              <span style="margin-right: 15px; font-weight: 500;">Số lượng:</span>
+              <div style="display: flex; align-items: center; border: 1px solid #ddd; border-radius: 4px;">
+                <button class="quantity-btn minus" style="
+                  width: 40px;
+                  height: 40px;
+                  background: #f5f5f5;
+                  border: none;
+                  border-right: 1px solid #ddd;
+                  font-size: 18px;
+                  cursor: pointer;
+                ">-</button>
+                <input type="number" class="quantity-input" value="1" min="1" max="99" style="
+                  width: 60px;
+                  height: 40px;
+                  border: none;
+                  text-align: center;
+                  font-size: 16px;
+                ">
+                <button class="quantity-btn plus" style="
+                  width: 40px;
+                  height: 40px;
+                  background: #f5f5f5;
+                  border: none;
+                  border-left: 1px solid #ddd;
+                  font-size: 18px;
+                  cursor: pointer;
+                ">+</button>
+              </div>
             </div>
-            <button class="btn add-to-cart-btn" data-id="${product.Id}">Thêm vào giỏ hàng</button>
+            
+            <button class="btn add-to-cart-btn" data-id="${product.Id}" style="
+              background-color: var(--main-color, #088178);
+              color: white;
+              border: none;
+              padding: 12px 25px;
+              font-size: 16px;
+              border-radius: 4px;
+              cursor: pointer;
+              margin-top: 15px;
+              transition: background-color 0.3s;
+            ">
+              <i class="fa fa-shopping-cart" style="margin-right: 8px;"></i>
+              Thêm vào giỏ hàng
+            </button>
+            
+            <div style="
+              display: flex;
+              gap: 15px;
+              margin-top: 20px;
+            ">
+              <div style="display: flex; align-items: center; color: #555; font-size: 14px;">
+                <i class="fa fa-check-circle" style="color: #088178; margin-right: 5px;"></i> Còn hàng
+              </div>
+              <div style="display: flex; align-items: center; color: #555; font-size: 14px;">
+                <i class="fa fa-truck" style="margin-right: 5px;"></i> Giao hàng nhanh
+              </div>
+              <div style="display: flex; align-items: center; color: #555; font-size: 14px;">
+                <i class="fa fa-shield-alt" style="margin-right: 5px;"></i> Bảo hành chính hãng
+              </div>
+            </div>
           </div>
         </div>
       </div>

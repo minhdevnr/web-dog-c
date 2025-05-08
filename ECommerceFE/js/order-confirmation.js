@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
+    
     // Lấy orderId và status từ URL query parameters
     const urlParams = new URLSearchParams(window.location.search);
     const orderId = urlParams.get('orderId');
@@ -65,8 +66,8 @@ async function fetchOrderDetails(orderId) {
         
         const data = await response.json();
         
-        if (data.Success && data.Order) {
-            displayOrderDetails(data.Order);
+        if (data) {
+            displayOrderDetails(data);
         } else {
             console.error("Không thể lấy thông tin đơn hàng", data.Message);
         }
@@ -92,24 +93,26 @@ function displayOrderDetails(order) {
             itemElement.className = 'order-item';
             itemElement.innerHTML = `
                 <div class="item-image">
-                    <img src="${item.ProductImage || '../images/product-placeholder.png'}" alt="${item.ProductName}">
+                    <img src="${item.Product.Image || '../images/product-placeholder.png'}" alt="${item.Product.Name}">
                 </div>
                 <div class="item-details">
-                    <h3>${item.ProductName}</h3>
+                    <h3>${item.Product.Name}</h3>
                     <div class="item-meta">
                         <span class="item-quantity">SL: ${item.Quantity}</span>
-                        <span class="item-price">${formatCurrency(item.UnitPrice)}</span>
+                        <span class="item-price">${formatCurrency(item.Price)}</span>
                     </div>
                 </div>
-                <div class="item-total">${formatCurrency(item.TotalPrice)}</div>
+                <div class="item-total">${formatCurrency(item.Total)}</div>
             `;
             orderItemsContainer.appendChild(itemElement);
         });
     }
     
     // Cập nhật tổng tiền
-    document.getElementById('subtotal').textContent = formatCurrency(order.TotalAmount);
-    document.getElementById('total-amount').textContent = formatCurrency(order.TotalAmount);
+    document.getElementById('subtotal').textContent = formatCurrency(order.Total);
+    //shipping-fee
+    document.getElementById('shipping-fee').textContent = formatCurrency(order.ShippingFee);
+    document.getElementById('total-amount').textContent = formatCurrency(order.Total);
 }
 
 function displayCartItemsFromLocalStorage() {

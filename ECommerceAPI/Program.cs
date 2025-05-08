@@ -41,7 +41,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         policy =>
         {
-            policy.WithOrigins("http://127.0.0.1:5500", "https://4551-113-161-54-110.ngrok-free.app")
+            policy.WithOrigins("http://127.0.0.1:5500", "https://4551-113-161-54-110.ngrok-free.app", "https://minhdevnr.github.io", "http://localhost:5500/")
                   .AllowAnyHeader()
                   .AllowAnyMethod()
                   .AllowCredentials();

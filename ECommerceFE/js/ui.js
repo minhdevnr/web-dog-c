@@ -14,6 +14,9 @@ class UI {
     this.setupUIEvents();
     // Cài đặt hiệu ứng UI
     this.setupUIEffects();
+    
+    // Thiết lập notification system
+    this.setupNotifications();
   }
 
   /**
@@ -900,6 +903,11 @@ class UI {
    * @returns {Element} - Element thông báo
    */
   static createNotification(message, type = 'info', duration = 3000) {
+    // Kiểm tra loại thông báo hợp lệ
+    const validTypes = ['info', 'success', 'warning', 'error'];
+    if (!validTypes.includes(type)) {
+      type = 'info'; // Mặc định là info nếu loại không hợp lệ
+    }
     
     // Tạo container cho notifications nếu chưa tồn tại
     let notificationsContainer = document.getElementById('notifications-container');
@@ -912,8 +920,28 @@ class UI {
     // Tạo notification
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
+    
+    // Icon tương ứng với loại thông báo
+    let icon = '';
+    switch (type) {
+      case 'success':
+        icon = '<i class="fas fa-check-circle"></i>';
+        break;
+      case 'error':
+        icon = '<i class="fas fa-times-circle"></i>';
+        break;
+      case 'warning':
+        icon = '<i class="fas fa-exclamation-circle"></i>';
+        break;
+      case 'info':
+      default:
+        icon = '<i class="fas fa-info-circle"></i>';
+        break;
+    }
+    
     notification.innerHTML = `
       <div class="notification-content">
+        <div class="notification-icon">${icon}</div>
         <div class="notification-message">${message}</div>
         <button class="notification-close">&times;</button>
       </div>
@@ -922,6 +950,11 @@ class UI {
     
     // Thêm notification vào container
     notificationsContainer.appendChild(notification);
+    
+    // Hiệu ứng hiển thị
+    setTimeout(() => {
+      notification.classList.add('active');
+    }, 10);
     
     // Hiệu ứng progress bar
     const progressBar = notification.querySelector('.notification-progress');
@@ -938,10 +971,14 @@ class UI {
     
     // Tự động đóng sau khoảng thời gian
     setTimeout(() => {
-      notification.classList.add('notification-hiding');
-      setTimeout(() => {
-        notification.remove();
-      }, 300);
+      if (document.body.contains(notification)) {
+        notification.classList.add('notification-hiding');
+        setTimeout(() => {
+          if (document.body.contains(notification)) {
+            notification.remove();
+          }
+        }, 300);
+      }
     }, duration);
     
     return notification;
@@ -1352,6 +1389,43 @@ class UI {
   
   formatCurrency(amount) {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+  }
+
+  /**
+   * Thiết lập hệ thống thông báo
+   */
+  static setupNotifications() {
+    // Tạo container cho notifications nếu chưa tồn tại
+    let notificationsContainer = document.getElementById('notifications-container');
+    if (!notificationsContainer) {
+      notificationsContainer = document.createElement('div');
+      notificationsContainer.id = 'notifications-container';
+      document.body.appendChild(notificationsContainer);
+    }
+    
+    // Đảm bảo hàm showNotification toàn cục truy cập đúng đến phương thức của UI
+    window.showNotification = function(type, message, duration = 3000) {
+      return UI.createNotification(message, type, duration);
+    };
+    
+    // Mặc định tắt debug thông báo
+    this._debugNotifications = false;
+    
+    // Nếu đang trong môi trường phát triển, tự động test thông báo
+    if (this._debugNotifications) {
+      this.testNotification();
+    }
+  }
+  
+  /**
+   * Kiểm tra hệ thống thông báo
+   */
+  static testNotification() {
+    // Hiển thị các loại thông báo khác nhau sau khoảng thời gian
+    setTimeout(() => this.createNotification('Đây là thông báo thông tin', 'info'), 500);
+    setTimeout(() => this.createNotification('Thao tác thành công!', 'success'), 1500);
+    setTimeout(() => this.createNotification('Cảnh báo: Đây là một cảnh báo', 'warning'), 2500);
+    setTimeout(() => this.createNotification('Lỗi: Đã xảy ra lỗi trong quá trình xử lý', 'error'), 3500);
   }
 }
 

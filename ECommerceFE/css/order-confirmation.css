@@ -5,6 +5,11 @@
     margin: 40px auto;
     padding: 30px;
     max-width: 900px;
+    font-family: "Roboto", sans-serif;
+}
+
+main {
+    padding-top: 120px;
 }
 
 .confirmation-header {
@@ -15,9 +20,15 @@
 }
 
 .confirmation-header h1 {
-    color: #4CAF50;
-    font-size: 28px;
+    color: #be9c79;
+    font-size: 3rem;
     margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.confirmation-header p {
+    font-size: 1.6rem;
+    color: #666;
 }
 
 .order-details, .order-summary {
@@ -25,11 +36,12 @@
 }
 
 .order-details h2, .order-summary h2 {
-    font-size: 20px;
+    font-size: 2.2rem;
     color: #333;
     margin-bottom: 15px;
     padding-bottom: 10px;
     border-bottom: 1px solid #eee;
+    font-weight: 600;
 }
 
 .order-info {
@@ -47,10 +59,12 @@
     font-weight: 600;
     width: 200px;
     color: #666;
+    font-size: 1.6rem;
 }
 
 .info-value {
     flex: 1;
+    font-size: 1.6rem;
 }
 
 .status-success {
@@ -97,20 +111,21 @@
 }
 
 .item-details h3 {
-    font-size: 16px;
+    font-size: 1.6rem;
     margin-bottom: 5px;
+    font-weight: 600;
 }
 
 .item-meta {
     display: flex;
     gap: 20px;
     color: #666;
-    font-size: 14px;
+    font-size: 1.4rem;
 }
 
 .item-total {
     font-weight: 600;
-    font-size: 16px;
+    font-size: 1.6rem;
     min-width: 120px;
     text-align: right;
 }
@@ -125,6 +140,7 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
+    font-size: 1.6rem;
 }
 
 .total-row:last-child {
@@ -143,7 +159,8 @@
     margin-top: 15px;
     padding-top: 15px;
     border-top: 1px solid #ddd;
-    font-size: 18px;
+    font-size: 1.8rem;
+    font-weight: 700;
 }
 
 .next-actions {
@@ -160,26 +177,50 @@
     text-decoration: none;
     transition: all 0.3s ease;
     cursor: pointer;
+    font-size: 1.6rem;
 }
 
 .btn-primary {
-    background-color: #4CAF50;
+    background-color: #be9c79;
     color: white;
     border: none;
 }
 
 .btn-primary:hover {
-    background-color: #388e3c;
+    background-color: #a67b5b;
 }
 
 .btn-outline {
     background-color: transparent;
-    color: #4CAF50;
-    border: 1px solid #4CAF50;
+    color: #be9c79;
+    border: 1px solid #be9c79;
 }
 
 .btn-outline:hover {
-    background-color: #f1f8e9;
+    background-color: #f8f2eb;
+}
+
+.error-icon {
+    font-size: 8rem;
+    color: #f44336;
+    margin-bottom: 20px;
+}
+
+.error-container {
+    text-align: center;
+}
+
+.error-title {
+    color: #f44336;
+    margin-bottom: 15px;
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.error-container p {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+    color: #555;
 }
 
 /* Responsive Styles */
