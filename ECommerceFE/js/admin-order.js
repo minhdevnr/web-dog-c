@@ -187,11 +187,13 @@ class AdminOrderManager {
             'Processing': 'info',
             'Shipped': 'primary',
             'Delivered': 'success',
+            'Paymented': 'success',
             'Cancelled': 'danger',
             'pending': 'warning',
             'processing': 'info',
             'shipped': 'primary',
             'delivered': 'success',
+            'paymented': 'success',
             'cancelled': 'danger'
         };
         return colors[status] || 'secondary';
@@ -204,10 +206,12 @@ class AdminOrderManager {
             'Shipped': 'Đã giao hàng',
             'Delivered': 'Đã nhận hàng',
             'Cancelled': 'Đã hủy',
+            'Paymented': 'Đã thanh toán',
             'pending': 'Chờ xác nhận',
             'processing': 'Đang xử lý',
             'shipped': 'Đã giao hàng',
             'delivered': 'Đã nhận hàng',
+            'paymented': 'Đã thanh toán',
             'cancelled': 'Đã hủy'
         };
         return labels[status] || status;

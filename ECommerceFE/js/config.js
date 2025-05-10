@@ -46,6 +46,7 @@ const IMAGE_CONFIG = {
 const ORDER_STATUS = {
   pending: 'Chờ xác nhận',
   confirmed: 'Đã xác nhận',
+  paymented : 'Đã thanh toán',
   shipping: 'Đang giao hàng',
   delivered: 'Đã giao hàng',
   cancelled: 'Đã hủy'

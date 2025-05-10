@@ -648,15 +648,15 @@ class Auth {
         // Chuyển hướng dựa trên vai trò và trang hiện tại
         if (data.Role && data.Role.toLowerCase() === 'admin') {
           // Nếu là admin, chuyển đến trang admin
-          window.location.href = '/ECommerceFE/admin/admin.html';
+          window.location.href = '/../admin/admin.html';
         } else {
           // Nếu đang cố gắng đăng nhập vào trang admin mà không phải admin
           if (isAdminLogin) {
             // Chuyển đến trang chủ người dùng
-            window.location.href = '/ECommerceFE/index.html';
+            window.location.href = '/../index.html';
           } else {
             // Nếu đăng nhập từ trang thông thường, đi đến trang chủ
-            window.location.href = '/ECommerceFE/index.html';
+            window.location.href = '/../index.html';
           }
         }
       }, 1000);
@@ -762,7 +762,7 @@ class Auth {
     
     // Chuyển hướng về trang đăng nhập
     setTimeout(() => {
-      window.location.href = '/ECommerceFE/login.html';
+      window.location.href = '/../login.html';
     }, 1000);
   }
 
@@ -1106,9 +1106,9 @@ class Auth {
       var isExpired = Date.now() >= expirationTime;
       // if(!isExpired) {
       //   if(payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] == "admin") {
-      //     window.location.href = '/ECommerceFE/admin/admin.html';
+      //     window.location.href = '/../admin/admin.html';
       //   } else {
-      //     window.location.href = '/ECommerceFE/index.html';
+      //     window.location.href = '/../index.html';
       //   }
       // }
       // Trả về true nếu thời gian hiệu lực của token đã qua

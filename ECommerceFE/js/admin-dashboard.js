@@ -206,6 +206,7 @@ class AdminDashboard {
             'processing': 'warning',
             'shipped': 'primary',
             'delivered': 'success',
+            'paymented': 'success',
             'cancelled': 'danger'
         };
         return statusMap[status] || 'secondary';
@@ -217,11 +218,13 @@ class AdminDashboard {
             'Processing': 'Đang xử lý',
             'Shipped': 'Đã giao hàng',
             'Delivered': 'Hoàn thành',
+            'Paymented': 'Đã thanh toán',
             'Cancelled': 'Đã hủy',
             'pending': 'Chờ xác nhận',
             'processing': 'Đang xử lý',
             'shipped': 'Đã giao hàng',
             'delivered': 'Hoàn thành',
+            'paymented': 'Đã thanh toán',
             'cancelled': 'Đã hủy'
         };
         return labels[status] || status;

@@ -422,7 +422,7 @@ class Api {
               // Nếu không có Auth object, xóa token
               localStorage.removeItem('token');
               localStorage.removeItem('refreshToken');
-              window.location.href = '/ECommerceFE/login.html';
+              window.location.href = '/../login.html';
             }
             
             throw new Error('Phiên đăng nhập hết hạn, vui lòng đăng nhập lại');

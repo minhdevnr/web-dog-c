@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function() {
     fetchOrderDetails(orderId);
     
     // Xóa giỏ hàng sau khi đơn hàng đã xác nhận
-    if (status === "Completed" || !status) {
+    if (status === "Paymented" || !status) {
         Cart.clearCart();
     }
 });
@@ -30,9 +30,9 @@ function updateStatusUI(status) {
     const statusElement = document.getElementById('order-status');
     const headerElement = document.getElementById('confirmation-header');
     
-    if (status === "Completed" || status === "Pending") {
+    if (status === "Paymented" || status === "Pending") {
         // Đơn hàng thành công
-        statusElement.textContent = status === "Completed" ? "Đã thanh toán" : "Chờ xử lý";
+        statusElement.textContent = status === "Paymented" ? "Đã thanh toán" : "Chờ xử lý";
         statusElement.classList.add('status-success');
         
         headerElement.innerHTML = `
@@ -164,7 +164,7 @@ function getStatusText(status) {
             return "Đang xử lý";
         case "Shipped":
             return "Đang giao hàng";
-        case "Completed":
+        case "Paymented":
             return "Đã thanh toán";
         case "Failed":
             return "Thanh toán thất bại";

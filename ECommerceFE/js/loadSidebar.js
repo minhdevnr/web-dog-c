@@ -44,7 +44,7 @@
                 return;
             }
             
-            fetch('/ECommerceFE/admin/sidebar.html')
+            fetch('/../admin/sidebar.html')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Failed to load sidebar: ' + response.status);
@@ -65,7 +65,7 @@
                             localStorage.removeItem('token');
                             localStorage.removeItem('currentUser');
                             alert('Đăng xuất thành công');
-                            window.location.href = '/ECommerceFE/login.html';
+                            window.location.href = '/../login.html';
                         });
                     }
                 })
@@ -110,7 +110,7 @@
                     localStorage.removeItem('token');
                     localStorage.removeItem('currentUser');
                     alert('Đăng xuất thành công');
-                    window.location.href = '/ECommerceFE/login.html';
+                    window.location.href = '/../login.html';
                 });
             }
         }

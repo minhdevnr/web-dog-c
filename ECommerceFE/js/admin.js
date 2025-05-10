@@ -30,7 +30,7 @@ function checkAdminAuthentication() {
     if (!token) {
         addDebugMessage('Không tìm thấy token, chuyển hướng đến trang đăng nhập');
         // Chuyển hướng đến trang đăng nhập
-        window.location.href = '/ECommerceFE/login.html';
+        window.location.href = '../login.html';
         return false;
     }
     
@@ -40,7 +40,7 @@ function checkAdminAuthentication() {
         // if (!user || !user.role || user.role.toLowerCase() !== 'admin') {
         //     addDebugMessage('Người dùng không có quyền admin, chuyển hướng về trang chủ');
         //     // Chuyển hướng đến trang chủ người dùng
-        //     window.location.href = '/ECommerceFE/index.html';
+        //     window.location.href = '/../index.html';
         //     return false;
         // }
         
@@ -50,7 +50,7 @@ function checkAdminAuthentication() {
         console.error('Lỗi khi kiểm tra quyền admin:', error);
         addDebugMessage('Lỗi xác thực: ' + error.message);
         // Chuyển hướng đến trang đăng nhập trong trường hợp lỗi
-        window.location.href = '/ECommerceFE/login.html';
+        window.location.href = '../login.html';
         return false;
     }
 }
@@ -119,7 +119,7 @@ function loadSidebar() {
     const currentPath = window.location.pathname;
     let sidebarPath = 'sidebar.html'; // Đường dẫn tương đối mặc định
     
-    // Nếu ở trong thư mục ECommerceFE/admin
+    // Nếu ở trong thư mục ../admin
     if (currentPath.includes('/admin/') || currentPath.includes('/admin')) {
         if (currentPath.endsWith('/')) {
             sidebarPath = 'sidebar.html';
@@ -133,7 +133,7 @@ function loadSidebar() {
         }
     } else {
         // Nếu đang không ở trong thư mục admin, dùng đường dẫn tuyệt đối
-        sidebarPath = '/ECommerceFE/admin/sidebar.html';
+        sidebarPath = '/../admin/sidebar.html';
     }
     
     addDebugMessage('Đang tải sidebar từ: ' + sidebarPath);
@@ -143,7 +143,7 @@ function loadSidebar() {
             if (!response.ok) {
                 // Thử lại với đường dẫn tuyệt đối
                 addDebugMessage('Không thể tải với đường dẫn tương đối, thử với đường dẫn tuyệt đối');
-                return fetch('/ECommerceFE/admin/sidebar.html');
+                return fetch('/../admin/sidebar.html');
             }
             return response.text();
         })
@@ -219,7 +219,7 @@ function setupLogoutButton() {
                 }
                 
                 // Chuyển hướng đến trang đăng nhập
-                window.location.href = '/ECommerceFE/login.html';
+                window.location.href = '../login.html';
             } catch (error) {
                 console.error('Error during logout:', error);
                 addDebugMessage('Lỗi khi đăng xuất: ' + error.message);

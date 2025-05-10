@@ -172,7 +172,7 @@ namespace ECommerceAPI.Controllers
 
                 // Lấy thông tin từ cấu hình
                 string hashSecret = _configuration["VnPay:HashSecret"];
-                string clientUrl = _configuration["ClientUrl"];
+                string clientUrl = _configuration["FrontendBaseUrl"];
 
                 if (string.IsNullOrEmpty(hashSecret))
                 {
@@ -241,7 +241,7 @@ namespace ECommerceAPI.Controllers
 
                 // Kiểm tra mã phản hồi từ VNPay
                 bool isSuccess = vnpResponseCode == "00";
-                string status = isSuccess ? "Completed" : "Failed";
+                string status = isSuccess ? "Paymented" : "Failed";
                 string message = isSuccess ? "Thanh toán thành công" : GetResponseMessage(vnpResponseCode);
 
                 // Cập nhật trạng thái đơn hàng trong database
