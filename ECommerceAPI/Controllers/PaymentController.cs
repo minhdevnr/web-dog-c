@@ -2,6 +2,7 @@ using ECommerceAPI.Data;
 using ECommerceAPI.Helpers;
 using ECommerceAPI.Models.Requests;
 using ECommerceAPI.Models.Responses;
+using ECommerceAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -15,11 +16,13 @@ namespace ECommerceAPI.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly ILogger<PaymentController> _logger;
+        private readonly IEmailService _emailService;
 
-        public PaymentController(IConfiguration configuration, ILogger<PaymentController> logger)
+        public PaymentController(IConfiguration configuration, ILogger<PaymentController> logger, IEmailService emailService)
         {
             _configuration = configuration;
             _logger = logger;
+            _emailService = emailService;
         }
 
         /// <summary>
@@ -160,7 +163,7 @@ namespace ECommerceAPI.Controllers
         /// Xử lý kết quả thanh toán từ VNPay
         /// </summary>
         [HttpGet("vnpay/payment-return")]
-        public IActionResult ProcessVnPayReturn([FromQuery] Dictionary<string, string> requestParams)
+        public async Task<IActionResult> ProcessVnPayReturn([FromQuery] Dictionary<string, string> requestParams)
         {
             try
             {
@@ -255,7 +258,9 @@ namespace ECommerceAPI.Controllers
                         var dbContext = scope.GetRequiredService<ApplicationDbContext>();
 
                         // Tìm đơn hàng theo ID
-                        var order = dbContext.Orders.FirstOrDefault(o => o.Id.ToString() == orderId);
+                        var order = dbContext.Orders
+                            .Include(o => o.User)
+                            .FirstOrDefault(o => o.Id.ToString() == orderId);
 
                         if (order != null)
                         {
@@ -294,6 +299,29 @@ namespace ECommerceAPI.Controllers
 
                                 // Comment vì chưa có PaymentStatus
                                 // order.PaymentStatus = "Paid";
+                                
+                                // Gửi email xác nhận đơn hàng đến khách hàng
+                                if (order.User != null && !string.IsNullOrEmpty(order.User.Email))
+                                {
+                                    try
+                                    {
+                                        await _emailService.SendOrderConfirmationEmailAsync(
+                                            order.User.Email,
+                                            orderId,
+                                            status,
+                                            order.TotalAmount
+                                        );
+                                        _logger.LogInformation($"Đã gửi email xác nhận đơn hàng đến {order.User.Email}");
+                                    }
+                                    catch (Exception emailEx)
+                                    {
+                                        _logger.LogError(emailEx, $"Lỗi khi gửi email xác nhận đơn hàng: {emailEx.Message}");
+                                    }
+                                }
+                                else
+                                {
+                                    _logger.LogWarning($"Không tìm thấy thông tin email của khách hàng cho đơn hàng {orderId}");
+                                }
                             }
 
                             dbContext.SaveChanges();
@@ -438,7 +466,33 @@ namespace ECommerceAPI.Controllers
                             HttpContext = HttpContext
                         };
 
-                        return await orderController.CreateOrder(request);
+                        var orderResult = await orderController.CreateOrder(request) as ObjectResult;
+                        
+                        // Nếu tạo đơn hàng thành công, gửi email xác nhận
+                        if (orderResult?.StatusCode == 200)
+                        {
+                            var orderData = orderResult.Value as dynamic;
+                            string orderId = orderData.OrderId.ToString();
+                            
+                            try
+                            {
+                                // Gửi email xác nhận đơn hàng
+                                await _emailService.SendOrderConfirmationEmailAsync(
+                                    request.Email,
+                                    orderId,
+                                    "Pending", // Trạng thái mặc định cho COD là chờ xử lý
+                                    request.TotalAmount
+                                );
+                                _logger.LogInformation($"Đã gửi email xác nhận đơn hàng COD đến {request.Email}");
+                            }
+                            catch (Exception emailEx)
+                            {
+                                _logger.LogError(emailEx, $"Lỗi khi gửi email xác nhận đơn hàng COD: {emailEx.Message}");
+                                // Vẫn tiếp tục xử lý ngay cả khi gửi email thất bại
+                            }
+                        }
+
+                        return orderResult;
                     }
                 }
                 else
@@ -466,7 +520,7 @@ namespace ECommerceAPI.Controllers
         /// Xử lý callback từ VNPay sau khi thanh toán
         /// </summary>
         [HttpPost("vnpay/payment-callback")]
-        public IActionResult ProcessVnPayCallback([FromBody] VnPayCallbackRequest request)
+        public async Task<IActionResult> ProcessVnPayCallback([FromBody] VnPayCallbackRequest request)
         {
             try
             {
@@ -506,7 +560,72 @@ namespace ECommerceAPI.Controllers
                     });
                 }
 
-                // TODO: Gọi service cập nhật trạng thái đơn hàng
+                // Cập nhật trạng thái đơn hàng trong database
+                try
+                {
+                    using (var scope = new ServiceCollection()
+                        .AddDbContext<ApplicationDbContext>(options =>
+                            options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")))
+                        .BuildServiceProvider())
+                    {
+                        var dbContext = scope.GetRequiredService<ApplicationDbContext>();
+
+                        // Tìm đơn hàng theo ID
+                        var order = dbContext.Orders
+                            .Include(o => o.User)
+                            .FirstOrDefault(o => o.Id == orderId);
+
+                        if (order != null)
+                        {
+                            // Cập nhật trạng thái đơn hàng
+                            order.Status = "Paymented";
+                            order.UpdatedAt = DateTime.Now;
+                            
+                            // Lưu thay đổi
+                            await dbContext.SaveChangesAsync();
+                            
+                            // Gửi email xác nhận nếu có thông tin khách hàng
+                            if (order.User != null && !string.IsNullOrEmpty(order.User.Email))
+                            {
+                                try
+                                {
+                                    await _emailService.SendOrderConfirmationEmailAsync(
+                                        order.User.Email,
+                                        orderId.ToString(),
+                                        "Paymented", 
+                                        order.TotalAmount
+                                    );
+                                    _logger.LogInformation($"Đã gửi email xác nhận thanh toán đến {order.User.Email}");
+                                }
+                                catch (Exception emailEx)
+                                {
+                                    _logger.LogError(emailEx, $"Lỗi khi gửi email xác nhận thanh toán: {emailEx.Message}");
+                                }
+                            }
+                            
+                            _logger.LogInformation($"Đã cập nhật trạng thái đơn hàng {orderId} thành Paymented");
+                        }
+                        else
+                        {
+                            _logger.LogWarning($"Không tìm thấy đơn hàng với ID {orderId}");
+                            return NotFound(new
+                            {
+                                Success = false,
+                                Message = "Không tìm thấy đơn hàng",
+                                OrderId = request.OrderId
+                            });
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Lỗi khi cập nhật trạng thái đơn hàng: {ex.Message}");
+                    return StatusCode(StatusCodes.Status500InternalServerError, new
+                    {
+                        Success = false,
+                        Message = "Đã xảy ra lỗi khi cập nhật trạng thái đơn hàng: " + ex.Message
+                    });
+                }
 
                 return Ok(new
                 {
