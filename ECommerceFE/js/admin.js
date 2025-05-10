@@ -215,7 +215,6 @@ function setupLogoutButton() {
                 if (typeof NotificationSystem !== 'undefined') {
                     NotificationSystem.success('Đăng xuất thành công');
                 } else {
-                    alert('Đăng xuất thành công');
                 }
                 
                 // Chuyển hướng đến trang đăng nhập

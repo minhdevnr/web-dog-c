@@ -64,7 +64,6 @@
                             event.preventDefault();
                             localStorage.removeItem('token');
                             localStorage.removeItem('currentUser');
-                            alert('Đăng xuất thành công');
                             window.location.href = '/../login.html';
                         });
                     }
@@ -109,7 +108,6 @@
                     event.preventDefault();
                     localStorage.removeItem('token');
                     localStorage.removeItem('currentUser');
-                    alert('Đăng xuất thành công');
                     window.location.href = '/../login.html';
                 });
             }
