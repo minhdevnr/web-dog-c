@@ -321,10 +321,10 @@ class Cart {
    */
   static updateItemQuantity(itemId, quantity) {
     if (!itemId) return;
-
+    const id = parseInt(itemId)
     // Tìm sản phẩm trong giỏ hàng, kiểm tra nhiều loại ID có thể có
     const itemIndex = this.items.findIndex(item => 
-      (item.id === itemId) || (item.Id === itemId) || (item.productId === itemId)
+      (item.id === id) || (item.Id === id) || (item.productId === id)
     );
 
     if (itemIndex !== -1) {
@@ -345,6 +345,48 @@ class Cart {
       this.updateCartDropdown(); // Cập nhật dropdown
       this.updateCartCount();    // Cập nhật số lượng
       this.updateCartPage();     // Cập nhật trang giỏ hàng nếu đang mở
+      
+      // Cập nhật tổng tiền của sản phẩm trong UI (nếu đang ở trang giỏ hàng)
+      this.updateItemTotalPrice(itemId, quantity);
+    }
+  }
+  
+  /**
+   * Cập nhật hiển thị tổng tiền của sản phẩm khi thay đổi số lượng
+   * @param {string} itemId - ID của sản phẩm
+   * @param {number} quantity - Số lượng mới
+   * @private
+   */
+  static updateItemTotalPrice(itemId, quantity) {
+    
+    // Chỉ áp dụng khi đang ở trang giỏ hàng
+    const cartItemsContainer = document.getElementById('cart-items');
+    if (!cartItemsContainer) return;
+    
+    // Tìm sản phẩm trong giỏ hàng
+    const item = this.items.find(item => 
+      (item.id === itemId) || (item.Id === itemId) || (item.productId === itemId)
+    );
+    
+    if (!item) return;
+    
+    // Lấy giá sản phẩm
+    const price = item.price || item.Price || 0;
+    
+    // Tính tổng tiền của sản phẩm
+    const itemTotal = price * quantity;
+    
+    // Cập nhật hiển thị tổng tiền
+    const cartItemTotalElement = document.querySelector(`.cart-item-total[data-id="${itemId}"]`);
+    if (cartItemTotalElement) {
+      cartItemTotalElement.textContent = `Tổng: ${this.formatCurrency(itemTotal)}`;
+    }
+    
+    // Cập nhật tổng tiền của giỏ hàng
+    const totalCostElement = document.getElementById('total-cost');
+    if (totalCostElement) {
+      const totalPrice = this.getTotalPrice();
+      totalCostElement.textContent = this.formatCurrency(totalPrice).replace(' ₫', '');
     }
   }
 
@@ -354,16 +396,17 @@ class Cart {
    */
   static removeItem(itemId) {
     if (!itemId) return;
-
-    // Xác nhận xóa
-    if (typeof UI !== 'undefined' && typeof UI.confirmDialog === 'function') {
-      UI.confirmDialog('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?', () => {
-        this.doRemoveItem(itemId);
-      });
-    } else {
-      // Nếu không có UI.confirmDialog, xóa trực tiếp
-      this.doRemoveItem(itemId);
-    }
+ // Nếu không có UI.confirmDialog, xóa trực tiếp
+ this.doRemoveItem(itemId);
+    // // Xác nhận xóa
+    // if (typeof UI !== 'undefined' && typeof UI.confirmDialog === 'function') {
+    //   UI.confirmDialog('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?', () => {
+    //     this.doRemoveItem(itemId);
+    //   });
+    // } else {
+    //   // Nếu không có UI.confirmDialog, xóa trực tiếp
+    //   this.doRemoveItem(itemId);
+    // }
   }
   
   /**
@@ -372,17 +415,21 @@ class Cart {
    * @private
    */
   static doRemoveItem(itemId) {
+    
     // Lưu số lượng sản phẩm trước khi xóa
     const initialCount = this.items.length;
     console.log('DEBUG: Số lượng sản phẩm trước khi xóa:', initialCount);
     console.log('DEBUG: Đang xóa sản phẩm có ID:', itemId);
 
+    // Chuyển đổi itemId thành số
+    const itemIdNum = parseInt(itemId, 10);
+    
     // Lọc ra danh sách sản phẩm không chứa sản phẩm cần xóa
     this.items = this.items.filter(item => {
       // Kiểm tra tất cả các trường id có thể có
       const productId = item.id || item.Id || item.productId;
-      // Không giữ lại sản phẩm có id khớp với itemId
-      return productId !== itemId;
+      // Chuyển đổi productId thành số và so sánh với itemIdNum
+      return parseInt(productId, 10) !== itemIdNum;
     });
 
     console.log('DEBUG: Số lượng sản phẩm sau khi xóa:', this.items.length);
@@ -511,6 +558,7 @@ class Cart {
    * @param {number} retryCount - Số lần thử lại nếu phần tử chưa được tải
    */
   static updateCartCount(retryCount = 0) {
+      
     const totalQuantity = this.getTotalQuantity();
     console.log('Cập nhật số lượng giỏ hàng:', totalQuantity);
 
@@ -816,7 +864,7 @@ class Cart {
                 <input type="number" class="cart-quantity-input" data-id="${productId}" value="${productQuantity}" min="1">
                 <button class="quantity-btn increase" data-id="${productId}">+</button>
               </div>
-              <div class="cart-item-total">Tổng: ${this.formatCurrency(itemTotal)}</div>
+              <div class="cart-item-total" data-id="${productId}">Tổng: ${this.formatCurrency(itemTotal)}</div>
               <button class="remove-item-btn" data-id="${productId}">Xóa</button>
             </div>
           `;
