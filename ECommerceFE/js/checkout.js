@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Kiểm tra xem có phải là callback từ VNPay không
     if (window.location.pathname.includes("checkout.html") && window.location.search.includes('vnp_ResponseCode')) {
-        debugger;
+        
         handleVNPayCallback();
     }
 

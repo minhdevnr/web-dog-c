@@ -97,7 +97,7 @@ class AdminProductManager {
                 <tr>
                     <td>${product.Id}</td>
                     <td>
-                        <img src="${productImage}" class="product-image" alt="${product.Name}" onerror="this.src='../images/default-product.jpg'">
+                        <img src="${productImage}" class="product-image" alt="${product.Name}">
                     </td>
                     <td>${product.Name}</td>
                     <td>${product.Category?.Name || 'Không có'}</td>
@@ -241,7 +241,7 @@ class AdminProductManager {
                 
                 $('#imagePreview').html(`
                     <div class="mb-2">
-                        <img src="${product.ImageUrl}" class="img-thumbnail" style="max-height: 200px;" onerror="this.src='../images/default-product.jpg'">
+                        <img src="${product.ImageUrl}" class="img-thumbnail" style="max-height: 200px;" >
                         <p class="text-muted mt-1">Ảnh hiện tại. Tải lên ảnh mới nếu muốn thay đổi.</p>
                     </div>
                 `);

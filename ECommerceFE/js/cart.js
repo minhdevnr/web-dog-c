@@ -410,7 +410,7 @@ class Cart {
    * Xóa tất cả sản phẩm khỏi giỏ hàng
    */
   static clearCart() {
-    debugger;
+    
     // Xác nhận xóa tất cả
     if (typeof UI !== 'undefined' && typeof UI.confirmDialog === 'function') {
         this.doClearCart();

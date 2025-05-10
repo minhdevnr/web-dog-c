@@ -1093,7 +1093,7 @@ class Auth {
    */
   static isTokenExpired(token) {
     try {
-      debugger;
+      
       // Decode JWT token
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -1104,13 +1104,13 @@ class Auth {
       const payload = JSON.parse(jsonPayload);
       const expirationTime = payload.exp * 1000; // Chuyển từ giây sang mili giây
       var isExpired = Date.now() >= expirationTime;
-      if(!isExpired) {
-        if(payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] == "admin") {
-          window.location.href = '/ECommerceFE/admin/admin.html';
-        } else {
-          window.location.href = '/ECommerceFE/index.html';
-        }
-      }
+      // if(!isExpired) {
+      //   if(payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] == "admin") {
+      //     window.location.href = '/ECommerceFE/admin/admin.html';
+      //   } else {
+      //     window.location.href = '/ECommerceFE/index.html';
+      //   }
+      // }
       // Trả về true nếu thời gian hiệu lực của token đã qua
       return Date.now() >= expirationTime;
     } catch (error) {

@@ -71,6 +71,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Register services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IAdminInitializerService, AdminInitializerService>();
 
 // Thêm hỗ trợ cho các tệp tĩnh
 builder.Services.AddDirectoryBrowser();
@@ -109,11 +110,15 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
         context.Database.Migrate();
+        
+        // Khởi tạo tài khoản admin
+        var adminInitializer = services.GetRequiredService<IAdminInitializerService>();
+        adminInitializer.InitializeAdminAccount().Wait();
     }
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while migrating the database.");
+        logger.LogError(ex, "An error occurred while migrating the database or initializing admin account.");
     }
 }
 

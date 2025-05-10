@@ -205,7 +205,6 @@ class AdminCategoryManager {
     }
 
     async saveCategory() {
-        debugger;
         const form = $('#categoryForm')[0];
         if (!form.checkValidity()) {
             form.reportValidity();
@@ -217,6 +216,7 @@ class AdminCategoryManager {
             Name: $('#categoryName').val().trim(),
             Description: $('#categoryDescription').val().trim()
         };
+        
 
         const validationErrors = this.validateCategoryData(categoryData);
         if (validationErrors.length > 0) {
