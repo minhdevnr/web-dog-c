@@ -127,7 +127,8 @@ class AdminUserManager {
                 PhoneNumber: $('#phone').val(),
                 Address: $('#address').val(),
                 Role: $('#role').val(),
-                IsActive: $('#status').val() === 'active'
+                IsActive: $('#status').val() === 'active',
+                Password: $('#password').val()
             }
             : {
                 Username: $('#name').val(),

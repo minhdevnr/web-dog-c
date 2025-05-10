@@ -276,7 +276,7 @@ namespace ECommerceAPI.Services
             return user;
         }
 
-        public async Task<User> UpdateUserAsync(int id, User userUpdateData)
+        public async Task<User> UpdateUserAsync(int id, User userUpdateData,string password = null)
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null)
@@ -301,7 +301,10 @@ namespace ECommerceAPI.Services
             user.Role = userUpdateData.Role;
             user.IsActive = userUpdateData.IsActive;
             //user.UpdatedAt = DateTime.UtcNow;
-
+            if (!string.IsNullOrWhiteSpace(password))
+            {
+                user.Password = HashPassword(password);
+            }
             await _context.SaveChangesAsync();
 
             return user;

@@ -438,7 +438,7 @@ class Cart {
 
     // Hiển thị thông báo
     if (typeof UI !== 'undefined' && typeof UI.createNotification === 'function') {
-      UI.createNotification('Đã xóa tất cả sản phẩm khỏi giỏ hàng.', 'success');
+      // UI.createNotification('Đã xóa tất cả sản phẩm khỏi giỏ hàng.', 'success');
     }
   }
 

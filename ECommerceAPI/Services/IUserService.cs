@@ -29,7 +29,7 @@ namespace ECommerceAPI.Services
         // Thêm các phương thức mới cho quản lý người dùng
         Task<IEnumerable<User>> GetAllUsersAsync();
         Task<User> CreateUserAsync(User user, string password);
-        Task<User> UpdateUserAsync(int id, User user);
+        Task<User> UpdateUserAsync(int id, User user,string password = null);
         Task<bool> DeleteUserAsync(int id);
     }
 } 
