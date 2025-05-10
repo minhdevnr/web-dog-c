@@ -1,6 +1,7 @@
 using ECommerceAPI.Data;
 using ECommerceAPI.Entities;
 using ECommerceAPI.Helpers;
+using ECommerceAPI.Models.Requests;
 using ECommerceAPI.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -93,7 +94,7 @@ namespace ECommerceAPI.Controllers
 
         // POST: api/category
         [HttpPost]
-        public async Task<ActionResult<Category>> CreateCategory(Category category)
+        public async Task<ActionResult<Category>> CreateCategory(CategoryRequest category)
         {
             try
             {
@@ -102,14 +103,19 @@ namespace ECommerceAPI.Controllers
                 {
                     return BadRequest("Tên danh mục không được để trống");
                 }
+                var newCategory = new Category
+                {
+                    Name = category.Name,
+                    Description = category.Description,
+                    CreatedAt = DateTime.Now
+                };
+                newCategory.CreatedAt = DateTime.Now;
+                newCategory.Products = new HashSet<Product>(); // Khởi tạo collection Products
 
-                category.CreatedAt = DateTime.Now;
-                category.Products = new HashSet<Product>(); // Khởi tạo collection Products
-
-                _context.Categories.Add(category);
+                _context.Categories.Add(newCategory);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction(nameof(GetCategory), new { id = category.Id }, category);
+                return CreatedAtAction(nameof(GetCategory), new { id = newCategory.Id }, category);
             }
             catch (DbUpdateException ex)
             {
