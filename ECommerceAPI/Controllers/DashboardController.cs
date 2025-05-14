@@ -32,7 +32,7 @@ namespace ECommerceAPI.Controllers
 
                 // Tính doanh thu đơn hàng thành công
                 decimal successRevenue = await _context.Orders
-                    .Where(o => o.Status == "Delivered" || o.Status == "delivered" || o.Status == "Paymented")
+                    .Where(o => o.Status == "Delivered" || o.Status == "delivered")
                     .SumAsync(o => o.TotalAmount);
 
                 // Tính doanh thu đơn hàng đang chờ
