@@ -29,7 +29,7 @@ namespace ECommerceAPI.Controllers
             [FromQuery] int pageSize = DEFAULT_PAGE_SIZE,
             [FromQuery] string keyword = null,
             [FromQuery] int? categoryId = null,
-            [FromQuery] string sortBy = "Id",
+            [FromQuery] string sortBy = "UpdatedAt",
             [FromQuery] bool desc = false)
         {
             // Validate page size
@@ -105,7 +105,7 @@ namespace ECommerceAPI.Controllers
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = DEFAULT_PAGE_SIZE,
             [FromQuery] string keyword = null,
-            [FromQuery] string sortBy = "Id",
+            [FromQuery] string sortBy = "UpdatedAt",
             [FromQuery] bool desc = false)
         {
             // Validate page size
@@ -329,6 +329,96 @@ namespace ECommerceAPI.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "Xóa sản phẩm thành công" });
+        }
+
+        // GET: api/product/stock/{id}
+        [HttpGet("stock/{id}")]
+        public async Task<ActionResult<object>> GetProductStock(int id)
+        {
+            var product = await _context.Products.FindAsync(id);
+            
+            if (product == null)
+            {
+                return NotFound(new { success = false, message = "Sản phẩm không tồn tại" });
+            }
+
+            return Ok(new { 
+                success = true, 
+                stock = product.Stock,
+                productId = product.Id,
+                productName = product.Name
+            });
+        }
+
+        // POST: api/product/check-stocks
+        [HttpPost("check-stocks")]
+        public async Task<ActionResult<object>> CheckProductStocks([FromBody] List<int> productIds)
+        {
+            if (productIds == null || !productIds.Any())
+            {
+                return BadRequest(new { success = false, message = "Danh sách sản phẩm không hợp lệ" });
+            }
+
+            // Lấy thông tin tồn kho của tất cả sản phẩm được yêu cầu
+            var products = await _context.Products
+                .Where(p => productIds.Contains(p.Id))
+                .Select(p => new { p.Id, p.Name, p.Stock })
+                .ToListAsync();
+
+            // Kiểm tra các sản phẩm không tồn tại
+            var missingProductIds = productIds.Except(products.Select(p => p.Id)).ToList();
+
+            // Tạo kết quả
+            var result = new
+            {
+                success = true,
+                stocks = products.Select(p => new
+                {
+                    productId = p.Id,
+                    productName = p.Name,
+                    stock = p.Stock,
+                    inStock = p.Stock > 0
+                }).ToList(),
+                missingProducts = missingProductIds
+            };
+
+            return Ok(result);
+        }
+
+        // PUT: api/product/stock/{id}
+        [HttpPut("stock/{id}")]
+        public async Task<ActionResult<object>> UpdateProductStock(int id, [FromBody] UpdateStockRequest request)
+        {
+            var product = await _context.Products.FindAsync(id);
+            
+            if (product == null)
+            {
+                return NotFound(new { success = false, message = "Sản phẩm không tồn tại" });
+            }
+
+            // Cập nhật tồn kho
+            product.Stock = request.Stock;
+            product.UpdatedAt = DateTime.Now;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                
+                return Ok(new { 
+                    success = true, 
+                    message = "Cập nhật tồn kho thành công",
+                    stock = product.Stock,
+                    productId = product.Id,
+                    productName = product.Name
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { 
+                    success = false, 
+                    message = "Lỗi khi cập nhật tồn kho: " + ex.Message 
+                });
+            }
         }
 
         #region Helper Methods

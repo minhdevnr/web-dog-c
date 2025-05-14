@@ -3,6 +3,8 @@ using ECommerceAPI.Models.Requests;
 using ECommerceAPI.Models.Responses;
 using ECommerceAPI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ECommerceAPI.Controllers
 {
@@ -120,10 +122,13 @@ namespace ECommerceAPI.Controllers
 
         private void SetRefreshTokenCookie(string token)
         {
+            var configuration = HttpContext.RequestServices.GetRequiredService<IConfiguration>();
+            var expirationDays = int.Parse(configuration["Jwt:RefreshTokenExpirationDays"] ?? "7");
+            
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddDays(expirationDays),
                 SameSite = SameSiteMode.Strict,
                 Secure = true
             };

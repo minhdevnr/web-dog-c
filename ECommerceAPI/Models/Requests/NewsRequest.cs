@@ -84,7 +84,7 @@ namespace ECommerceAPI.Models.Requests
         /// <summary>
         /// Sắp xếp theo trường, mặc định là CreatedAt
         /// </summary>
-        public string SortBy { get; set; } = "CreatedAt";
+        public string SortBy { get; set; } = "UpdatedAt";
 
         /// <summary>
         /// Sắp xếp giảm dần, mặc định là true

@@ -875,15 +875,32 @@ class Cart {
 
         // Cập nhật số lượng và tổng giá trị
         const totalQuantity = this.getTotalQuantity();
-        const totalPrice = this.getTotalPrice();
+        const subtotal = this.getTotalPrice();
+        const shippingCost = 100000; // Phí vận chuyển mặc định
+        const totalPrice = subtotal + shippingCost;
 
         console.log('DEBUG: Cập nhật tổng số lượng:', totalQuantity);
-        console.log('DEBUG: Cập nhật tổng giá trị:', totalPrice);
+        console.log('DEBUG: Cập nhật tạm tính:', subtotal);
+        console.log('DEBUG: Phí vận chuyển:', shippingCost);
+        console.log('DEBUG: Tổng tiền:', totalPrice);
 
         if (itemCountElement) {
           itemCountElement.textContent = totalQuantity;
         }
 
+        // Cập nhật tạm tính (subtotal)
+        const subtotalElement = document.getElementById('subtotal');
+        if (subtotalElement) {
+          subtotalElement.textContent = this.formatCurrency(subtotal).replace(' ₫', '');
+        }
+
+        // Cập nhật phí vận chuyển (shipping cost)
+        const shippingCostElement = document.getElementById('shipping-cost');
+        if (shippingCostElement) {
+          shippingCostElement.textContent = this.formatCurrency(shippingCost).replace(' ₫', '');
+        }
+
+        // Cập nhật tổng tiền (total cost)
         if (totalCostElement) {
           totalCostElement.textContent = this.formatCurrency(totalPrice).replace(' ₫', '');
         }

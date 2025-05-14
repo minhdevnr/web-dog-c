@@ -12,7 +12,6 @@ class AdminDashboard {
             await this.loadRecentActivities();
             await this.loadStatistics();
         } catch (error) {
-            console.error("Lỗi khi khởi tạo dashboard:", error);
             this.showToast('Lỗi khi tải dữ liệu dashboard: ' + error.message, 'error');
         }
     }
@@ -34,7 +33,6 @@ class AdminDashboard {
             }
             
             const data = await response.json();
-            console.log('Dashboard summary:', data);
             
             // Cập nhật UI với dữ liệu từ API
             this.updateDashboardSummary(data);
@@ -68,7 +66,7 @@ class AdminDashboard {
         const successLabel = document.querySelector('.card-single:nth-child(2) h5');
         const pendingLabel = document.querySelector('.card-single:nth-child(3) h5');
 
-        if (balanceLabel) balanceLabel.textContent = 'Tổng doanh thu';
+        if (balanceLabel) balanceLabel.textContent = 'Tổng doanh thu đã thanh toán';
         if (successLabel) successLabel.textContent = 'Doanh thu thành công';
         if (pendingLabel) pendingLabel.textContent = 'Doanh thu đang chờ';
     }
@@ -90,7 +88,6 @@ class AdminDashboard {
             }
             
             const data = await response.json();
-            console.log('Recent activities:', data.RecentActivities);
             
             // Cập nhật bảng với hoạt động gần đây
             this.updateRecentActivities(data.RecentActivities);
@@ -169,7 +166,6 @@ class AdminDashboard {
             }
             
             const data = await response.json();
-            console.log('Dashboard statistics:', data);
             
             // Cập nhật UI với dữ liệu thống kê
             this.updateStatistics(data);

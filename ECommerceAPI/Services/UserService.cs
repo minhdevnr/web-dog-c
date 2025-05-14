@@ -349,11 +349,12 @@ namespace ECommerceAPI.Services
                 new Claim(ClaimTypes.Role, user.Role)
             };
 
+            var expirationMinutes = int.Parse(_configuration["Jwt:AccessTokenExpirationMinutes"] ?? "60");
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddHours(3),
+                expires: DateTime.Now.AddMinutes(expirationMinutes),
                 signingCredentials: credentials
             );
 
@@ -366,10 +367,11 @@ namespace ECommerceAPI.Services
             {
                 var randomBytes = new byte[64];
                 rng.GetBytes(randomBytes);
+                var expirationDays = int.Parse(_configuration["Jwt:RefreshTokenExpirationDays"] ?? "7");
                 return new RefreshToken
                 {
                     Token = Convert.ToBase64String(randomBytes),
-                    ExpiryDate = DateTime.UtcNow.AddDays(7),
+                    ExpiryDate = DateTime.UtcNow.AddDays(expirationDays),
                     CreatedByIp = ipAddress,
                     CreatedAt = DateTime.UtcNow
                 };

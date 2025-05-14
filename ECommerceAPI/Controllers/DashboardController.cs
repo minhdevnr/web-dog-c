@@ -22,17 +22,17 @@ namespace ECommerceAPI.Controllers
         // GET: api/dashboard/summary
         [HttpGet("summary")]
         public async Task<ActionResult<DashboardSummary>> GetSummary()
-        {
+            {
             try
             {
                 // Tính tổng doanh thu
                 decimal totalRevenue = await _context.Orders
-                    .Where(o => o.Status == "Delivered" || o.Status == "delivered")
+                    .Where(o => o.Status == "Paymented")
                     .SumAsync(o => o.TotalAmount);
 
                 // Tính doanh thu đơn hàng thành công
                 decimal successRevenue = await _context.Orders
-                    .Where(o => o.Status == "Delivered" || o.Status == "delivered")
+                    .Where(o => o.Status == "Delivered" || o.Status == "delivered" || o.Status == "Paymented")
                     .SumAsync(o => o.TotalAmount);
 
                 // Tính doanh thu đơn hàng đang chờ

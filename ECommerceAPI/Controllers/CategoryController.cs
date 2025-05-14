@@ -28,7 +28,7 @@ namespace ECommerceAPI.Controllers
             [FromQuery] int pageSize = DEFAULT_PAGE_SIZE,
             [FromQuery] string keyword = null,
             [FromQuery] bool includeProducts = false,
-            [FromQuery] string sortBy = "Id",
+            [FromQuery] string sortBy = "UpdatedAt",
             [FromQuery] bool desc = false)
         {
             // Validate page size

@@ -135,7 +135,7 @@ namespace ECommerceAPI.Controllers
             [FromQuery] int? userId = null,
             [FromQuery] DateTime? fromDate = null,
             [FromQuery] DateTime? toDate = null,
-            [FromQuery] string sortBy = "CreatedAt",
+            [FromQuery] string sortBy = "UpdatedAt",
             [FromQuery] bool desc = true)
         {
             // Validate page size

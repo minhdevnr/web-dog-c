@@ -12,199 +12,298 @@
     />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/style-about.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <title>Giới Thiệu - LH Coffee</title>
+    <meta
+      name="description"
+      content="Tìm hiểu về hành trình phát triển và giá trị cốt lõi của LH Coffee - cà phê Việt Nam chất lượng cao."
+    />
   </head>
 
   <body>
     <!-- Header container -->
     <div id="header-container"></div>
 
-    <!-- Banner Section -->
-    <section class="about-banner no-image">
-      <div class="about-banner-overlay">
-        <h1>Giới Thiệu</h1>
-        <div class="breadcrumb">
-          <a href="index.html">Trang Chủ</a>
-          <i class="fas fa-chevron-right"></i> <span>Giới Thiệu</span>
-        </div>
+    <!-- Hero Banner -->
+    <div class="news-hero" id="about-hero">
+      <div class="hero-overlay"></div>
+      <div class="container" data-aos="fade-up">
+        <h1 class="hero-title">Giới Thiệu</h1>
+        <nav aria-label="breadcrumb" data-aos="fade-up" data-aos-delay="100">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+              Giới Thiệu
+            </li>
+          </ol>
+        </nav>
       </div>
-    </section>
+    </div>
 
     <!-- About Us Section -->
     <section class="about_us">
       <div class="about_us_content">
-        <h2 class="heading">Giới Thiệu về <span>LH Coffee</span></h2>
+        <h2 class="heading" data-aos="fade-up">
+          <span>Câu Chuyện LH Coffee</span>
+        </h2>
 
         <div class="about_us_intro">
-          <div class="about_us_img">
-            <div class="placeholder-image">
-              <i class="fas fa-coffee"></i>
-              <p>Hình ảnh về LH Coffee</p>
-            </div>
+          <div class="about_us_img" data-aos="fade-right">
+            <img src="img/coffee-2225564_960_720.jpg" alt="LH Coffee" />
           </div>
-          <div class="about_us_text">
-            <h3>Hành trình từ hạt đến tách cà phê hoàn hảo</h3>
+          <div class="about_us_text" data-aos="fade-left">
+            <h3>Từ Tình Yêu Với Hạt Cà Phê Việt Nam</h3>
             <p>
-              Chúng tôi tự hào mang đến những sản phẩm cà phê chất lượng cao,
-              được thu hoạch từ vùng nguyên liệu Buôn Ma Thuột và Lâm Đồng. Mỗi
-              hạt cà phê đều trải qua quy trình rang xay nghiêm ngặt để đảm bảo
-              giữ trọn hương vị đậm đà, thơm ngon.
+              LH Coffee ra đời năm 2013 với khát vọng nâng tầm di sản cà phê lâu
+              đời của Việt Nam và lan tỏa tinh thần tự hào, kết nối hàng triệu
+              người thông qua những ly cà phê đậm vị.
             </p>
             <p>
-              Với hơn 10 năm kinh nghiệm, LH Coffee không chỉ mang đến những
-              tách cà phê hoàn hảo mà còn kiến tạo không gian thư giãn, là nơi
-              kết nối những tâm hồn yêu cà phê. Chúng tôi cam kết sử dụng nguồn
-              nguyên liệu hữu cơ, thân thiện với môi trường và hỗ trợ cộng đồng
-              nông dân Việt Nam.
+              Bắt đầu từ một cửa hàng nhỏ tại Thành phố Hồ Chí Minh, chúng tôi
+              đã phát triển mở rộng thành chuỗi cửa hàng trên khắp Việt Nam,
+              mang đến những trải nghiệm cà phê độc đáo cho hàng triệu khách
+              hàng mỗi năm.
             </p>
           </div>
         </div>
 
-        <!-- Our Mission -->
-        <div class="mission-section">
-          <h3>Sứ mệnh của chúng tôi</h3>
+        <!-- Our Value -->
+        <div class="value-section">
+          <h3 data-aos="fade-up">Những Giá Trị Cốt Lõi</h3>
           <div class="mission-boxes">
-            <div class="mission-box">
+            <div class="mission-box" data-aos="fade-up" data-aos-delay="100">
               <i class="fas fa-coffee"></i>
-              <h4>Chất lượng hàng đầu</h4>
+              <h4>Đam Mê Cà Phê</h4>
               <p>
-                Mang đến những sản phẩm cà phê chất lượng hàng đầu, được chọn
-                lọc kỹ càng từ những vùng nguyên liệu tốt nhất.
+                Chúng tôi đam mê tạo ra những tách cà phê hoàn hảo, từ việc lựa
+                chọn hạt, rang xay đến phương pháp pha chế.
               </p>
             </div>
-            <div class="mission-box">
+            <div class="mission-box" data-aos="fade-up" data-aos-delay="200">
               <i class="fas fa-leaf"></i>
-              <h4>Phát triển bền vững</h4>
+              <h4>Tôn Vinh Giá Trị Việt</h4>
               <p>
-                Ưu tiên các phương pháp trồng và chế biến cà phê bền vững, thân
-                thiện với môi trường và hỗ trợ cộng đồng nông dân.
+                Mỗi sản phẩm của LH Coffee đều được tạo ra từ nguồn nguyên liệu
+                và công thức Việt Nam truyền thống.
               </p>
             </div>
-            <div class="mission-box">
-              <i class="fas fa-users"></i>
-              <h4>Kết nối cộng đồng</h4>
+            <div class="mission-box" data-aos="fade-up" data-aos-delay="300">
+              <i class="fas fa-heart"></i>
+              <h4>Gắn Kết Cộng Đồng</h4>
               <p>
-                Xây dựng không gian để kết nối những người yêu cà phê, chia sẻ
-                niềm đam mê và tạo nên những khoảnh khắc đáng nhớ.
+                Không gian LH Coffee được thiết kế để trở thành điểm hẹn thân
+                thiện, nơi kết nối mọi người với nhau.
               </p>
             </div>
           </div>
         </div>
 
-        <!-- Our Story -->
-        <div class="story-section">
-          <div class="story-content">
-            <h3>Câu chuyện của chúng tôi</h3>
-            <div class="timeline">
-              <div class="timeline-item">
-                <div class="timeline-year">2013</div>
-                <div class="timeline-content">
-                  <h4>Khởi nguồn</h4>
-                  <p>
-                    LH Coffee được thành lập với cửa hàng đầu tiên tại Thành phố
-                    Hồ Chí Minh, mang tầm nhìn về một thương hiệu cà phê Việt
-                    Nam chất lượng cao.
-                  </p>
-                </div>
-              </div>
-              <div class="timeline-item">
-                <div class="timeline-year">2016</div>
-                <div class="timeline-content">
-                  <h4>Mở rộng</h4>
-                  <p>
-                    Mở thêm 3 cửa hàng mới và phát triển dòng sản phẩm cà phê
-                    đóng gói, mang hương vị LH Coffee đến nhiều người hơn.
-                  </p>
-                </div>
-              </div>
-              <div class="timeline-item">
-                <div class="timeline-year">2020</div>
-                <div class="timeline-content">
-                  <h4>Phát triển bền vững</h4>
-                  <p>
-                    Triển khai các dự án hỗ trợ nông dân trồng cà phê và cam kết
-                    sử dụng 100% nguyên liệu có nguồn gốc bền vững.
-                  </p>
-                </div>
-              </div>
-              <div class="timeline-item">
-                <div class="timeline-year">2023</div>
-                <div class="timeline-content">
-                  <h4>Hiện tại</h4>
-                  <p>
-                    LH Coffee hiện đã có 15 cửa hàng trên toàn quốc, phục vụ hơn
-                    1 triệu khách hàng mỗi năm với các sản phẩm cà phê chất
-                    lượng cao.
-                  </p>
-                </div>
-              </div>
-            </div>
+        <!-- Heritage -->
+        <div class="heritage-section">
+          <div class="heritage-heading" data-aos="fade-up">
+            <h3>Di Sản Cà Phê Việt Nam</h3>
+            <p class="heritage-intro">
+              LH Coffee tự hào góp phần gìn giữ và phát triển văn hóa cà phê
+              Việt Nam đã có từ hơn 100 năm qua. Chúng tôi không ngừng sáng tạo
+              để mang đến những trải nghiệm cà phê độc đáo, gìn giữ những giá
+              trị truyền thống đồng thời phát triển những xu hướng mới.
+            </p>
           </div>
-          <div class="story-image">
-            <div class="placeholder-image">
-              <i class="fas fa-store"></i>
-              <p>Hình ảnh cửa hàng LH Coffee</p>
+          <div class="heritage-content">
+            <div class="heritage-image" data-aos="fade-right">
+              <img
+                src="img/coffee-2225564_960_720.jpg"
+                alt="Cà phê phin truyền thống"
+              />
+            </div>
+            <div class="heritage-text" data-aos="fade-left">
+              <h4>Hương Vị Cà Phê Đích Thực</h4>
+              <p>
+                Cà phê tại LH Coffee được chọn lọc từ những vùng trồng nổi tiếng
+                như Buôn Ma Thuột, Lâm Đồng, qua quy trình rang xay riêng biệt,
+                tạo nên những tách cà phê đậm đà, đúng vị Việt Nam.
+              </p>
+              <p>
+                Dù là cà phê phin truyền thống, hay những phiên bản hiện đại như
+                cà phê Espresso, Cappuccino, chúng tôi luôn giữ trọn vẹn hương
+                vị đặc trưng của hạt cà phê Việt.
+              </p>
             </div>
           </div>
         </div>
 
-        <!-- Our Team -->
-        <div class="team-section">
-          <h3>Đội ngũ của chúng tôi</h3>
-          <div class="team-members">
-            <div class="team-member">
-              <div class="member-image">
-                <div class="placeholder-image">
-                  <i class="fas fa-user"></i>
-                </div>
-              </div>
-              <h4>Nguyễn Văn A</h4>
-              <p>Founder & CEO</p>
-              <div class="member-social">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
+        <!-- Our Journey -->
+        <div class="journey-section">
+          <h3 data-aos="fade-up">Hành Trình Phát Triển</h3>
+          <div class="timeline" data-aos="fade-up" data-aos-delay="100">
+            <div class="timeline-item">
+              <div class="timeline-year">2013</div>
+              <div class="timeline-content">
+                <h4>Khởi Nguồn</h4>
+                <p>
+                  Cửa hàng LH Coffee đầu tiên ra đời tại Quận 1, TP.HCM với khát
+                  vọng mang đến những tách cà phê chất lượng cao mang đậm bản
+                  sắc Việt.
+                </p>
               </div>
             </div>
-            <div class="team-member">
-              <div class="member-image">
-                <div class="placeholder-image">
-                  <i class="fas fa-user"></i>
-                </div>
-              </div>
-              <h4>Trần Thị B</h4>
-              <p>Coffee Master</p>
-              <div class="member-social">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
+            <div class="timeline-item">
+              <div class="timeline-year">2016</div>
+              <div class="timeline-content">
+                <h4>Mở Rộng</h4>
+                <p>
+                  Phát triển thêm 5 cửa hàng mới tại TP.HCM và Hà Nội, đồng thời
+                  cho ra mắt dòng sản phẩm cà phê đóng gói cao cấp.
+                </p>
               </div>
             </div>
-            <div class="team-member">
-              <div class="member-image">
-                <div class="placeholder-image">
-                  <i class="fas fa-user"></i>
-                </div>
+            <div class="timeline-item">
+              <div class="timeline-year">2019</div>
+              <div class="timeline-content">
+                <h4>Đổi Mới</h4>
+                <p>
+                  Làm mới không gian cửa hàng với thiết kế hiện đại, gần gũi hơn
+                  với người trẻ nhưng vẫn giữ những giá trị cốt lõi.
+                </p>
               </div>
-              <h4>Lê Văn C</h4>
-              <p>Marketing Director</p>
-              <div class="member-social">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-year">2023</div>
+              <div class="timeline-content">
+                <h4>Phát Triển Bền Vững</h4>
+                <p>
+                  LH Coffee hiện có 15 cửa hàng trên toàn quốc, áp dụng các tiêu
+                  chuẩn thân thiện với môi trường và hỗ trợ nông dân trồng cà
+                  phê bền vững.
+                </p>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Sustainable -->
+        <div class="sustainable-section">
+          <div class="sustainable-content" data-aos="fade-right">
+            <h3>Phát Triển Bền Vững</h3>
+            <p>
+              Chúng tôi tin rằng, để phát triển bền vững, LH Coffee cần đóng góp
+              tích cực cho cộng đồng và môi trường. Vì vậy, chúng tôi cam kết:
+            </p>
+            <ul class="sustainable-list">
+              <li>
+                <i class="fas fa-check-circle"></i>
+                <span
+                  >Hỗ trợ nông dân trồng cà phê với mức thu nhập ổn định</span
+                >
+              </li>
+              <li>
+                <i class="fas fa-check-circle"></i>
+                <span
+                  >Sử dụng bao bì thân thiện với môi trường, có thể tái
+                  chế</span
+                >
+              </li>
+              <li>
+                <i class="fas fa-check-circle"></i>
+                <span>Giảm thiểu rác thải nhựa trong hoạt động kinh doanh</span>
+              </li>
+              <li>
+                <i class="fas fa-check-circle"></i>
+                <span
+                  >Hỗ trợ các chương trình giáo dục tại vùng trồng cà phê</span
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="sustainable-image" data-aos="fade-left">
+            <img
+              src="img/coffee-2225564_960_720.jpg"
+              alt="Vườn cà phê bền vững"
+            />
+          </div>
+        </div>
+
+        <!-- Newsletter Section -->
+        <section class="newsletter-section" data-aos="fade-up">
+          <div class="container">
+            <div class="newsletter-wrapper">
+              <div class="newsletter-content">
+                <h2>Đăng Ký Nhận Tin</h2>
+                <p>
+                  Đăng ký để nhận thông tin mới nhất về sản phẩm, khuyến mãi và
+                  câu chuyện cà phê từ LH Coffee.
+                </p>
+              </div>
+              <form class="newsletter-form">
+                <input type="email" placeholder="Nhập email của bạn" required />
+                <button type="submit" class="btn">Đăng Ký</button>
+              </form>
+            </div>
+          </div>
+        </section>
 
         <!-- Contact CTA -->
-        <div class="contact-cta">
-          <h3>Ghé thăm cửa hàng của chúng tôi</h3>
+        <div class="contact-cta" data-aos="fade-up">
+          <h3>Hãy Ghé Thăm LH Coffee</h3>
           <p>
-            Khám phá không gian và thưởng thức những tách cà phê tuyệt vời nhất
-            từ LH Coffee
+            Chúng tôi luôn chào đón bạn đến thưởng thức những tách cà phê ngon
+            nhất và trải nghiệm không gian thân thiện tại LH Coffee
           </p>
-          <a href="index.html#contact" class="btn">Liên hệ ngay</a>
+          <a href="index.html#contact" class="btn">Tìm Cửa Hàng Gần Nhất</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Author & Share Section -->
+    <section class="author-share-section">
+      <div class="container" data-aos="fade-up">
+        <div class="section-wrapper">
+          <div class="author-info">
+            <div class="author-image">
+              <img src="img/review-3.jpg" alt="Founder" id="author-image" />
+            </div>
+            <div class="author-details">
+              <h3 id="author-name">Nguyễn Văn A</h3>
+              <p id="author-bio">
+                Founder & CEO của LH Coffee, với hơn 15 năm kinh nghiệm trong
+                ngành cà phê. Người đặt nền móng cho thương hiệu và tầm nhìn
+                phát triển bền vững của LH Coffee.
+              </p>
+              <div class="author-social">
+                <a href="#" title="Facebook"
+                  ><i class="fab fa-facebook-f"></i
+                ></a>
+                <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" title="LinkedIn"
+                  ><i class="fab fa-linkedin-in"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+          <div class="share-wrapper">
+            <h3>Chia Sẻ Thông Tin</h3>
+            <div class="share-buttons">
+              <a href="#" class="facebook" title="Chia sẻ trên Facebook">
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a href="#" class="twitter" title="Chia sẻ trên Twitter">
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a href="#" class="pinterest" title="Chia sẻ trên Pinterest">
+                <i class="fab fa-pinterest-p"></i>
+              </a>
+              <a href="#" class="linkedin" title="Chia sẻ trên LinkedIn">
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+              <a href="#" class="email" title="Chia sẻ qua email">
+                <i class="fas fa-envelope"></i>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -212,9 +311,103 @@
     <!-- Footer container -->
     <div id="footer-container"></div>
 
+    <!-- Back to Top Button -->
+    <button id="back-to-top" title="Lên đầu trang">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+
     <!-- JavaScript Modules -->
     <script src="js/config.js"></script>
     <script src="js/api.js"></script>
     <script src="js/ui.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      // Khởi tạo UI khi trang đã tải xong
+      document.addEventListener("DOMContentLoaded", () => {
+        // Khởi tạo UI
+        if (typeof UI !== "undefined") {
+          UI.init();
+        }
+
+        // Khởi tạo thư viện AOS
+        AOS.init({
+          duration: 800,
+          easing: "ease",
+          once: true,
+        });
+
+        // Khởi tạo nút Back to Top
+        initBackToTop();
+
+        // Thiết lập banner hero
+        setupHeroBanner();
+
+        // Khởi tạo chức năng chia sẻ
+        initShareButtons();
+      });
+
+      // Hàm khởi tạo nút Back to Top
+      function initBackToTop() {
+        const backToTopButton = document.getElementById("back-to-top");
+
+        // Hiển thị nút khi người dùng cuộn xuống
+        window.addEventListener("scroll", () => {
+          if (window.pageYOffset > 300) {
+            backToTopButton.classList.add("show");
+          } else {
+            backToTopButton.classList.remove("show");
+          }
+        });
+
+        // Xử lý sự kiện khi nhấp vào nút
+        backToTopButton.addEventListener("click", () => {
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
+        });
+      }
+
+      // Hàm thiết lập banner hero
+      function setupHeroBanner() {
+        const heroDiv = document.getElementById("about-hero");
+        if (heroDiv) {
+          heroDiv.style.backgroundImage =
+            "url('img/coffee-2225564_960_720.jpg')";
+        }
+      }
+
+      // Hàm khởi tạo chức năng chia sẻ
+      function initShareButtons() {
+        const shareButtons = document.querySelectorAll(".share-buttons a");
+
+        shareButtons.forEach((button) => {
+          button.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent(document.title);
+
+            let shareUrl;
+
+            if (this.classList.contains("facebook")) {
+              shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+            } else if (this.classList.contains("twitter")) {
+              shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
+            } else if (this.classList.contains("pinterest")) {
+              shareUrl = `https://pinterest.com/pin/create/button/?url=${url}&description=${title}`;
+            } else if (this.classList.contains("linkedin")) {
+              shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+            } else if (this.classList.contains("email")) {
+              shareUrl = `mailto:?subject=${title}&body=Xem thông tin về LH Coffee: ${url}`;
+            }
+
+            if (shareUrl) {
+              window.open(shareUrl, "_blank", "width=600,height=400");
+            }
+          });
+        });
+      }
+    </script>
   </body>
 </html>
