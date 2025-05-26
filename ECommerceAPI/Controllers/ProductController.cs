@@ -184,7 +184,8 @@ namespace ECommerceAPI.Controllers
                 Stock = request.Stock,
                 Status = request.Status,
                 CategoryId = request.CategoryId,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.Now,
+                ProductCode = request.ProductCode
             };
 
             // Xử lý hình ảnh
@@ -249,6 +250,7 @@ namespace ECommerceAPI.Controllers
             existingProduct.Status = request.Status;
             existingProduct.CategoryId = request.CategoryId;
             existingProduct.UpdatedAt = DateTime.Now;
+            existingProduct.ProductCode = request.ProductCode;
 
             // Handle image update
             if (request.Image != null)
@@ -467,7 +469,8 @@ namespace ECommerceAPI.Controllers
                     Id = product.Category.Id,
                     Name = product.Category.Name,
                     Description = product.Category.Description
-                } : null
+                } : null,
+                ProductCode = product.ProductCode
             };
         }
 

@@ -36,5 +36,9 @@ namespace ECommerceAPI.Models.Requests
 
         [Required(ErrorMessage = "Danh mục sản phẩm là bắt buộc")]
         public int CategoryId { get; set; }
+
+        [Required(ErrorMessage = "Mã sản phẩm là bắt buộc")]
+        [MaxLength(50, ErrorMessage = "Mã sản phẩm không được vượt quá 50 ký tự")]
+        public string ProductCode { get; set; }
     }
 } 

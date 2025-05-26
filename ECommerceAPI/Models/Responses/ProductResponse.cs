@@ -81,6 +81,11 @@ namespace ECommerceAPI.Models.Responses
         /// Hình ảnh
         /// </summary>
         public string Image { get; set; }
+
+        /// <summary>
+        /// Mã sản phẩm (code)
+        /// </summary>
+        public string ProductCode { get; set; }
     }
 
     /// <summary>

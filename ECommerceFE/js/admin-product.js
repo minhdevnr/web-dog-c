@@ -104,6 +104,7 @@ class AdminProductManager {
                     <td>${this.formatCurrency(product.Price)}</td>
                     <td>${product.Stock}</td>
                     <td><span class="badge bg-${product.Status === 'Active' ? 'success' : 'danger'}">${this.getStatusLabel(product.Status)}</span></td>
+                    <td>${product.ProductCode || ''}</td>
                     <td>
                         <button class="btn btn-sm btn-info view-product" data-id="${product.Id}">
                             <i class="fas fa-eye"></i>
@@ -253,6 +254,8 @@ class AdminProductManager {
             // Hiển thị thông báo về việc thay đổi ảnh
             $('#imageHelp').text('Để giữ ảnh hiện tại, không cần chọn ảnh mới.');
             $('#imageLabel').text('Thay đổi ảnh (nếu muốn)');
+
+            $('#productCode').val(product.ProductCode || '');
         } else {
             $('#productModalTitle').text('Thêm Sản phẩm');
             $('#productId').val('');
@@ -263,6 +266,8 @@ class AdminProductManager {
             // Cập nhật text cho label và help text
             $('#imageHelp').text('Vui lòng chọn ảnh cho sản phẩm.');
             $('#imageLabel').text('Ảnh sản phẩm');
+
+            $('#productCode').val('');
         }
 
         modal.modal('show');
@@ -318,6 +323,8 @@ class AdminProductManager {
             formData.append('ImageUrl', currentImageUrl);
             console.log('Using existing image URL:', currentImageUrl);
         }
+
+        formData.append('ProductCode', $('#productCode').val());
 
         try {
             const url = productId ? `${this.API_BASE.PRODUCTS}/${productId}` : this.API_BASE.PRODUCTS;
@@ -424,6 +431,7 @@ class AdminProductManager {
                              });
 
             $('#productId').val(product.Id);
+            $('#detailProductCode').text(product.ProductCode || '');
             $('#productDetailModal').modal('show');
         } catch (error) {
             console.error('Error loading product details:', error);

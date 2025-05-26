@@ -188,8 +188,8 @@ namespace ECommerceAPI.Controllers
                     Id = o.Id,
                     Status = o.Status,
                     PhoneNumber = o.PhoneNumber,
-                    SubTotal = o.TotalAmount - 30000, // Giả định phí vận chuyển là 30000
-                    ShippingFee = 30000,
+                    SubTotal = o.TotalAmount - 100000, // Giả định phí vận chuyển là 30000
+                    ShippingFee = 100000,
                     Total = o.TotalAmount,
                     Note = string.Empty,
                     CreatedAt = o.CreatedAt,
@@ -261,8 +261,8 @@ namespace ECommerceAPI.Controllers
                 {
                     Id = o.Id,
                     Status = o.Status,
-                    SubTotal = o.TotalAmount - 30000, // Giả định phí vận chuyển là 30000
-                    ShippingFee = 30000,
+                    SubTotal = o.TotalAmount - 100000, // Giả định phí vận chuyển là 30000
+                    ShippingFee = 100000,
                     Total = o.TotalAmount,
                     Note = string.Empty,
                     PhoneNumber = o.PhoneNumber,

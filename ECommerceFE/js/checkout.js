@@ -131,6 +131,7 @@ function updateTotalWithShipping(shippingFee) {
     const cartItems = JSON.parse(localStorage.getItem('cart'));
     const totalElement = document.getElementById("total-amount");
     const checkoutTotalElement = document.getElementById("checkout-total-cost");
+    const itemCountElement = document.getElementById("checkout-item-count");
     
     if (!cartItems || cartItems.length === 0) return;
     
@@ -140,7 +141,7 @@ function updateTotalWithShipping(shippingFee) {
     });
     
     const totalAmount = subtotal + shippingFee;
-    
+    const itemCount = cartItems.reduce((count, item) => count + item.Quantity, 0);
     // Cập nhật tổng tiền trong trang cart summary
     if (totalElement) {
         totalElement.textContent = formatCurrency(totalAmount);
@@ -149,6 +150,10 @@ function updateTotalWithShipping(shippingFee) {
     // Cập nhật tổng tiền trong checkout summary
     if (checkoutTotalElement) {
         checkoutTotalElement.textContent = formatCurrency(totalAmount);
+    }
+    // cập nhất số lượng mục trong checkout summary
+    if (itemCountElement) {
+        itemCountElement.textContent = itemCount;
     }
 }
 
@@ -170,36 +175,7 @@ function updateCartSummary() {
     summaryContainer.innerHTML = "";
     
     // Thêm từng mục vào bảng tóm tắt
-    cartItems.forEach(item => {
-        const itemRow = document.createElement("div");
-        itemRow.className = "cart-item summary-item";
-        
-        const itemPrice = parseInt(item.Price);
-        const itemTotal = itemPrice * item.Quantity;
-        
-        itemRow.innerHTML = `
-            <div class="item-details">
-                <div class="item-image">
-                    <img src="${item.Image}" alt="${item.Name}">
-                </div>
-                <div class="item-info">
-                    <h4>${item.Name}</h4>
-                    <div class="item-meta">
-                        <span class="item-quantity">SL: ${item.Quantity}</span>
-                        <span class="item-price">${formatCurrency(itemPrice)}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="item-total">
-                ${formatCurrency(itemTotal)}
-            </div>
-        `;
-        
-        summaryContainer.appendChild(itemRow);
-        
-        itemCount += item.Quantity;
-        totalAmount += itemTotal;
-    });
+   
     }
     if(itemCountElement){
     // Cập nhật số lượng mục và tổng tiền
@@ -212,6 +188,7 @@ function updateCartSummary() {
     // Cập nhật số lượng mục trong checkout summary
     const checkoutItemCountElement = document.getElementById("checkout-item-count");
     if (checkoutItemCountElement) {
+        debugger;
         checkoutItemCountElement.textContent = itemCount;
     }
     

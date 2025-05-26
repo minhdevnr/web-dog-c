@@ -41,5 +41,9 @@ namespace ECommerceAPI.Entities
         // Navigation property
         [ForeignKey("CategoryId")]
         public virtual Category Category { get; set; }
+
+        [Required]
+        [MaxLength(50)]
+        public string ProductCode { get; set; }
     }
 } 

@@ -96,6 +96,7 @@
                   <th>Giá</th>
                   <th>Tồn kho</th>
                   <th>Trạng thái</th>
+                  <th>Mã SP</th>
                   <th>Thao tác</th>
                 </tr>
               </thead>
@@ -175,6 +176,18 @@
                     type="date"
                     class="form-control"
                     id="expiryDate"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label">Mã sản phẩm</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="productCode"
+                    maxlength="50"
                     required
                   />
                 </div>
@@ -259,6 +272,10 @@
                 </p>
                 <p>
                   <strong>Trạng thái:</strong> <span id="detailStatus"></span>
+                </p>
+                <p>
+                  <strong>Mã sản phẩm:</strong>
+                  <span id="detailProductCode"></span>
                 </p>
                 <hr />
                 <h5>Mô tả:</h5>
